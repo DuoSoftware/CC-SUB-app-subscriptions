@@ -1,0 +1,44 @@
+<!-- INVOICE LIST ITEMS -->
+<meta name="updatedBy" content="Kasun">
+<meta name="modifiedDate" content="07-03-2017">
+<meta name="version" content="6.0.1.0">
+<meta name="app" content="subscriptions">
+<meta name="view" content="list-view.html">
+
+<!-- INVOICE LIST ITEMS -->
+<div class="subscriptions-list-item" layout="row" layout-align="center center" flex ng-repeat="subscription in vm.subscriptions | filter:vm.search | filter: global.search"
+     md-ink-ripple
+     ng-click="switchInfoPane('show',subscription)"
+     ng-class="{'selected': vm.selectedSubscription === subscription}">
+
+  <div layout="row" layout-align="center center" flex>
+
+    <div class="info" flex layout="row">
+      <div class="invoiceMainInfo" layout="column" layout-align="center start">
+        <span>{{subscription.email_addr}}</span>
+        <div class="invoiceType">
+          {{subscription.code}}
+        </div>
+      </div>
+    </div>
+
+    <div flex class="client" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+      {{subscription.uom}}
+    </div>
+
+    <div flex class="client" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+      <span>{{subscription.lastBillDate | parseDate | date: 'dd'}} {{subscription.lastBillDate | parseDate | date: 'MMMM' | limitTo:3}} {{subscription.lastBillDate | parseDate | date: 'yyyy'}}</span>
+    </div>
+
+    <div flex class="client" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+      <span>{{subscription.endDate | parseDate | date: 'dd'}} {{subscription.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{subscription.endDate | parseDate | date: 'yyyy'}}</span>
+    </div>
+
+    <div class="status" layout="column" layout-align="center end" ng-class="{'flex-30':showInpageReadpane == true,'flex-10': showInpageReadpane == false}">
+      <span class="pill partial" layout="row" layout-align="center center" ng-class="{'stopped':subscription.status==='Stopped','active':subscription.status==='Active'}">{{subscription.status}}</span>
+    </div>
+  </div>
+</div>
+<!-- PRODUCT LIST ITEMS
+
+<!-- PRODUCT LIST ITEMS

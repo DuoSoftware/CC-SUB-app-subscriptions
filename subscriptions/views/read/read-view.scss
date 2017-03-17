@@ -1,0 +1,177 @@
+#inventory-read {
+  .ta-editor{
+    margin-top: 10px;
+  }
+  .full{
+    width: 100%;
+  }
+  .top{
+    margin-top: 0px;
+  }
+  &.compact {
+    padding: 0;
+    overflow: auto;
+
+    .invoice-read-container {
+
+      .card {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        padding: 50px!important;
+        overflow: hidden;
+        background: #FFFFFF;
+      }
+    }
+  }
+}
+
+/* PRINT STYLES */
+//@media print {
+//
+//  /* Invoice Specific Styles */
+//  #invoice-read {
+//
+//    &.compact {
+//
+//      .invoice-read-container {
+//        padding: 0;
+//
+//        .card {
+//          width: 100%;
+//          min-width: 0;
+//          background: none;
+//          padding: 0;
+//          box-shadow: none;
+//
+//          .inv-read-header {
+//
+//            .invoice-date {
+//              margin-bottom: 16pt;
+//            }
+//
+//            .issuer {
+//              padding-right: 0;
+//              margin-right: 0;
+//            }
+//          }
+//
+//          .inv-read-content {
+//
+//            .invoice-table {
+//              margin-top: 16pt;
+//
+//              thead {
+//
+//                tr {
+//
+//                  th {
+//                    font-size: 10pt;
+//                    max-width: 60pt;
+//
+//                    &:first-child {
+//                      padding-left: 0;
+//                    }
+//
+//                    &:last-child {
+//                      padding-right: 0;
+//                    }
+//                  }
+//                }
+//              }
+//
+//              tbody {
+//
+//                tr {
+//
+//                  td {
+//
+//                    &:first-child {
+//                      padding-left: 0;
+//                    }
+//
+//                    &:last-child {
+//                      padding-right: 0;
+//                    }
+//                  }
+//                }
+//              }
+//
+//              .title {
+//                font-size: 10pt;
+//              }
+//
+//              .detail {
+//                margin-top: 4pt;
+//                font-size: 9pt;
+//                max-width: none;
+//              }
+//            }
+//
+//            .invoice-table-footer {
+//              margin: 16pt 0;
+//
+//              tr {
+//
+//                td {
+//                  font-size: 13pt;
+//                  padding: 4pt 4pt;
+//
+//                  &:first-child {
+//                    text-align: left;
+//                    padding-left: 0;
+//                  }
+//
+//                  &:last-child {
+//                    padding-right: 0;
+//                  }
+//                }
+//
+//                &.discount {
+//
+//                  td {
+//                    padding-bottom: 16pt;
+//                  }
+//                }
+//
+//                &.total {
+//
+//                  td {
+//                    padding: 16pt 4pt 0 4pt;
+//                    font-size: 16pt;
+//
+//                    &:first-child {
+//                      padding-left: 0;
+//                    }
+//
+//                    &:last-child {
+//                      padding-right: 0;
+//                    }
+//                  }
+//                }
+//              }
+//            }
+//          }
+//
+//          .inv-read-footer {
+//
+//            .note {
+//              font-size: 10pt;
+//              margin-bottom: 8pt;
+//            }
+//
+//            .logo {
+//              font-size: 14pt;
+//              margin-right: 8pt;
+//            }
+//
+//            .small-note {
+//              font-size: 8pt;
+//              line-height: normal;
+//            }
+//          }
+//        }
+//      }
+//    }
+//  }
+//}

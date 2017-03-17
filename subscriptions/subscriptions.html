@@ -1,0 +1,336 @@
+<meta name="owner" content="GihanHerath">
+<meta name="modifiedBy" content="Kasun">
+<meta name="modifiedDate" content="15-02-2017">
+<meta name="version" content="6.0.1.0">
+<meta name="app" content="plans">
+<meta name="view" content="plans.html">
+
+<div id="subscriptions" class="page-layout carded left-sidenav" layout="row" ng-switch="vm.appInnerState">
+
+  <!-- TOP BACKGROUND -->
+  <div class="top-bg md-accent-bg"></div>
+  <!-- / TOP BACKGROUND -->
+
+  <!-- SIDENAV -->
+  <md-sidenav class="sidenav" md-is-locked-open="$mdMedia('gt-md')" md-component-id="main-sidenav"
+     ng-include="'app/main/subscriptions/sidenavs/main/main-sidenav.html'" ms-scroll ms-sidenav-helper>
+  </md-sidenav>
+  <!-- / SIDENAV -->
+
+  <!-- CENTER -->
+  <div ng-switch-when="default" class="center" layout="column" flex>
+    <!-- CONTENT HEADER -->
+    <div class="header" layout="row" layout-align="start center" ng-if="vm.activeInvoicePaneIndex === 0" ng-hide="inpageReadPaneEdit || editOff">
+
+      <div class="search-wrapper md-whiteframe-4dp" layout="row" layout-align="start center" flex>
+        <md-button class="md-icon-button sidenav-toggle" ng-click="vm.toggleSidenav('main-sidenav')" hide-gt-md
+                   aria-label="Toggle Sidenav">
+          <md-icon class="icon" md-font-icon="icon-menu"></md-icon>
+        </md-button>
+
+        <div class="search" flex layout="row" layout-align="start center">
+          <md-icon md-font-icon="icon-magnify" class="icon s24"></md-icon>
+          <input flex ng-model="vm.search" type="text" ng-keypress="searchKeyPress($event,vm.search,vm.search.length)" ng-change="loadByKeywordPlan(vm.search,3)" placeholder="Search for Plans">
+        </div>
+      </div>
+
+    </div>
+    <!-- / CONTENT HEADER -->
+
+    <div layout="row" style="height:100%">
+        <!-- CONTENT CARD -->
+        <div class="content-card" layout="column" ng-class="{'flex-30':showInpageReadpane}" ng-if="!inpageReadPaneEdit && !editOff" flex>
+
+          <!-- CONTENT TOOLBAR -->
+          <div class="toolbar list-header" layout="row" layout-align="space-between center" ng-if="vm.activePlanPaneIndex === 0">
+            <div layout="row" flex layout-align="start center" style="padding-left: 0px;">
+              <div class="info" flex layout="row" style="height: 40px">
+
+                <div class="productName" layout="column" layout-align="center start" flex>
+                  <div layout="row">
+                    <span layout="column" layout-align="center center">Plan</span>
+                    <div layout="column" layout="center center">
+                      <md-button ng-hide="showUser" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('user',true,'User')">
+                        <md-icon class="sort_btn_icon merged" md-font-icon="icon-chevron-up"></md-icon>
+                        <md-icon md-font-icon="icon-chevron-down"></md-icon>
+                      </md-button>
+                      <md-button ng-show="showUser" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('user',null,'User')">
+                        <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
+                        <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
+                      </md-button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="productName" layout="column" layout-align="center start" flex ng-if="!showInpageReadpane">
+                  <div layout="row">
+                    <span layout="column" layout-align="center center">Order Type</span>
+                    <div layout="column" layout="center center">
+                      <md-button ng-hide="showType" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('type',true,'Type')">
+                        <md-icon class="sort_btn_icon merged" md-font-icon="icon-chevron-up"></md-icon>
+                        <md-icon md-font-icon="icon-chevron-down"></md-icon>
+                      </md-button>
+                      <md-button ng-show="showType" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('type',null,'Type')">
+                        <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
+                        <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
+                      </md-button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="productName" layout="column" layout-align="center start" flex ng-if="!showInpageReadpane">
+                  <div layout="row">
+                    <span layout="column" layout-align="center center">Last billing date</span>
+                    <div layout="column" layout="center center">
+                      <md-button ng-hide="showLast" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('lastBillingDate',true,'Last')">
+                        <md-icon class="sort_btn_icon merged" md-font-icon="icon-chevron-up"></md-icon>
+                        <md-icon md-font-icon="icon-chevron-down"></md-icon>
+                      </md-button>
+                      <md-button ng-show="showLast" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('lastBillingDate',null,'Last')">
+                        <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
+                        <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
+                      </md-button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="productName" layout="column" layout-align="center start" flex ng-if="!showInpageReadpane">
+                  <div layout="row">
+                    <span layout="column" layout-align="center center">Next scheduled date</span>
+                    <div layout="column" layout="center center">
+                      <md-button ng-hide="showNext" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('nextScheculedDate',true,'Next')">
+                        <md-icon class="sort_btn_icon merged" md-font-icon="icon-chevron-up"></md-icon>
+                        <md-icon md-font-icon="icon-chevron-down"></md-icon>
+                      </md-button>
+                      <md-button ng-show="showNext" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('nextScheculedDate',null,'Next')">
+                        <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
+                        <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
+                      </md-button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="productName" layout="column" layout-align="center center" ng-class="{'flex-30':showInpageReadpane == true,'flex-10': showInpageReadpane == false}">
+                  <div layout="row" layout-align="center center" style="position:relative;right: -20px">
+                    <span layout="column" layout-align="center center">Status</span>
+                    <div layout="column" layout="center center">
+                      <md-button ng-hide="showState" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('status',true,'Status')">
+                        <md-icon class="sort_btn_icon merged" md-font-icon="icon-chevron-up"></md-icon>
+                        <md-icon md-font-icon="icon-chevron-down"></md-icon>
+                      </md-button>
+                      <md-button ng-show="showState" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('status',null,'Status')">
+                        <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
+                        <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
+                      </md-button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="toolbar" layout="row" layout-align="space-between center" ng-if="vm.activePlanPaneIndex === 1 && !editOff">
+            <md-button class="md-icon-button"
+                       ng-click="vm.closeReadPane()"
+                       aria-label="Back">
+              <md-icon md-font-icon="icon-keyboard-backspace"></md-icon>
+            </md-button>
+          </div>
+          <!-- / CONTENT TOOLBAR -->
+
+          <!-- CONTENT WRAPPER -->
+          <div class="content-wrapper" layout="row" flex>
+
+            <md-tabs md-selected="vm.activePlanPaneIndex" class="plan-tabs" md-dynamic-height="{{vm.dynamicHeight}}" flex>
+              <!-- INVOICE LIST PANE -->
+              <md-tab>
+                <md-tab-label>Plans List Pane</md-tab-label>
+                <md-tab-body>
+                  <div class="preloader" layout="row" layout-sm="column" layout-align="space-around" ng-hide="!isLoading">
+                    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                  </div>
+                  <div layout="row">
+                    <div flex class="content subscriptions-list-pane"
+                         ng-include="'app/main/subscriptions/views/list/list-view.html'" ms-scroll>
+                    </div>
+                  </div>
+
+                </md-tab-body>
+              </md-tab>
+              <!-- / INVOICE LIST PANE -->
+
+              <!-- INVOICE DISPLAY PANE -->
+              <md-tab>
+                <md-tab-label>Plans Display Pane</md-tab-label>
+                <md-tab-body>
+                  <div class="content plan-display-pane"
+                       ng-include="'app/main/subscriptions/views/read/read-view.html'" ms-scroll>
+                  </div>
+                </md-tab-body>
+              </md-tab>
+              <!-- / INVOICE DISPLAY PANE -->
+            </md-tabs>
+
+          </div>
+          <!-- / CONTENT WRAPPER -->
+
+        </div>
+
+        <div flex class="inpage-readpane" md-whiteframe="4dp" ng-if="showInpageReadpane">
+          <div layout="row" layout-align="space-between center" class="inpage-readpane-toolbar">
+            <h3 class="group-sub-head" layout="row" layout-align="start center">{{vm.selectedSubscription.user}}</h3>
+            <div layout="row">
+              <md-menu>
+                <md-button aria-label="More" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+                  <md-icon md-font-icon="icon-menu"></md-icon>
+                  <md-tooltip>Actions</md-tooltip>
+                </md-button>
+
+                <md-menu-content width="3">
+                  <md-menu-item>
+                    <md-button aria-label="Delete" ng-click="showStopSubscriptionConfirm($event,vm.selectedSubscription,'Immediate')" ng-disabled="vm.selectedSubscription.status == 'Stopped'">
+                      <md-icon md-font-icon="icon-stop"></md-icon>
+                      <span>Stop (Immediately)</span>
+                    </md-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button aria-label="Delete" ng-click="showStopSubscriptionConfirm($event,vm.selectedSubscription,'EOM')" ng-disabled="vm.selectedSubscription.status == 'Stopped'">
+                      <md-icon md-font-icon="icon-stop"></md-icon>
+                      <span>Stop (End of Circle)</span>
+                    </md-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button aria-label="Delete" ng-disabled="vm.selectedSubscription.status == 'Active'">
+                      <md-icon md-font-icon="icon-play"></md-icon>
+                      <span>Start</span>
+                    </md-button>
+                  </md-menu-item>
+                </md-menu-content>
+              </md-menu>
+              <md-button class="md-icon-button" ng-click="switchInfoPane('close',vm.selectedSubscription)">
+                <md-icon md-font-icon="icon-close"></md-icon>
+                <md-tooltip>Close</md-tooltip>
+              </md-button>
+            </div>
+          </div>
+
+          <md-content ms-scroll layout="column" class="inpage-readpane-body">
+            <div layout="row" layout-align="start center" style="height: 50px;padding: 0 20px 0 15px;position:absolute;right: 0">
+              <div layout="row" layout-align="end center" flex>
+                <span class="pill partial" layout="row" layout-align="center center" ng-class="{'expired':vm.selectedSubscription.orderStatus==='Stopped','active':vm.selectedSubscription.orderStatus==='Active'}">{{vm.selectedSubscription.orderStatus}}</span>
+              </div>
+            </div>
+            <md-tabs md-dynamic-height md-border-bottom>
+              <md-tab label="Subscription">
+                <md-content class="md-padding">
+                  <div layout="row" class="inpage-readpane" style="background: #ffffff">
+                    <div flex class="inpage-readpane-body">
+                      <div layout="row" layout-align="start center" class="detail-row">
+                        <span><b>Plan</b></span>
+                        <span>: {{vm.selectedSubscription.name}}</span>
+                      </div>
+                      <div layout="row" layout-align="start center" class="detail-row">
+                        <span><b>Plan type</b></span>
+                        <span>: {{vm.selectedSubscription.type}}</span>
+                      </div>
+                      <div layout="row" layout-align="start center" class="detail-row">
+                        <span><b>Last billing date</b></span>
+                        <span>: {{vm.selectedSubscription.lastBillDate | parseDate | date: 'dd'}} {{vm.selectedSubscription.lastBillDate | parseDate | date: 'MMMM' | limitTo:3}} {{vm.selectedSubscription.lastBillDate | parseDate | date: 'yyyy'}}</span>
+                      </div>
+                      <div layout="row" layout-align="start center" class="detail-row">
+                        <span><b>Next scheduled date</b></span>
+                        <span>: {{vm.selectedSubscription.endDate | parseDate | date: 'dd'}} {{vm.selectedSubscription.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{vm.selectedSubscription.endDate | parseDate | date: 'yyyy'}}</span>
+                      </div>
+                      <div ng-if="showMoreUserInfo">
+                      </div>
+                      <div layout="row" layout-align="end end" class="more-chevron">
+                        <div layout="row" layout-align="start center" style="background: #ffffff">
+                          <md-button class="md-icon-button" ng-click="contentExpandHandler()"><md-icon md-font-icon="icon-chevron-down" ng-if="!showMoreUserInfo"></md-icon><md-icon md-font-icon="icon-chevron-up" ng-if="showMoreUserInfo"></md-icon> </md-button><label ng-if="showMoreUserInfo">Less</label><label ng-if="!showMoreUserInfo">More</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="plan-portion" flex layout="row" layout-align="center center">
+                      <div layout="row" style="width: 330px">
+                        <md-card layout-align="center center" class="plan-card" style="width: 100%">
+                          <md-card-title flex layout="column">
+                            <md-card-title-text>
+                              <h3>{{vm.selectedSubscription.name}}</h3>
+                            </md-card-title-text>
+                          </md-card-title>
+                          <div class="plan-name" layout="row" layout-align="center center" flex>
+                            <div>{{vm.selectedSubscription.unitPrice| isoCurrency:vm.selectedSubscription.currency :decimalPoint}}
+                              <!--<span >/ {{vm.selectedPlan.billEvery}}</span>-->
+                              <span >/ UNIT</span>
+                            </div>
+                          </div>
+
+                          <md-card-content flex style="background: #ffffff;">
+
+                            <!--<md-divider></md-divider>-->
+
+                            <div layout="column" layout-align="center center" class="features-wrap">
+                              <span class="features">{{vm.selectedSubscription.description}}</span>
+                              <span class="features">{{vm.selectedSubscription.billingInterval}} /{{vm.selectedSubscription.billEvery}}</span>
+                              <span class="features">{{vm.selectedSubscription.billingCycle==-1?"Auto Renew":vm.selectedSubscription.billingCycle}} Billing Cycles</span>
+                              <span class="features">{{vm.selectedSubscription.trailDays}} TrailDays</span>
+                              <span class="features">{{vm.selectedSubscription.status}}</span>
+                            </div>
+                          </md-card-content>
+                        </md-card>
+                      </div>
+                    </div>
+                  </div>
+                </md-content>
+              </md-tab>
+              <md-tab label="Subscription history">
+                <md-card flex class="input-block-gen" style="height: 81%;">
+                  <md-card-title layout="row" layout-align="space-between center" style="max-height: 50px;">
+                    <div layout="row" layout-align="start center">
+                      <md-icon md-font-icon="icon-credit-card-multiple"></md-icon> <h3>Subscription history</h3>
+                    </div>
+                  </md-card-title>
+                  <div class="list-header" layout="row">
+                    <div flex="10" layout-align="center start">INDEX</div>
+                    <div flex="30" layout-align="center start">DATE</div>
+                    <div flex layout-align="start center" layout="row"><span>MODULE</span></div>
+                    <div flex class="text-right" layout-align="end center">REMARK</div>
+                    <!--<div flex="10"></div>-->
+                    <!--<div flex="10" layout="row" layout-align="end center">REMARK</div>-->
+                  </div>
+                  <md-card-content style="padding: 0">
+                    <div>
+                      <div layout="row" flex class="payment-history-row" ng-repeat="history in auditTrailList">
+
+                        <div class="prodCost" flex="10" layout="row" layout-align="start center">
+                          <span>{{$index}}</span>
+                        </div>
+                        <div class="prodCost" flex="30" layout="row" layout-align="start center">
+                          <span>{{history.createdDate | parseDate | date: 'dd'}} {{history.createdDate | parseDate | date: 'MMMM' | limitTo:3}} {{history.createdDate | parseDate | date: 'yyyy'}}</span>
+                        </div>
+                        <div class="prodCost" flex layout="row" layout-align="start center">
+                          <span class="text-truncate">{{history.module}}</span>
+                        </div>
+                        <div class="prodCost" flex layout="row" layout-align="end center">
+                          <span> {{history.remark}}</span>
+                        </div>
+                        <!--<div flex="10"></div>-->
+                        <!--<div class="prodCost" flex="10" layout="row" layout-align="start center">-->
+                          <!--<span flex class="text-right"> {{history.remark }}</span>-->
+                        <!--</div>-->
+                      </div>
+                    </div>
+                  </md-card-content>
+                </md-card>
+              </md-tab>
+            </md-tabs>
+          </md-content>
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+  </div>
+  <!-- / CENTER -->
+
+</div>
