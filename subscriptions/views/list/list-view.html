@@ -15,14 +15,14 @@
 
     <div class="info" flex layout="row">
       <div class="invoiceMainInfo" layout="column" layout-align="center start">
-        <span>{{subscription.email_addr}}</span>
+        <span>{{subscription.first_name}}</span>
         <!--<div class="invoiceType">-->
           <!--{{subscription.code}}-->
         <!--</div>-->
       </div>
     </div>
 
-    <div flex="10" class="client" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+    <div flex="15" class="client" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
       {{subscription.code}}
     </div>
 
