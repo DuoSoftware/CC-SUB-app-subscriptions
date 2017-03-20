@@ -48,7 +48,7 @@
 
                 <div class="productName" layout="column" layout-align="center start" flex>
                   <div layout="row">
-                    <span layout="column" layout-align="center center">Plan</span>
+                    <span layout="column" layout-align="center center">Customer</span>
                     <div layout="column" layout="center center">
                       <md-button ng-hide="showUser" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('user',true,'User')">
                         <md-icon class="sort_btn_icon merged" md-font-icon="icon-chevron-up"></md-icon>
@@ -188,19 +188,19 @@
 
                 <md-menu-content width="3">
                   <md-menu-item>
-                    <md-button aria-label="Delete" ng-click="showStopSubscriptionConfirm($event,vm.selectedSubscription,'Immediate')" ng-disabled="vm.selectedSubscription.status == 'Stopped'">
+                    <md-button aria-label="Delete" ng-click="showStopSubscriptionConfirm($event,vm.selectedSubscription,'Immediate')" ng-disabled="vm.selectedSubscription.orderStatus == 'Stopped'">
                       <md-icon md-font-icon="icon-stop"></md-icon>
                       <span>Stop (Immediately)</span>
                     </md-button>
                   </md-menu-item>
                   <md-menu-item>
-                    <md-button aria-label="Delete" ng-click="showStopSubscriptionConfirm($event,vm.selectedSubscription,'EOM')" ng-disabled="vm.selectedSubscription.status == 'Stopped'">
+                    <md-button aria-label="Delete" ng-click="showStopSubscriptionConfirm($event,vm.selectedSubscription,'EOM')" ng-disabled="vm.selectedSubscription.orderStatus == 'Stopped'">
                       <md-icon md-font-icon="icon-stop"></md-icon>
                       <span>Stop (End of Circle)</span>
                     </md-button>
                   </md-menu-item>
                   <md-menu-item>
-                    <md-button aria-label="Delete" ng-disabled="vm.selectedSubscription.status == 'Active'">
+                    <md-button aria-label="Delete" ng-disabled="vm.selectedSubscription.orderStatus == 'Active'">
                       <md-icon md-font-icon="icon-play"></md-icon>
                       <span>Start</span>
                     </md-button>
@@ -283,45 +283,90 @@
                   </div>
                 </md-content>
               </md-tab>
-              <md-tab label="Subscription history">
-                <md-card flex class="input-block-gen" style="height: 81%;">
-                  <md-card-title layout="row" layout-align="space-between center" style="max-height: 50px;">
-                    <div layout="row" layout-align="start center">
-                      <md-icon md-font-icon="icon-credit-card-multiple"></md-icon> <h3>Subscription history</h3>
-                    </div>
-                  </md-card-title>
-                  <div class="list-header" layout="row">
-                    <div flex="10" layout-align="center start">INDEX</div>
-                    <div flex="30" layout-align="center start">DATE</div>
-                    <div flex layout-align="start center" layout="row"><span>MODULE</span></div>
-                    <div flex class="text-right" layout-align="end center">REMARK</div>
-                    <!--<div flex="10"></div>-->
-                    <!--<div flex="10" layout="row" layout-align="end center">REMARK</div>-->
-                  </div>
-                  <md-card-content style="padding: 0">
-                    <div>
-                      <div layout="row" flex class="payment-history-row" ng-repeat="history in auditTrailList">
+              <md-tab label="Subscription history" md-no-scroll>
 
-                        <div class="prodCost" flex="10" layout="row" layout-align="start center">
-                          <span>{{$index}}</span>
-                        </div>
-                        <div class="prodCost" flex="30" layout="row" layout-align="start center">
-                          <span>{{history.createdDate | parseDate | date: 'dd'}} {{history.createdDate | parseDate | date: 'MMMM' | limitTo:3}} {{history.createdDate | parseDate | date: 'yyyy'}}</span>
-                        </div>
-                        <div class="prodCost" flex layout="row" layout-align="start center">
-                          <span class="text-truncate">{{history.module}}</span>
-                        </div>
-                        <div class="prodCost" flex layout="row" layout-align="end center">
-                          <span> {{history.remark}}</span>
-                        </div>
-                        <!--<div flex="10"></div>-->
-                        <!--<div class="prodCost" flex="10" layout="row" layout-align="start center">-->
-                          <!--<span flex class="text-right"> {{history.remark }}</span>-->
-                        <!--</div>-->
+                <md-card class="carded-list-wrap" md-whiteframe="2dp" style="position:relative;">
+                  <md-card-header>
+                    <md-card-header-text layout="row">
+                      <span flex="10" layout-align="center start">Index</span>
+                      <span flex="20" layout-align="center start">Date</span>
+                      <span flex="20" layout-align="start center" layout="row"><span>Module</span></span>
+                      <span flex layout-align="start center" layout="row">Remark</span>
+                    </md-card-header-text>
+                  </md-card-header>
+                  <md-divider></md-divider>
+                  <!--<div class="preloader" layout="row" layout-sm="column" layout-align="space-around" ng-hide="moreAuditTrailLoaded">-->
+                    <!--<md-progress-circular md-mode="indeterminate"></md-progress-circular>-->
+                  <!--</div>-->
+                  <div class="page-load-cover" ng-hide="moreAuditTrailLoaded"><md-progress-circular></md-progress-circular></div>
+                  <md-content ms-scroll style="position:relative;height: auto;background-color: #ffffff;max-height: 330px;min-height: 330px" ng-class="{'page-setup-cover': moreAuditTrailLoaded==false}">
+                    <div layout="row" flex class="payment-history-row" ng-repeat="history in auditTrailList" ng-hide="noAuditTrailLabel">
+                      <div class="prodCost" flex="10" layout="row" layout-align="start center">
+                        <span>{{$index+1}}</span>
+                      </div>
+                      <div class="prodCost" flex="20" layout="row" layout-align="start center">
+                        <span>{{history.createdDate | parseDate | date: 'dd'}} {{history.createdDate | parseDate | date: 'MMMM' | limitTo:3}} {{history.createdDate | parseDate | date: 'yyyy'}}</span>
+                      </div>
+                      <div class="prodCost" flex="20" layout="row" layout-align="start center">
+                        <span class="text-truncate">{{history.module}}</span>
+                      </div>
+                      <div class="prodCost" flex layout="row" layout-align="start center">
+                        <span> {{history.remark}}</span>
                       </div>
                     </div>
-                  </md-card-content>
+                    <div class="invoice-list-item" ng-show="vm.isAuditTrailLoaded" ng-hide="!moreAuditTrailLoaded" layout="row" layout-align="center center">
+                      <md-button ng-click="searchmoreAuditTrails(vm.selectedSubscription)" class="md-primary" style="font-size: 12px;font-weight: 400"><md-icon md-font-icon="icon-magnify"></md-icon> More</md-button>
+                    </div>
+                    <div ng-show="noAuditTrailLabel" layout="column" layout-align="center center" style="height: 100%;">
+                      <span class="no-sched"><md-icon md-font-icon="icon-information-outline"></md-icon> No Audit Trails for this User!</span>
+                    </div>
+                  </md-content>
                 </md-card>
+                <!--<md-card flex class="input-block-gen" style="height: 81%;">-->
+                  <!--<md-card-title layout="row" layout-align="space-between center" style="max-height: 50px;">-->
+                    <!--<div layout="row" layout-align="start center">-->
+                      <!--<md-icon md-font-icon="icon-credit-card-multiple"></md-icon> <h3>Subscription history</h3>-->
+                    <!--</div>-->
+                  <!--</md-card-title>-->
+                  <!--<div class="list-header" layout="row">-->
+                    <!--<div flex="10" layout-align="center start">Index</div>-->
+                    <!--<div flex="20" layout-align="center start">Date</div>-->
+                    <!--<div flex="20" layout-align="start center" layout="row"><span>Module</span></div>-->
+                    <!--<div flex layout-align="start center" layout="row">Remark</div>-->
+                    <!--&lt;!&ndash;<div flex="10"></div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div flex="10" layout="row" layout-align="end center">REMARK</div>&ndash;&gt;-->
+                  <!--</div>-->
+                  <!--<md-card-content style="padding: 0;max-height: 100%" ms-scroll>-->
+                    <!--<div>-->
+                      <!--<div class="preloader" layout="row" layout-sm="column" layout-align="space-around" ng-hide="moreAuditTrailLoaded">-->
+                        <!--<md-progress-circular md-mode="indeterminate"></md-progress-circular>-->
+                      <!--</div>-->
+                      <!--<div layout="row" flex class="payment-history-row" ng-repeat="history in auditTrailList" ng-hide="noAuditTrailLabel">-->
+                        <!--<div class="prodCost" flex="10" layout="row" layout-align="start center">-->
+                          <!--<span>{{$index+1}}</span>-->
+                        <!--</div>-->
+                        <!--<div class="prodCost" flex="20" layout="row" layout-align="start center">-->
+                          <!--<span>{{history.createdDate | parseDate | date: 'dd'}} {{history.createdDate | parseDate | date: 'MMMM' | limitTo:3}} {{history.createdDate | parseDate | date: 'yyyy'}}</span>-->
+                        <!--</div>-->
+                        <!--<div class="prodCost" flex="20" layout="row" layout-align="start center">-->
+                          <!--<span class="text-truncate">{{history.module}}</span>-->
+                        <!--</div>-->
+                        <!--<div class="prodCost" flex layout="row" layout-align="start center">-->
+                          <!--<span> {{history.remark}}</span>-->
+                        <!--</div>-->
+                      <!--</div>-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash;<div layout="column" layout-align="center center" class="preloader-dot-auto" ng-hide="moreAuditTrailLoaded" >&ndash;&gt;-->
+                      <!--&lt;!&ndash;<img src="assets/images/142.gif" alt=""/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--<div class="invoice-list-item" ng-show="vm.isAuditTrailLoaded" ng-hide="!moreAuditTrailLoaded" layout="row" layout-align="center center">-->
+                      <!--<md-button ng-click="searchmoreAuditTrails(vm.selectedSubscription)" class="md-primary" style="font-size: 12px;font-weight: 400"><md-icon md-font-icon="icon-magnify"></md-icon> More</md-button>-->
+                    <!--</div>-->
+                    <!--<div ng-show="noAuditTrailLabel" layout="column" layout-align="center center" style="height: 100%;">-->
+                      <!--<span class="no-sched"><md-icon md-font-icon="icon-information-outline"></md-icon> No Audit Trails for this User!</span>-->
+                    <!--</div>-->
+                  <!--</md-card-content>-->
+                <!--</md-card>-->
               </md-tab>
             </md-tabs>
           </md-content>

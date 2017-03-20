@@ -293,6 +293,37 @@
     left: 45%;
     z-index: 9999;
   }
+  .page-load-cover{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    //background: #fff;
+    z-index: 3;
+    opacity: 1;
+    md-progress-circular{
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      margin: auto;
+    }
+  }
+  .page-setup-cover{
+    pointer-events: none;
+    //height: 100%;
+    background: rgba(0,0,0,0.2);
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -o-filter: blur(5px);
+    -ms-filter: blur(5px);
+    filter: blur(5px);
+    -webkit-transition: filter 0.5s;
+    -moz-transition: filter 0.5s;
+    -ms-transition: filter 0.5s;
+    -o-transition: filter 0.5s;
+    transition: filter 0.5s;
+  }
   .rel{
     position: relative;
   }
