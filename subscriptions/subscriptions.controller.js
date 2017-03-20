@@ -189,6 +189,27 @@
         vm.selectedSubscription.orderStatus=subscription.status;
         vm.selectedSubscription.guAccountId=subscription.guAccountId;
         vm.selectedSubscription.guOrderId=subscription.guOrderId;
+
+        $charge.tax().getTaxGrpByIDs(vm.selectedSubscription.taxID).success(function(data) {
+          var taxid=data.groupDetail[0].taxid;
+          $charge.tax().getTaxByIDs(taxid).success(function(data) {
+            //vm.selectedPlan = plan;
+            vm.selectedSubscription.taxType = data[0].amounttype;
+            vm.selectedSubscription.taxAmount = data[0].amount;
+
+          }).error(function(data) {
+            console.log(data);
+            //vm.selectedPlan = plan;
+            vm.selectedSubscription.taxType = "-1";
+            vm.selectedSubscription.taxAmount = 0;
+          })
+
+        }).error(function(data) {
+          console.log(data);
+          //vm.selectedPlan = plan;
+          vm.selectedSubscription.taxType = "-1";
+          vm.selectedSubscription.taxAmount = 0;
+        })
       }).error(function(data){
         //
         vm.selectedSubscription.startDate=subscription.startDate;
@@ -198,6 +219,9 @@
         vm.selectedSubscription.orderStatus=subscription.status;
         vm.selectedSubscription.guAccountId=subscription.guAccountId;
         vm.selectedSubscription.guOrderId=subscription.guOrderId;
+
+        vm.selectedSubscription.taxType = "-1";
+        vm.selectedSubscription.taxAmount = 0;
       })
       //vm.selectedSubscription = subscription;
     };
@@ -266,6 +290,7 @@
           $scope.showLast = false;
           $scope.showNext = false;
           $scope.showState = false;
+          $scope.showState = false;
         }
         if(property=='Type')
         {
@@ -273,6 +298,7 @@
           $scope.showType = status;
           $scope.showLast = false;
           $scope.showNext = false;
+          $scope.showState = false;
           $scope.showState = false;
         }
         if(property=='Last')
@@ -282,13 +308,24 @@
           $scope.showLast = status;
           $scope.showNext = false;
           $scope.showState = false;
+          $scope.showState = false;
         }
         if(property=='Next')
         {
           $scope.showUser = false;
           $scope.showType = false;
           $scope.showLast = false;
+          $scope.showState = false;
           $scope.showNext = status;
+          $scope.showState = false;
+        }
+        if(property=='Code')
+        {
+          $scope.showUser = false;
+          $scope.showType = false;
+          $scope.showLast = false;
+          $scope.Code = status;
+          $scope.showNext = false;
           $scope.showState = false;
         }
         if(property=='Status')
@@ -297,6 +334,7 @@
           $scope.showType = false;
           $scope.showLast = false;
           $scope.showNext = false;
+          $scope.showState = false;
           $scope.showState = status;
         }
       }

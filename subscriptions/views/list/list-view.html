@@ -16,21 +16,25 @@
     <div class="info" flex layout="row">
       <div class="invoiceMainInfo" layout="column" layout-align="center start">
         <span>{{subscription.email_addr}}</span>
-        <div class="invoiceType">
-          {{subscription.code}}
-        </div>
+        <!--<div class="invoiceType">-->
+          <!--{{subscription.code}}-->
+        <!--</div>-->
       </div>
     </div>
 
-    <div flex class="client" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+    <div flex="10" class="client" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+      {{subscription.code}}
+    </div>
+
+    <div flex="15" class="client" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
       {{subscription.uom}}
     </div>
 
-    <div flex class="client" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+    <div flex="20" class="client" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
       <span>{{subscription.lastBillDate | parseDate | date: 'dd'}} {{subscription.lastBillDate | parseDate | date: 'MMMM' | limitTo:3}} {{subscription.lastBillDate | parseDate | date: 'yyyy'}}</span>
     </div>
 
-    <div flex class="client" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+    <div flex="20" class="client" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
       <span>{{subscription.endDate | parseDate | date: 'dd'}} {{subscription.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{subscription.endDate | parseDate | date: 'yyyy'}}</span>
     </div>
 

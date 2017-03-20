@@ -62,7 +62,23 @@
                   </div>
                 </div>
 
-                <div class="productName" layout="column" layout-align="center start" flex ng-if="!showInpageReadpane">
+                <div class="productName" layout="column" layout-align="center start" flex="10" ng-if="!showInpageReadpane">
+                  <div layout="row">
+                    <span layout="column" layout-align="center center">Plan</span>
+                    <div layout="column" layout="center center">
+                      <md-button ng-hide="showCode" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('code',true,'Code')">
+                        <md-icon class="sort_btn_icon merged" md-font-icon="icon-chevron-up"></md-icon>
+                        <md-icon md-font-icon="icon-chevron-down"></md-icon>
+                      </md-button>
+                      <md-button ng-show="showCode" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('code',null,'Code')">
+                        <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
+                        <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
+                      </md-button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="productName" layout="column" layout-align="center start" flex="15" ng-if="!showInpageReadpane">
                   <div layout="row">
                     <span layout="column" layout-align="center center">Order Type</span>
                     <div layout="column" layout="center center">
@@ -78,7 +94,7 @@
                   </div>
                 </div>
 
-                <div class="productName" layout="column" layout-align="center start" flex ng-if="!showInpageReadpane">
+                <div class="productName" layout="column" layout-align="center start" flex="20" ng-if="!showInpageReadpane">
                   <div layout="row">
                     <span layout="column" layout-align="center center">Last billing date</span>
                     <div layout="column" layout="center center">
@@ -94,7 +110,7 @@
                   </div>
                 </div>
 
-                <div class="productName" layout="column" layout-align="center start" flex ng-if="!showInpageReadpane">
+                <div class="productName" layout="column" layout-align="center start" flex="20" ng-if="!showInpageReadpane">
                   <div layout="row">
                     <span layout="column" layout-align="center center">Next scheduled date</span>
                     <div layout="column" layout="center center">
@@ -272,6 +288,8 @@
                             <div layout="column" layout-align="center center" class="features-wrap">
                               <span class="features">{{vm.selectedSubscription.description}}</span>
                               <span class="features">{{vm.selectedSubscription.billingInterval}} /{{vm.selectedSubscription.billEvery}}</span>
+                              <span class="features" ng-if="vm.selectedSubscription.taxType=='0'">{{vm.selectedSubscription.taxAmount}}% TAX</span>
+                              <span class="features" ng-if="vm.selectedSubscription.taxType=='1'">{{vm.selectedSubscription.taxAmount| isoCurrency:vm.selectedSubscription.currency :decimalPoint}} TAX</span>
                               <span class="features">{{vm.selectedSubscription.billingCycle==-1?"Auto Renew":vm.selectedSubscription.billingCycle}} Billing Cycles</span>
                               <span class="features">{{vm.selectedSubscription.trailDays}} TrailDays</span>
                               <span class="features">{{vm.selectedSubscription.status}}</span>
