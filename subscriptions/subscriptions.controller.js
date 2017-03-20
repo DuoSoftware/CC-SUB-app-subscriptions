@@ -187,6 +187,8 @@
         vm.selectedSubscription.lastBillDate=subscription.lastBillDate;
         vm.selectedSubscription.email_addr=subscription.email_addr;
         vm.selectedSubscription.orderStatus=subscription.status;
+        vm.selectedSubscription.guAccountId=subscription.guAccountId;
+        vm.selectedSubscription.guOrderId=subscription.guOrderId;
       }).error(function(data){
         //
         vm.selectedSubscription.startDate=subscription.startDate;
@@ -194,6 +196,8 @@
         vm.selectedSubscription.lastBillDate=subscription.lastBillDate;
         vm.selectedSubscription.email_addr=subscription.email_addr;
         vm.selectedSubscription.orderStatus=subscription.status;
+        vm.selectedSubscription.guAccountId=subscription.guAccountId;
+        vm.selectedSubscription.guOrderId=subscription.guOrderId;
       })
       //vm.selectedSubscription = subscription;
     };
@@ -232,10 +236,10 @@
       }).error(function(data)
       {
         console.log(data);
-        if(data==204)
-        {
-          $scope.noAuditTrailLabel=true;
-        }
+        //if(data.error=="No found!")
+        //{
+        //  $scope.noAuditTrailLabel=true;
+        //}
         $scope.moreAuditTrailLoaded = true;
         vm.isAuditTrailLoaded = false;
         //$scope.auditTrailList=[];
@@ -313,15 +317,17 @@
       if(state=='show'){
         $scope.showInpageReadpane = true;
         $scope.$watch(function () {
-          //vm.selectedSubscription = subscription;
+          vm.selectedListItem = subscription;
         });
         selectSubscription(subscription);
+        skipAuditTrails=0;
+        $scope.auditTrailList=[];
         $scope.getAuditTrailDetails(subscription);
       }else if(state=='close'){
         if($scope.inpageReadPaneEdit){
           $scope.cancelEdit();
           $scope.$watch(function () {
-            //vm.selectedSubscription = subscription;
+            vm.selectedListItem = subscription;
           });
         }else{
           $scope.showInpageReadpane = false;

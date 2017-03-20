@@ -9,7 +9,7 @@
 <div class="subscriptions-list-item" layout="row" layout-align="center center" flex ng-repeat="subscription in vm.subscriptions | filter:vm.search | filter: global.search"
      md-ink-ripple
      ng-click="switchInfoPane('show',subscription)"
-     ng-class="{'selected': vm.selectedSubscription === subscription}">
+     ng-class="{'selected': vm.selectedListItem === subscription}">
 
   <div layout="row" layout-align="center center" flex>
 
