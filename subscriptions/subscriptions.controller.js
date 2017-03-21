@@ -185,7 +185,7 @@
         vm.selectedSubscription.startDate=subscription.startDate;
         vm.selectedSubscription.endDate=subscription.endDate;
         vm.selectedSubscription.lastBillDate=subscription.lastBillDate;
-        vm.selectedSubscription.email_addr=subscription.email_addr;
+        //vm.selectedSubscription.email_addr=subscription.email_addr;
         vm.selectedSubscription.orderStatus=subscription.status;
         vm.selectedSubscription.guAccountId=subscription.guAccountId;
         vm.selectedSubscription.guOrderId=subscription.guOrderId;
@@ -204,6 +204,16 @@
             vm.selectedSubscription.taxAmount = 0;
           })
 
+          $charge.profile().getByID(subscription.guAccountId).success(function(data) {
+
+            vm.selectedSubscription.email_addr=data[0].email_addr;
+
+          }).error(function(data) {
+            console.log(data);
+            vm.selectedSubscription.email_addr="";
+
+          })
+
         }).error(function(data) {
           console.log(data);
           //vm.selectedPlan = plan;
@@ -215,7 +225,7 @@
         vm.selectedSubscription.startDate=subscription.startDate;
         vm.selectedSubscription.endDate=subscription.endDate;
         vm.selectedSubscription.lastBillDate=subscription.lastBillDate;
-        vm.selectedSubscription.email_addr=subscription.email_addr;
+        vm.selectedSubscription.email_addr="";
         vm.selectedSubscription.orderStatus=subscription.status;
         vm.selectedSubscription.guAccountId=subscription.guAccountId;
         vm.selectedSubscription.guOrderId=subscription.guOrderId;
