@@ -204,7 +204,14 @@
             vm.selectedSubscription.taxAmount = 0;
           })
 
-          $charge.profile().getByID(subscription.guAccountId).success(function(data) {
+        }).error(function(data) {
+          console.log(data);
+          //vm.selectedPlan = plan;
+          vm.selectedSubscription.taxType = "-1";
+          vm.selectedSubscription.taxAmount = 0;
+        })
+
+        $charge.profile().getByID(subscription.guAccountId).success(function(data) {
 
             vm.selectedSubscription.email_addr=data[0].email_addr;
 
@@ -213,13 +220,6 @@
             vm.selectedSubscription.email_addr="";
 
           })
-
-        }).error(function(data) {
-          console.log(data);
-          //vm.selectedPlan = plan;
-          vm.selectedSubscription.taxType = "-1";
-          vm.selectedSubscription.taxAmount = 0;
-        })
       }).error(function(data){
         //
         vm.selectedSubscription.startDate=subscription.startDate;
