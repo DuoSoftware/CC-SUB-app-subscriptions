@@ -1,8 +1,8 @@
 ////////////////////////////////
 // App : Subscription
 // Owner  : Gihan Herath
-// Last changed date : 2017/03/21
-// Version : 6.1.0.2
+// Last changed date : 2017/04/05
+// Version : 6.1.0.3
 // Modified By : GihanHerath
 /////////////////////////////////
 
@@ -43,8 +43,8 @@
         bodyClass: 'subscriptions'
       });
 
-    //Api
-    msApiProvider.register('cc_invoice.invoices', ['app/data/cc_invoice/invoices.json']);
+    // //Api
+    // msApiProvider.register('cc_invoice.invoices', ['app/data/cc_invoice/invoices.json']);
 
     // Navigation
 
