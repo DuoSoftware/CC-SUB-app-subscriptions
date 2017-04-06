@@ -243,11 +243,12 @@
                             <!--<md-button class="md-icon-button" ng-click="getTenantPaymentHistory()"><md-icon md-font-icon="icon-refresh"></md-icon><md-tooltip>Refresh list</md-tooltip></md-button>-->
                         </md-card-title>
                         <div class="list-header" layout="row">
-                            <!--<div flex="20" layout-align="start center">Plan</div>-->
-                            <div flex layout-align="start center">Start</div>
-                            <div flex="20">User Name</div>
+                            <div flex="20" layout-align="start center">Plan</div>
+                            <div flex="20">Start</div>
+                            <div flex="20">End</div>
+                            <!--<div flex="20">User Name</div>-->
                             <div flex="20">Occurences</div>
-                            <div flex="20">Billing Cycles</div>
+                            <!--<div flex="20">Billing Cycles</div>-->
                             <div flex="20">Amount</div>
                             <div flex="10" layout="row" layout-align="start center">Status</div>
                         </div>
@@ -258,15 +259,18 @@
                                 </div>
                                 <div layout="row" flex class="list-item" ng-repeat="history in vm.paymentHistoryList" ng-hide="isTenantPaymentHistoryClicked">
 
-                                    <!--<div flex="20" layout="row" layout-align="start center">-->
-                                        <!--<span>{{history.code}}</span>-->
-                                    <!--</div>-->
-                                    <div flex layout="row" layout-align="start center">
+                                    <div flex="20" layout="row" layout-align="start center">
+                                        <span>{{history.code}}</span>
+                                    </div>
+                                    <div flex="20">
                                         <span> {{history.startDate | date:'yyyy.MM.dd'}}</span>
                                     </div>
-                                    <div flex="20">{{history.first_name}} {{history.last_name}}</div>
+                                    <div flex="20">
+                                      <span> {{history.endDate | date:'yyyy.MM.dd'}}</span>
+                                    </div>
+                                    <!--<div flex="20">{{history.first_name}} {{history.last_name}}</div>-->
                                     <div flex="20">{{history.occurences}}</div>
-                                    <div flex="20">{{history.billingCycles==-1?"Auto Renew":history.billingCycles}}</div>
+                                    <!--<div flex="20">{{history.billingCycles==-1?"Auto Renew":history.billingCycles}}</div>-->
                                     <div flex="20">{{history.amount}}</div>
                                     <div flex="10" layout="row" layout-align="start center">
                                         <span flex>{{history.status}}</span>
@@ -311,16 +315,16 @@
                                             <!--<span>{{history.remark}}</span>-->
                                         <!--</div>-->
                                     <!--</div>-->
-                                    <!--&lt;!&ndash;<div layout="column" layout-align="center center" class="preloader-dot-auto" ng-show="item.isDialogLoading || isDialogClosed" >&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<img src="assets/images/142.gif" alt=""/>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                    <!--<!--<div layout="column" layout-align="center center" class="preloader-dot-auto" ng-show="item.isDialogLoading || isDialogClosed" >-->
+                                    <!--<!--<img src="assets/images/142.gif" alt=""/>-->
+                                    <!--<!--</div>-->
                                 <!--</md-card>-->
                             <!--</div>-->
                             <!--<div flex="5"></div>-->
 
                         <!--</div>-->
 
-                        <!--&lt;!&ndash;load more button&ndash;&gt;-->
+                        <!--<!--load more button-->
                         <!--<div layout="row" layout-align="center center" class="tl-load-more" ng-show="vm.isAuditTrailLoaded">-->
                             <!--<md-button class="md-icon-button" ng-click="searchmoreAuditTrails(vm.selectedSubscription)">-->
                                 <!--<md-icon md-font-icon="icon-plus-circle md-accent"></md-icon>-->
@@ -341,9 +345,9 @@
                             <!--</md-card-header-text>-->
                         <!--</md-card-header>-->
                         <!--<md-divider></md-divider>-->
-                        <!--&lt;!&ndash;<div class="preloader" layout="row" layout-sm="column" layout-align="space-around" ng-hide="moreAuditTrailLoaded">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<md-progress-circular md-mode="indeterminate"></md-progress-circular>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--<!--<div class="preloader" layout="row" layout-sm="column" layout-align="space-around" ng-hide="moreAuditTrailLoaded">-->
+                        <!--<!--<md-progress-circular md-mode="indeterminate"></md-progress-circular>-->
+                        <!--<!--</div>-->
                         <!--<div class="main-list-preloader animate-fade-in-out" layout="row" layout-sm="column" layout-align="space-around" ng-hide="moreAuditTrailLoaded">-->
                             <!--<md-progress-circular md-mode="indeterminate"></md-progress-circular>-->
                         <!--</div>-->
@@ -390,51 +394,51 @@
                     <!--<md-tab label="Subscription history" md-no-scroll>-->
 
                     <!---->
-                    <!--&lt;!&ndash;<md-card flex class="input-block-gen" style="height: 81%;">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<md-card-title layout="row" layout-align="space-between center" style="max-height: 50px;">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div layout="row" layout-align="start center">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<md-icon md-font-icon="icon-credit-card-multiple"></md-icon> <h3>Subscription history</h3>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</md-card-title>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div class="list-header" layout="row">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div flex="10" layout-align="center start">Index</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div flex="20" layout-align="center start">Date</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div flex="20" layout-align="start center" layout="row"><span>Module</span></div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div flex layout-align="start center" layout="row">Remark</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;&lt;!&ndash;<div flex="10"></div>&ndash;&gt;&ndash;&gt;-->
-                    <!--&lt;!&ndash;&lt;!&ndash;<div flex="10" layout="row" layout-align="end center">REMARK</div>&ndash;&gt;&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<md-card-content style="padding: 0;max-height: 100%" ms-scroll>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div class="preloader" layout="row" layout-sm="column" layout-align="space-around" ng-hide="moreAuditTrailLoaded">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<md-progress-circular md-mode="indeterminate"></md-progress-circular>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div layout="row" flex class="payment-history-row" ng-repeat="history in auditTrailList" ng-hide="noAuditTrailLabel">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div class="prodCost" flex="10" layout="row" layout-align="start center">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<span>{{$index+1}}</span>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div class="prodCost" flex="20" layout="row" layout-align="start center">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<span>{{history.createdDate | parseDate | date: 'dd'}} {{history.createdDate | parseDate | date: 'MMMM' | limitTo:3}} {{history.createdDate | parseDate | date: 'yyyy'}}</span>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div class="prodCost" flex="20" layout="row" layout-align="start center">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<span class="text-truncate">{{history.module}}</span>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div class="prodCost" flex layout="row" layout-align="start center">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<span> {{history.remark}}</span>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;&lt;!&ndash;<div layout="column" layout-align="center center" class="preloader-dot-auto" ng-hide="moreAuditTrailLoaded" >&ndash;&gt;&ndash;&gt;-->
-                    <!--&lt;!&ndash;&lt;!&ndash;<img src="assets/images/142.gif" alt=""/>&ndash;&gt;&ndash;&gt;-->
-                    <!--&lt;!&ndash;&lt;!&ndash;</div>&ndash;&gt;&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div class="invoice-list-item" ng-show="vm.isAuditTrailLoaded" ng-hide="!moreAuditTrailLoaded" layout="row" layout-align="center center">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<md-button ng-click="searchmoreAuditTrails(vm.selectedSubscription)" class="md-primary" style="font-size: 12px;font-weight: 400"><md-icon md-font-icon="icon-magnify"></md-icon> More</md-button>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div ng-show="noAuditTrailLabel" layout="column" layout-align="center center" style="height: 100%;">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<span class="no-sched"><md-icon md-font-icon="icon-information-outline"></md-icon> No Audit Trails for this User!</span>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</md-card-content>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</md-card>&ndash;&gt;-->
+                    <!--<!--<md-card flex class="input-block-gen" style="height: 81%;">-->
+                    <!--<!--<md-card-title layout="row" layout-align="space-between center" style="max-height: 50px;">-->
+                    <!--<!--<div layout="row" layout-align="start center">-->
+                    <!--<!--<md-icon md-font-icon="icon-credit-card-multiple"></md-icon> <h3>Subscription history</h3>-->
+                    <!--<!--</div>-->
+                    <!--<!--</md-card-title>-->
+                    <!--<!--<div class="list-header" layout="row">-->
+                    <!--<!--<div flex="10" layout-align="center start">Index</div>-->
+                    <!--<!--<div flex="20" layout-align="center start">Date</div>-->
+                    <!--<!--<div flex="20" layout-align="start center" layout="row"><span>Module</span></div>-->
+                    <!--<!--<div flex layout-align="start center" layout="row">Remark</div>-->
+                    <!--<!--<!--<div flex="10"></div>-->
+                    <!--<!--<!--<div flex="10" layout="row" layout-align="end center">REMARK</div>-->
+                    <!--<!--</div>-->
+                    <!--<!--<md-card-content style="padding: 0;max-height: 100%" ms-scroll>-->
+                    <!--<!--<div>-->
+                    <!--<!--<div class="preloader" layout="row" layout-sm="column" layout-align="space-around" ng-hide="moreAuditTrailLoaded">-->
+                    <!--<!--<md-progress-circular md-mode="indeterminate"></md-progress-circular>-->
+                    <!--<!--</div>-->
+                    <!--<!--<div layout="row" flex class="payment-history-row" ng-repeat="history in auditTrailList" ng-hide="noAuditTrailLabel">-->
+                    <!--<!--<div class="prodCost" flex="10" layout="row" layout-align="start center">-->
+                    <!--<!--<span>{{$index+1}}</span>-->
+                    <!--<!--</div>-->
+                    <!--<!--<div class="prodCost" flex="20" layout="row" layout-align="start center">-->
+                    <!--<!--<span>{{history.createdDate | parseDate | date: 'dd'}} {{history.createdDate | parseDate | date: 'MMMM' | limitTo:3}} {{history.createdDate | parseDate | date: 'yyyy'}}</span>-->
+                    <!--<!--</div>-->
+                    <!--<!--<div class="prodCost" flex="20" layout="row" layout-align="start center">-->
+                    <!--<!--<span class="text-truncate">{{history.module}}</span>-->
+                    <!--<!--</div>-->
+                    <!--<!--<div class="prodCost" flex layout="row" layout-align="start center">-->
+                    <!--<!--<span> {{history.remark}}</span>-->
+                    <!--<!--</div>-->
+                    <!--<!--</div>-->
+                    <!--<!--</div>-->
+                    <!--<!--<!--<div layout="column" layout-align="center center" class="preloader-dot-auto" ng-hide="moreAuditTrailLoaded" >-->
+                    <!--<!--<!--<img src="assets/images/142.gif" alt=""/>-->
+                    <!--<!--<!--</div>-->
+                    <!--<!--<div class="invoice-list-item" ng-show="vm.isAuditTrailLoaded" ng-hide="!moreAuditTrailLoaded" layout="row" layout-align="center center">-->
+                    <!--<!--<md-button ng-click="searchmoreAuditTrails(vm.selectedSubscription)" class="md-primary" style="font-size: 12px;font-weight: 400"><md-icon md-font-icon="icon-magnify"></md-icon> More</md-button>-->
+                    <!--<!--</div>-->
+                    <!--<!--<div ng-show="noAuditTrailLabel" layout="column" layout-align="center center" style="height: 100%;">-->
+                    <!--<!--<span class="no-sched"><md-icon md-font-icon="icon-information-outline"></md-icon> No Audit Trails for this User!</span>-->
+                    <!--<!--</div>-->
+                    <!--<!--</md-card-content>-->
+                    <!--<!--</md-card>-->
                     <!--</md-tab>-->
                     <!--</md-tabs>-->
                 </div>
