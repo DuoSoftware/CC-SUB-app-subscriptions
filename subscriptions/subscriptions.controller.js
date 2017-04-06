@@ -297,13 +297,16 @@
     $scope.getOrderHistoryDetails = function (order){
 
       var planCode=order.code;
+      var accId=order.guAccountId;
       vm.isOrderHistoryLoaded = true;
-      $charge.order().getOrderHistoryByPlanCode(planCode,skipOrderHistory,takeOrderHistory,'desc').success(function(data)
+      $charge.order().getOrderHistoryByPlanCode(planCode,accId,skipOrderHistory,takeOrderHistory,'desc').success(function(data)
       {
         console.log(data);
         skipOrderHistory+=takeOrderHistory;
         for (var i = 0; i < data.length; i++) {
           var objOrderHistory=data[i];
+          objOrderHistory.startDate=moment(objOrderHistory.startDate).format('L');
+          objOrderHistory.endDate=moment(objOrderHistory.endDate).format('L');
           vm.paymentHistoryList.push(objOrderHistory);
 
         }
