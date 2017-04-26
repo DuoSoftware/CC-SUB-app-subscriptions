@@ -597,7 +597,7 @@
 		$scope.more = function(filter){
 
 			$scope.isLoading = true;
-			$charge.order().all(skip,take,'desc',filter).success(function(data)
+			$charge.order().all(skip,take,'asc',filter).success(function(data)
 			{
 				console.log(data);
 
