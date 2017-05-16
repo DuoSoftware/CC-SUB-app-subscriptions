@@ -332,6 +332,16 @@
 
 		$scope.sortBy = function(propertyName,status,property) {
 
+			if(property == 'Next'){
+				angular.forEach(vm.subscriptions, function (sub) {
+					sub.lastBillDate = new Date(sub.lastBillDate);
+				});
+			}
+			if(property == 'Last'){
+				angular.forEach(vm.subscriptions, function (sub) {
+					sub.endDate = new Date(sub.endDate);
+				});
+			}
 			$scope.$watch(function () {
 				vm.subscriptions=$filter('orderBy')(vm.subscriptions, propertyName, $scope.reverse);
 			});
@@ -341,55 +351,55 @@
 				if(property=='User')
 				{
 					$scope.showUser = status;
+					$scope.showCode = false;
 					$scope.showType = false;
 					$scope.showLast = false;
 					$scope.showNext = false;
-					$scope.showState = false;
-					$scope.showState = false;
-				}
-				if(property=='Type')
-				{
-					$scope.showUser = false;
-					$scope.showType = status;
-					$scope.showLast = false;
-					$scope.showNext = false;
-					$scope.showState = false;
-					$scope.showState = false;
-				}
-				if(property=='Last')
-				{
-					$scope.showUser = false;
-					$scope.showType = false;
-					$scope.showLast = status;
-					$scope.showNext = false;
-					$scope.showState = false;
-					$scope.showState = false;
-				}
-				if(property=='Next')
-				{
-					$scope.showUser = false;
-					$scope.showType = false;
-					$scope.showLast = false;
-					$scope.showState = false;
-					$scope.showNext = status;
 					$scope.showState = false;
 				}
 				if(property=='Code')
 				{
 					$scope.showUser = false;
+					$scope.showCode = status;
 					$scope.showType = false;
 					$scope.showLast = false;
-					$scope.Code = status;
 					$scope.showNext = false;
+					$scope.showState = false;
+				}
+				if(property=='Type')
+				{
+					$scope.showUser = false;
+					$scope.showCode = false;
+					$scope.showType = status;
+					$scope.showLast = false;
+					$scope.showNext = false;
+					$scope.showState = false;
+				}
+				if(property=='Last')
+				{
+					$scope.showUser = false;
+					$scope.showCode = false;
+					$scope.showType = false;
+					$scope.showLast = status;
+					$scope.showNext = false;
+					$scope.showState = false;
+				}
+				if(property=='Next')
+				{
+					$scope.showUser = false;
+					$scope.showCode = false;
+					$scope.showType = false;
+					$scope.showLast = false;
+					$scope.showNext = status;
 					$scope.showState = false;
 				}
 				if(property=='Status')
 				{
 					$scope.showUser = false;
+					$scope.showCode = false;
 					$scope.showType = false;
 					$scope.showLast = false;
 					$scope.showNext = false;
-					$scope.showState = false;
 					$scope.showState = status;
 				}
 			}

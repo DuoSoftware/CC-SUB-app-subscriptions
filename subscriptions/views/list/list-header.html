@@ -34,11 +34,11 @@
     <div layout="row">
         <span layout="column" layout-align="center center" class="header-text">Order Type</span>
         <div layout="column" layout="center center">
-            <md-button ng-hide="showType" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('type',true,'Type')">
+            <md-button ng-hide="showType" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('uom',true,'Type')">
                 <md-icon class="sort_btn_icon merged" md-font-icon="icon-chevron-up"></md-icon>
                 <md-icon md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
-            <md-button ng-show="showType" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('type',null,'Type')">
+            <md-button ng-show="showType" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('uom',null,'Type')">
                 <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
                 <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
