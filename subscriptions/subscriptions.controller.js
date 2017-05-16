@@ -779,6 +779,18 @@
 			}
 		}
 
+		// Kasun_Wijeratne_16_05_2017
+		$charge.settingsapp().getDuobaseFieldDetailsByTableNameAndFieldName("CTS_GeneralAttributes","BaseCurrency").success(function(data) {
+			$scope.BaseCurrency=data[0].RecordFieldData;
+			//$scope.selectedCurrency = $scope.BaseCurrency;
+
+		}).error(function(data) {
+			console.log(data);
+			$scope.BaseCurrency="USD";
+			//$scope.selectedCurrency = $scope.BaseCurrency;
+		})
+		// Kasun_Wijeratne_16_05_2017
+
 		var skipPlanSearch, takePlanSearch;
 		var tempList;
 		$scope.loadByKeywordPlan= function (keyword,length) {

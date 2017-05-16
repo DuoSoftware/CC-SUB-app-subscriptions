@@ -41,7 +41,7 @@
       <span>{{subscription.endDate | parseDate | date: 'dd'}} {{subscription.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{subscription.endDate | parseDate | date: 'yyyy'}}</span>
     </div>
 
-    <div class="status" layout="column" layout-align="center center" ng-class="{'flex-30':showInpageReadpane == true,'flex-10': showInpageReadpane == false}">
+    <div class="status" layout="column" layout-align="center start" ng-class="{'flex-30':showInpageReadpane == true,'flex-10': showInpageReadpane == false}">
       <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':subscription.status==='Stopped','positive':subscription.status==='Active'}">{{subscription.status}}</span>
     </div>
   </div>

@@ -78,8 +78,8 @@
     </div>
 </div>
 
-<div class="productName" layout="column" layout-align="center center" ng-class="{'flex-30':showInpageReadpane == true,'flex-10': showInpageReadpane == false}">
-    <div layout="row" layout-align="center center" style="position:relative;right: -10px">
+<div class="productName" layout="column" layout-align="center start" ng-class="{'flex-30':showInpageReadpane == true,'flex-10': showInpageReadpane == false}">
+    <div layout="row" layout-align="center center" fill-width>
         <span layout="column" layout-align="center center" class="header-text">Status</span>
         <div layout="column" layout="center center">
             <md-button ng-hide="showState" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('status',true,'Status')">
@@ -91,5 +91,34 @@
                 <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
         </div>
+        <div flex></div>
+        <md-menu>
+            <md-button class="md-icon-button h-30 w-30 pv-5 ph-0 m-0 op-5" ng-click="$mdOpenMenu($event)">
+                <i class="material-icons fs-20">sort</i>
+                <md-tooltip>Filters</md-tooltip>
+            </md-button>
+
+            <md-menu-content width="3">
+                <md-menu-item>
+                    <md-button layout="row" layout-align="start center" ng-click="applyFilters('')">
+                        <md-icon md-font-icon="icon-label" class="filter-label s16"></md-icon>
+                        <span>All</span>
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button layout="row" layout-align="start center" ng-click="applyFilters('Active')">
+                        <md-icon md-font-icon="icon-label" class="filter-label-positive s16"></md-icon>
+                        <span>Active</span>
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button layout="row" layout-align="start center" ng-click="applyFilters('Stopped')">
+                        <md-icon md-font-icon="icon-label" class="filter-label-negative s16"></md-icon>
+                        <span>Active</span>
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+        <!--<md-button class="md-icon-button h-30 pv-5 ph-0 m-0"><i class="material-icons fs-20">filter_list</i></md-button>-->
     </div>
 </div>
