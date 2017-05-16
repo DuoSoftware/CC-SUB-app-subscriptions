@@ -23,8 +23,8 @@
                 <md-icon md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
             <md-button ng-show="showCode" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('code',null,'Code')">
-                <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
-                <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
+                <md-icon ng-if="reverse==false" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
+                <md-icon ng-if="reverse==true" md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
         </div>
     </div>
@@ -39,8 +39,8 @@
                 <md-icon md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
             <md-button ng-show="showType" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('uom',null,'Type')">
-                <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
-                <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
+                <md-icon ng-if="reverse==false" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
+                <md-icon ng-if="reverse==true" md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
         </div>
     </div>
@@ -50,13 +50,13 @@
     <div layout="row">
         <span layout="column" layout-align="center center" class="header-text">Last billing date</span>
         <div layout="column" layout="center center">
-            <md-button ng-hide="showLast" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('lastBillingDate',true,'Last')">
+            <md-button ng-hide="showLast" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('lastBillDate',true,'Last')">
                 <md-icon class="sort_btn_icon merged" md-font-icon="icon-chevron-up"></md-icon>
                 <md-icon md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
-            <md-button ng-show="showLast" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('lastBillingDate',null,'Last')">
-                <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
-                <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
+            <md-button ng-show="showLast" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('lastBillDate',null,'Last')">
+                <md-icon ng-if="reverse==false" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
+                <md-icon ng-if="reverse==true" md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
         </div>
     </div>
@@ -66,13 +66,13 @@
     <div layout="row">
         <span layout="column" layout-align="center center" class="header-text">Next scheduled date</span>
         <div layout="column" layout="center center">
-            <md-button ng-hide="showNext" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('nextScheculedDate',true,'Next')">
+            <md-button ng-hide="showNext" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('endDate',true,'Next')">
                 <md-icon class="sort_btn_icon merged" md-font-icon="icon-chevron-up"></md-icon>
                 <md-icon md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
-            <md-button ng-show="showNext" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('nextScheculedDate',null,'Next')">
-                <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
-                <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
+            <md-button ng-show="showNext" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('endDate',null,'Next')">
+                <md-icon ng-if="reverse==false" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
+                <md-icon ng-if="reverse==true" md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
         </div>
     </div>
@@ -87,8 +87,8 @@
                 <md-icon md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
             <md-button ng-show="showState" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('status',null,'Status')">
-                <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
-                <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
+                <md-icon ng-if="reverse==false" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
+                <md-icon ng-if="reverse==true" md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
         </div>
         <div flex></div>

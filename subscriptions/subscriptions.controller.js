@@ -332,14 +332,9 @@
 
 		$scope.sortBy = function(propertyName,status,property) {
 
-			if(property == 'Next'){
+			if(propertyName == 'lastBillingDate'){
 				angular.forEach(vm.subscriptions, function (sub) {
 					sub.lastBillDate = new Date(sub.lastBillDate);
-				});
-			}
-			if(property == 'Last'){
-				angular.forEach(vm.subscriptions, function (sub) {
-					sub.endDate = new Date(sub.endDate);
 				});
 			}
 			$scope.$watch(function () {
