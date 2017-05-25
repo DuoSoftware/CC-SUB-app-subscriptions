@@ -177,6 +177,9 @@
 			//});
 		}
 
+    $scope.addonPlansList=[];
+    $scope.paymentRetryHistory={};
+
 		$scope.openSubscription = function(subscription) {
 			$scope.isReadLoaded = false;
 
@@ -219,6 +222,55 @@
         }).error(function(data) {
           console.log(data);
           vm.selectedSubscription.email_addr="";
+
+        })
+
+        $scope.addonPlansList=[];
+        $charge.order().getAddonsByOrderId(subscription.guOrderId).success(function(data) {
+          console.log(data);
+          for (var i = 0; i < data.length; i++) {
+            $scope.addonPlansList.push(data[i]);
+
+          }
+
+        }).error(function(data) {
+          console.log(data);
+
+        })
+
+        $scope.paymentRetryHistory={};
+        $charge.notification().getPaymentRetryHistory(subscription.guAccountId, subscription.code).success(function(data) {
+          console.log(data);
+          $scope.paymentRetryHistory=data;
+
+          if($scope.paymentRetryHistory.attempted==0)
+          {
+            $scope.paymentRetryHistory.firstAttemptStatus=$scope.paymentRetryHistory.status;
+            $scope.paymentRetryHistory.firstAttemptStatus="";
+            $scope.paymentRetryHistory.secondAttemptStatus="";
+            $scope.paymentRetryHistory.thiredAttemptStatus="";
+          }
+          else if($scope.paymentRetryHistory.attempted==1)
+          {
+            $scope.paymentRetryHistory.firstAttemptStatus=$scope.paymentRetryHistory.status;
+            $scope.paymentRetryHistory.secondAttemptStatus="";
+            $scope.paymentRetryHistory.thiredAttemptStatus="";
+          }
+          else if($scope.paymentRetryHistory.attempted==2)
+          {
+            $scope.paymentRetryHistory.firstAttemptStatus="Failed";
+            $scope.paymentRetryHistory.secondAttemptStatus=$scope.paymentRetryHistory.status;
+            $scope.paymentRetryHistory.thiredAttemptStatus="";
+          }
+          else if($scope.paymentRetryHistory.attempted==3)
+          {
+            $scope.paymentRetryHistory.firstAttemptStatus="Failed";
+            $scope.paymentRetryHistory.secondAttemptStatus="Failed";
+            $scope.paymentRetryHistory.thiredAttemptStatus=$scope.paymentRetryHistory.status;
+          }
+
+        }).error(function(data) {
+          console.log(data);
 
         })
 
@@ -332,6 +384,11 @@
 
 		$scope.sortBy = function(propertyName,status,property) {
 
+			if(propertyName == 'lastBillingDate'){
+				angular.forEach(vm.subscriptions, function (sub) {
+					sub.lastBillDate = new Date(sub.lastBillDate);
+				});
+			}
 			$scope.$watch(function () {
 				vm.subscriptions=$filter('orderBy')(vm.subscriptions, propertyName, $scope.reverse);
 			});
@@ -341,55 +398,55 @@
 				if(property=='User')
 				{
 					$scope.showUser = status;
+					$scope.showCode = false;
 					$scope.showType = false;
 					$scope.showLast = false;
 					$scope.showNext = false;
-					$scope.showState = false;
-					$scope.showState = false;
-				}
-				if(property=='Type')
-				{
-					$scope.showUser = false;
-					$scope.showType = status;
-					$scope.showLast = false;
-					$scope.showNext = false;
-					$scope.showState = false;
-					$scope.showState = false;
-				}
-				if(property=='Last')
-				{
-					$scope.showUser = false;
-					$scope.showType = false;
-					$scope.showLast = status;
-					$scope.showNext = false;
-					$scope.showState = false;
-					$scope.showState = false;
-				}
-				if(property=='Next')
-				{
-					$scope.showUser = false;
-					$scope.showType = false;
-					$scope.showLast = false;
-					$scope.showState = false;
-					$scope.showNext = status;
 					$scope.showState = false;
 				}
 				if(property=='Code')
 				{
 					$scope.showUser = false;
+					$scope.showCode = status;
 					$scope.showType = false;
 					$scope.showLast = false;
-					$scope.Code = status;
 					$scope.showNext = false;
+					$scope.showState = false;
+				}
+				if(property=='Type')
+				{
+					$scope.showUser = false;
+					$scope.showCode = false;
+					$scope.showType = status;
+					$scope.showLast = false;
+					$scope.showNext = false;
+					$scope.showState = false;
+				}
+				if(property=='Last')
+				{
+					$scope.showUser = false;
+					$scope.showCode = false;
+					$scope.showType = false;
+					$scope.showLast = status;
+					$scope.showNext = false;
+					$scope.showState = false;
+				}
+				if(property=='Next')
+				{
+					$scope.showUser = false;
+					$scope.showCode = false;
+					$scope.showType = false;
+					$scope.showLast = false;
+					$scope.showNext = status;
 					$scope.showState = false;
 				}
 				if(property=='Status')
 				{
 					$scope.showUser = false;
+					$scope.showCode = false;
 					$scope.showType = false;
 					$scope.showLast = false;
 					$scope.showNext = false;
-					$scope.showState = false;
 					$scope.showState = status;
 				}
 			}
@@ -778,6 +835,18 @@
 				//$scope.loadByKeywordPlan(keyword,length);
 			}
 		}
+
+		// Kasun_Wijeratne_16_05_2017
+		$charge.settingsapp().getDuobaseFieldDetailsByTableNameAndFieldName("CTS_GeneralAttributes","BaseCurrency").success(function(data) {
+			$scope.BaseCurrency=data[0].RecordFieldData;
+			//$scope.selectedCurrency = $scope.BaseCurrency;
+
+		}).error(function(data) {
+			console.log(data);
+			$scope.BaseCurrency="USD";
+			//$scope.selectedCurrency = $scope.BaseCurrency;
+		})
+		// Kasun_Wijeratne_16_05_2017
 
 		var skipPlanSearch, takePlanSearch;
 		var tempList;
