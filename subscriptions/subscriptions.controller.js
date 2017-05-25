@@ -243,30 +243,81 @@
           console.log(data);
           $scope.paymentRetryHistory=data;
 
+          $scope.paymentRetryHistory.paymentFailedDate=$scope.paymentRetryHistory.failedDate;
+          $scope.paymentRetryHistory.paymentFirstFailedDate="";
+          $scope.paymentRetryHistory.paymentSecondFailedDate="";
+          $scope.paymentRetryHistory.paymentThiredFailedDate="";
+
+          $scope.paymentRetryHistory.paymentFirstSuccessDate="";
+          $scope.paymentRetryHistory.paymentSecondSuccessDate="";
+          $scope.paymentRetryHistory.paymentThiredSuccessDate="";
+
+          $scope.paymentRetryHistory.firstRetryOn="";
+          $scope.paymentRetryHistory.secondRetryOn="";
+          $scope.paymentRetryHistory.thiredRetryOn="";
+
           if($scope.paymentRetryHistory.attempted==0)
           {
-            $scope.paymentRetryHistory.firstAttemptStatus=$scope.paymentRetryHistory.status;
             $scope.paymentRetryHistory.firstAttemptStatus="";
             $scope.paymentRetryHistory.secondAttemptStatus="";
             $scope.paymentRetryHistory.thiredAttemptStatus="";
+
+            $scope.paymentRetryHistory.firstRetryOn=$scope.paymentRetryHistory.nextRetryOn;
           }
           else if($scope.paymentRetryHistory.attempted==1)
           {
             $scope.paymentRetryHistory.firstAttemptStatus=$scope.paymentRetryHistory.status;
             $scope.paymentRetryHistory.secondAttemptStatus="";
             $scope.paymentRetryHistory.thiredAttemptStatus="";
+
+            $scope.paymentRetryHistory.secondRetryOn=$scope.paymentRetryHistory.nextRetryOn;
+
+            $scope.paymentRetryHistory.paymentFirstDate=$scope.paymentRetryHistory.lastRetryOn;
+
+            if($scope.paymentRetryHistory.status=="Success")
+            {
+              $scope.paymentRetryHistory.paymentFirstSuccessDate=$scope.paymentRetryHistory.lastRetryOn;
+            }
+            else if($scope.paymentRetryHistory.status=="Failed")
+            {
+              $scope.paymentRetryHistory.paymentFirstFailedDate=$scope.paymentRetryHistory.lastRetryOn;
+            }
           }
           else if($scope.paymentRetryHistory.attempted==2)
           {
             $scope.paymentRetryHistory.firstAttemptStatus="Failed";
             $scope.paymentRetryHistory.secondAttemptStatus=$scope.paymentRetryHistory.status;
             $scope.paymentRetryHistory.thiredAttemptStatus="";
+
+            $scope.paymentRetryHistory.thiredRetryOn=$scope.paymentRetryHistory.nextRetryOn;
+
+            $scope.paymentRetryHistory.paymentSecondDate=$scope.paymentRetryHistory.lastRetryOn;
+
+            if($scope.paymentRetryHistory.status=="Success")
+            {
+              $scope.paymentRetryHistory.paymentSecondSuccessDate=$scope.paymentRetryHistory.lastRetryOn;
+            }
+            else if($scope.paymentRetryHistory.status=="Failed")
+            {
+              $scope.paymentRetryHistory.paymentSecondFailedDate=$scope.paymentRetryHistory.lastRetryOn;
+            }
           }
           else if($scope.paymentRetryHistory.attempted==3)
           {
             $scope.paymentRetryHistory.firstAttemptStatus="Failed";
             $scope.paymentRetryHistory.secondAttemptStatus="Failed";
             $scope.paymentRetryHistory.thiredAttemptStatus=$scope.paymentRetryHistory.status;
+
+            $scope.paymentRetryHistory.paymentThiredDate=$scope.paymentRetryHistory.lastRetryOn;
+
+            if($scope.paymentRetryHistory.status=="Success")
+            {
+              $scope.paymentRetryHistory.paymentThiredSuccessDate=$scope.paymentRetryHistory.lastRetryOn;
+            }
+            else if($scope.paymentRetryHistory.status=="Failed")
+            {
+              $scope.paymentRetryHistory.paymentThiredFailedDate=$scope.paymentRetryHistory.lastRetryOn;
+            }
           }
 
         }).error(function(data) {
