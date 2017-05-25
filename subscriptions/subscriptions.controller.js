@@ -177,6 +177,9 @@
 			//});
 		}
 
+    $scope.addonPlansList=[];
+    $scope.paymentRetryHistory={};
+
 		$scope.openSubscription = function(subscription) {
 			$scope.isReadLoaded = false;
 
@@ -219,6 +222,55 @@
         }).error(function(data) {
           console.log(data);
           vm.selectedSubscription.email_addr="";
+
+        })
+
+        $scope.addonPlansList=[];
+        $charge.order().getAddonsByOrderId(subscription.guOrderId).success(function(data) {
+          console.log(data);
+          for (var i = 0; i < data.length; i++) {
+            $scope.addonPlansList.push(data[i]);
+
+          }
+
+        }).error(function(data) {
+          console.log(data);
+
+        })
+
+        $scope.paymentRetryHistory={};
+        $charge.notification().getPaymentRetryHistory(subscription.guAccountId, subscription.code).success(function(data) {
+          console.log(data);
+          $scope.paymentRetryHistory=data;
+
+          if($scope.paymentRetryHistory.attempted==0)
+          {
+            $scope.paymentRetryHistory.firstAttemptStatus=$scope.paymentRetryHistory.status;
+            $scope.paymentRetryHistory.firstAttemptStatus="";
+            $scope.paymentRetryHistory.secondAttemptStatus="";
+            $scope.paymentRetryHistory.thiredAttemptStatus="";
+          }
+          else if($scope.paymentRetryHistory.attempted==1)
+          {
+            $scope.paymentRetryHistory.firstAttemptStatus=$scope.paymentRetryHistory.status;
+            $scope.paymentRetryHistory.secondAttemptStatus="";
+            $scope.paymentRetryHistory.thiredAttemptStatus="";
+          }
+          else if($scope.paymentRetryHistory.attempted==2)
+          {
+            $scope.paymentRetryHistory.firstAttemptStatus="Failed";
+            $scope.paymentRetryHistory.secondAttemptStatus=$scope.paymentRetryHistory.status;
+            $scope.paymentRetryHistory.thiredAttemptStatus="";
+          }
+          else if($scope.paymentRetryHistory.attempted==3)
+          {
+            $scope.paymentRetryHistory.firstAttemptStatus="Failed";
+            $scope.paymentRetryHistory.secondAttemptStatus="Failed";
+            $scope.paymentRetryHistory.thiredAttemptStatus=$scope.paymentRetryHistory.status;
+          }
+
+        }).error(function(data) {
+          console.log(data);
 
         })
 

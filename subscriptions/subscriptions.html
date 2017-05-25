@@ -205,9 +205,15 @@
                                             <!--</div>-->
                                             <div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">
                                                 <div flex class="iconed-label">
-                                                    <md-icon md-font-icon="icon-calendar-check"></md-icon> <span>Plan type</span>
+                                                    <md-icon md-font-icon="icon-calendar-check"></md-icon> <span>Amount</span>
                                                 </div>
-                                                <div flex class="">{{vm.selectedSubscription.type}}</div>
+                                                <div flex class="">{{vm.selectedSubscription.unitPrice}}</div>
+                                            </div>
+                                            <div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">
+                                              <div flex class="iconed-label">
+                                                <md-icon md-font-icon="icon-calendar-check"></md-icon> <span>Plan type</span>
+                                              </div>
+                                              <div flex class="">{{vm.selectedSubscription.type}}</div>
                                             </div>
                                             <div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">
                                                 <div flex class="iconed-label">
@@ -228,6 +234,47 @@
                                                 <div flex class="font-accent">{{vm.selectedSubscription.endDate | parseDate | date: 'dd'}} {{vm.selectedSubscription.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{vm.selectedSubscription.endDate | parseDate | date: 'yyyy'}}</div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <md-divider class="mt-10 mb-20" ng-if="addonPlansList.length!=0"></md-divider>
+                                    <div class="fs-20 font-accent fw-400" ng-if="addonPlansList.length!=0">Add-on Plans</div>
+                                    <div layout="row" ng-if="addonPlansList.length!=0">
+                                      <div flex class="list-offset sub-list" md-whiteframe="1dp">
+                                        <div class="list-header" layout="row" flex md-whiteframe="1dp">
+                                          <div flex>Plan</div>
+                                          <div flex>Plan Type</div>
+                                          <div flex>Quantity</div>
+                                          <!--<div flex>Last Billing Date</div>-->
+                                          <!--<div flex class="text-right">Next Scheduled Date</div>-->
+                                          <div flex class="text-right">Amount</div>
+                                        </div>
+                                        <md-card-content class="p-0" flex>
+                                          <md-content class="list-content" ms-scroll>
+                                            <div layout="row" layout-align="center center" class="msg-empty-list" ng-if="addonPlansList.length == 0 || addonPlansList == null">
+                                              <span><md-icon md-font-icon="icon-information-outline"></md-icon> No Add-on Plans for this Plan</span>
+                                            </div>
+                                            <div layout="row" flex class="list-item" ng-repeat="addon in addonPlansList">
+                                              <div flex>
+                                                <span>{{addon.code}}</span>
+                                              </div>
+                                              <div flex>
+                                                <span>Add-On</span>
+                                              </div>
+                                              <div flex>
+                                                <span>{{addon.qty}}</span>
+                                              </div>
+                                              <!--<div flex>-->
+                                                <!--<span>{{addon.lastBillDate | parseDate | date: 'dd'}} {{addon.lastBillDate | parseDate | date: 'MMMM' | limitTo:3}} {{addon.lastBillDate | parseDate | date: 'yyyy'}}</span>-->
+                                              <!--</div>-->
+                                              <!--<div flex class="text-right font-accent">-->
+                                                <!--<span>{{addon.endDate | parseDate | date: 'dd'}} {{addon.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{addon.endDate | parseDate | date: 'yyyy'}}</span>-->
+                                              <!--</div>-->
+                                              <div flex class="text-right">
+                                                <span>{{addon.amount|isoCurrency:BaseCurrency}}</span>
+                                              </div>
+                                            </div>
+                                          </md-content>
+                                        </md-card-content>
+                                      </div>
                                     </div>
                                 </div>
                             </md-tab-body>
