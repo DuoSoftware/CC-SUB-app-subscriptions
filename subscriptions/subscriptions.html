@@ -276,6 +276,109 @@
                                         </md-card-content>
                                       </div>
                                     </div>
+                                  <md-divider class="mt-10 mb-20"></md-divider>
+                                  <div class="fs-20 font-accent fw-400">Payment Retry History</div>
+                                  <div layout="row">
+                                    <div flex>
+                                      <div class="ml-35 mt-10" layout="row" layout-align="start center">
+                                        <span class="circle">Amount: </span>
+                                        <span class="label">{{paymentRetryHistory.amount|isoCurrency:paymentRetryHistory.currency}}</span>
+                                      </div>
+                                      <div class="ml-35 mt-10" layout="row" layout-align="start center">
+                                        <span class="circle">Payment Failed Date: </span>
+                                        <span class="label">{{paymentRetryHistory.paymentFailedDate}}</span>
+                                      </div>
+                                      <div class="ml-35 mt-10" layout="row" layout-align="start center">
+                                        <i class="material-icons start-process">repeat</i>
+                                      </div>
+
+                                      <div class="process-block">
+                                        <div layout="row" flex>
+                                          <div layout="row" layout-align="start center" class="step-circle" flex="20">
+                                            <span class="circle">1st</span>
+                                            <span class="label">Retry Attempt</span>
+                                          </div>
+                                          <!--<div flex="10" layout="row" layout-align="center center">-->
+                                          <!--&lt;!&ndash;<div class="bb flex"></div>&ndash;&gt;-->
+                                          <!--</div>-->
+                                          <div class="step-body" layout="row" layout-align="start center">
+                                            <div layout="row" layout-align="start center">
+                                              <span class="mr-10">Retried On </span>
+                                              <span class="mr-10">{{paymentRetryHistory.paymentFirstDate}}</span>
+                                              <span class="ml-10"> Status: {{paymentRetryHistory.firstAttemptStatus}}</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="process-block">
+                                        <div layout="row" flex>
+                                          <div layout="row" layout-align="start center" class="step-circle" flex="20">
+                                            <span class="circle">2nd</span>
+                                            <span class="label">Retry attempt</span>
+                                          </div>
+                                          <!--<div flex="10" layout="row" layout-align="center center">-->
+                                          <!--&lt;!&ndash;<div class="bb flex"></div>&ndash;&gt;-->
+                                          <!--</div>-->
+                                          <div class="step-body" layout="row" layout-align="start center">
+                                            <div layout="row" layout-align="start center">
+                                              <span class="mr-10">Retried On </span>
+                                              <span class="mr-10">{{paymentRetryHistory.paymentSecondDate}}</span>
+                                              <span class="ml-10"> Status: {{paymentRetryHistory.secondAttemptStatus}}</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="process-block">
+                                        <div layout="row" flex>
+                                          <div layout="row" layout-align="start center" class="step-circle" flex="20">
+                                            <span class="circle">3rd</span>
+                                            <span class="label">Retry attempt</span>
+                                          </div>
+                                          <!--<div flex="10" layout="row" layout-align="center center">-->
+                                          <!--&lt;!&ndash;<div class="bb flex"></div>&ndash;&gt;-->
+                                          <!--</div>-->
+                                          <div class="step-body" layout="row" layout-align="start center">
+                                            <div layout="row" layout-align="start center">
+                                              <span class="mr-10">Retried On </span>
+                                              <span class="mr-10">{{paymentRetryHistory.paymentThiredDate}}</span>
+                                              <span class="ml-10"> Status: {{paymentRetryHistory.thiredAttemptStatus}}</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="process-block pb-0 pt-5">
+                                        <div layout="row" flex>
+                                          <div layout="row" layout-align="start center" class="step-circle mb-0" flex="20">
+                                                                    <span class="circle end text-center">
+                                                                        <!--<i class="material-icons">report</i>-->
+                                                                        END
+                                                                    </span>
+                                            <span class="label">Process by</span>
+                                          </div>
+                                          <!--<div flex="10" layout="row" layout-align="center center">-->
+                                          <!--&lt;!&ndash;<div class="bb flex"></div>&ndash;&gt;-->
+                                          <!--</div>-->
+                                          <div class="step-body mbm-10" layout="row" layout-align="start center">
+                                            <div layout="row" layout-align="start center">
+                                              <span class="mr-10">Deactivate Profile</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="ml-35 mt-10" layout="row" layout-align="start center">
+                                        <span class="circle">Next Retry Date: </span>
+                                        <span class="label">{{paymentRetryHistory.nextRetryOn}}</span>
+                                      </div>
+                                      <div class="ml-35 mt-10" layout="row" layout-align="start center">
+
+                                      </div>
+                                      <div class="ml-35 mt-10" layout="row" layout-align="start center">
+
+                                      </div>
+
+                                    </div>
+                                  </div>
                                 </div>
                             </md-tab-body>
                         </md-tab>
