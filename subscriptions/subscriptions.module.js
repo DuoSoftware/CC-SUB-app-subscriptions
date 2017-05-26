@@ -1,8 +1,8 @@
 ////////////////////////////////
 // App : Subscription
 // Owner  : Gihan Herath
-// Last changed date : 2017/05/25
-// Version : 6.1.0.6
+// Last changed date : 2017/05/26
+// Version : 6.1.0.7
 // Modified By : Gihan
 /////////////////////////////////
 
