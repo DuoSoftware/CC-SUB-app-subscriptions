@@ -120,6 +120,28 @@
 			vm.dynamicHeight = current;
 		});
 
+    function gst(name) {
+      var nameEQ = name + "=";
+      var ca = document.cookie.split(';');
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+      }
+      //debugger;
+      return null;
+    }
+
+    function getDomainName() {
+      var _st = gst("domain");
+      return (_st != null) ? _st : ""; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
+    }
+
+    function getDomainExtension() {
+      var _st = gst("extention_mode");
+      return (_st != null) ? _st : "test"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
+    }
+
 		/**
 		 * Close read pane
 		 */
@@ -705,41 +727,93 @@
 		$scope.more = function(filter){
 
 			$scope.isLoading = true;
-			$charge.order().all(skip,take,'asc',filter).success(function(data)
-			{
-				console.log(data);
+			//$charge.order().all(skip,take,'asc',filter).success(function(data)
+			//{
+			//	console.log(data);
+            //
+			//	if($scope.loading)
+			//	{
+			//		skip += take;
+            //
+			//		for (var i = 0; i < data.length; i++) {
+			//			$scope.items.push(data[i]);
+			//		}
+			//		vm.subscriptions=$scope.items;
+			//		//$timeout(function () {
+			//		//  vm.plans=$scope.items;
+			//		//},0);
+			//		vm.searchMoreInit = false;
+            //
+			//		$scope.isLoading = false;
+			//		$scope.loading = false;
+			//		$scope.isdataavailable=true;
+			//		if(data.length<take){
+			//			$scope.isdataavailable=false;
+			//			$scope.hideSearchMore=true;
+			//		}
+            //
+			//	}
+            //
+			//}).error(function(data)
+			//{
+			//	console.log(data);
+			//	$scope.isSpinnerShown=false;
+			//	$scope.isdataavailable=false;
+			//	$scope.isLoading = false;
+			//	$scope.hideSearchMore=true;
+			//})
 
-				if($scope.loading)
-				{
-					skip += take;
+      var dbNamePart1="";
+      var dbNamePart2="";
+      var dbName="";
+      var filter="";
+      dbNamePart1=getDomainName();
+      dbNamePart2=getDomainExtension();
+      dbName=dbNamePart1+"_"+dbNamePart2;
+      //filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
+      var data={
+        "search": "*",
+        "filter": "(domain eq '"+dbName+"')",
+        "orderby" : "endDate asc",
+        "top":take,
+        "skip":skip
+      }
 
-					for (var i = 0; i < data.length; i++) {
-						$scope.items.push(data[i]);
-					}
-					vm.subscriptions=$scope.items;
-					//$timeout(function () {
-					//  vm.plans=$scope.items;
-					//},0);
-					vm.searchMoreInit = false;
+      $charge.azuresearch().getAllSubscriptionPost(data).success(function(data)
+      {
+        console.log(data);
 
-					$scope.isLoading = false;
-					$scope.loading = false;
-					$scope.isdataavailable=true;
-					if(data.length<take){
-						$scope.isdataavailable=false;
-						$scope.hideSearchMore=true;
-					}
+        if($scope.loading)
+        {
+          skip += take;
 
-				}
+          for (var i = 0; i < data.value.length; i++) {
+            $scope.items.push(data.value[i]);
+          }
+          vm.subscriptions=$scope.items;
+          //$timeout(function () {
+          //  vm.plans=$scope.items;
+          //},0);
+          vm.searchMoreInit = false;
 
-			}).error(function(data)
-			{
-				console.log(data);
-				$scope.isSpinnerShown=false;
-				$scope.isdataavailable=false;
-				$scope.isLoading = false;
-				$scope.hideSearchMore=true;
-			})
+          $scope.isLoading = false;
+          $scope.loading = false;
+          $scope.isdataavailable=true;
+          if(data.length<take){
+            $scope.isdataavailable=false;
+            $scope.hideSearchMore=true;
+          }
+
+        }
+
+      }).error(function(data)
+      {
+        console.log(data);
+        $scope.isSpinnerShown=false;
+        $scope.isdataavailable=false;
+        $scope.isLoading = false;
+        $scope.hideSearchMore=true;
+      })
 
 		};
 		// we call the function twice to populate the list
@@ -883,7 +957,7 @@
 			if(event.keyCode === 13)
 			{
 				console.log("Function Reached!");
-				//$scope.loadByKeywordPlan(keyword,length);
+				$scope.loadByKeywordSubscription(keyword,length);
 			}
 		}
 
@@ -899,9 +973,9 @@
 		})
 		// Kasun_Wijeratne_16_05_2017
 
-		var skipPlanSearch, takePlanSearch;
+		var skipSubscriptionSearch, takeSubscriptionSearch;
 		var tempList;
-		$scope.loadByKeywordPlan= function (keyword,length) {
+		$scope.loadByKeywordSubscription= function (keyword,length) {
 			if($scope.items.length==100) {
 				//
 				if(length==undefined)
@@ -917,26 +991,39 @@
 				//  searchLength=1;
 				//}
 
-				//if (keyword.length == searchLength) {
-				//  console.log(keyword);
-				//  //
-				//  skipPlanSearch = 0;
-				//  takePlanSearch = 100;
-				//  tempList = [];
-				//  $charge.profile().filterByKey(keyword, skipPlanSearch, takePlanSearch).success(function (data) {
-				//    for (var i = 0; i < data.length; i++) {
-				//      tempList.push(data[i]);
-				//    }
-				//    vm.plans = tempList;
-				//    //skipProfileSearch += takeProfileSearch;
-				//    //$scope.loadPaging(keyword, skipProfileSearch, takeProfileSearch);
-				//  }).error(function (data) {
-				//    vm.plans = [];
-				//  });
-				//}
-				//else if (keyword.length == 0 || keyword == null) {
-				//  vm.plans = $scope.items;
-				//}
+				if (keyword.length == searchLength) {
+				  console.log(keyword);
+				  //
+          skipSubscriptionSearch = 0;
+          takeSubscriptionSearch = 100;
+				  tempList = [];
+
+          var dbName="";
+          dbName=getDomainName()+"_"+getDomainExtension();
+          //filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
+          var data={
+            "search": keyword+"*",
+            "searchFields": "first_name,last_name,code",
+            "filter": "(domain eq '"+dbName+"')",
+            "orderby" : "endDate asc",
+            "top":takeSubscriptionSearch,
+            "skip":skipSubscriptionSearch
+          }
+
+				  $charge.azuresearch().getAllSubscriptionPost(data).success(function (data) {
+				    for (var i = 0; i < data.value.length; i++) {
+				      tempList.push(data.value[i]);
+				    }
+            vm.subscriptions = tempList;
+				    //skipProfileSearch += takeProfileSearch;
+				    //$scope.loadPaging(keyword, skipProfileSearch, takeProfileSearch);
+				  }).error(function (data) {
+            vm.subscriptions = [];
+				  });
+				}
+				else if (keyword.length == 0 || keyword == null) {
+          vm.subscriptions = $scope.items;
+				}
 
 				if(searchLength==0||searchLength==undefined)
 				{
