@@ -134,7 +134,7 @@
 
     function getDomainName() {
       var _st = gst("domain");
-      return (_st != null) ? _st : ""; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
+      return (_st != null) ? _st : "gihan"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
     }
 
     function getDomainExtension() {
@@ -767,7 +767,7 @@
       var dbNamePart2="";
       var dbName="";
       var filter="";
-      dbNamePart1=getDomainName();
+      dbNamePart1=getDomainName().split('.')[0];
       dbNamePart2=getDomainExtension();
       dbName=dbNamePart1+"_"+dbNamePart2;
       //filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
@@ -999,7 +999,7 @@
 				  tempList = [];
 
           var dbName="";
-          dbName=getDomainName()+"_"+getDomainExtension();
+          dbName=getDomainName().split('.')[0]+"_"+getDomainExtension();
           //filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
           var data={
             "search": keyword+"*",
