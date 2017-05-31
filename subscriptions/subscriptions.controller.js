@@ -100,6 +100,8 @@
 		$scope.currencyRate = 1;
 		$scope.decimalPoint = 2;
 		$scope.content={};
+		$scope.paymentRetryHistory = {};
+		$scope.paymentRetryHistory.paymentFailedDate = null;
 		//////////
 
 		// Watch screen size to activate responsive read pane
@@ -120,27 +122,33 @@
 			vm.dynamicHeight = current;
 		});
 
-    function gst(name) {
-      var nameEQ = name + "=";
-      var ca = document.cookie.split(';');
-      for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-      }
-      //debugger;
-      return null;
-    }
+		$scope.$watch(function () {
+			if($scope.loaderArr.length == 4){
+				$scope.isReadLoaded = true;
+			}
+		})
 
-    function getDomainName() {
-      var _st = gst("domain");
-      return (_st != null) ? _st : "gihan"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
-    }
+		function gst(name) {
+			var nameEQ = name + "=";
+			var ca = document.cookie.split(';');
+			for (var i = 0; i < ca.length; i++) {
+				var c = ca[i];
+				while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+				if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+			}
+			//debugger;
+			return null;
+		}
 
-    function getDomainExtension() {
-      var _st = gst("extention_mode");
-      return (_st != null) ? _st : "test"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
-    }
+		function getDomainName() {
+			var _st = gst("domain");
+			return (_st != null) ? _st : ""; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
+		}
+
+		function getDomainExtension() {
+			var _st = gst("extension_mode");
+			return (_st != null) ? _st : "test"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
+		}
 
 		/**
 		 * Close read pane
@@ -199,11 +207,14 @@
 			//});
 		}
 
-    $scope.addonPlansList=[];
-    $scope.paymentRetryHistory={};
+		$scope.addonPlansList=[];
+		$scope.paymentRetryHistory={};
+		$scope.loaderArr = [];
 
 		$scope.openSubscription = function(subscription) {
+			$scope.loaderArr = [];
 			$scope.isReadLoaded = false;
+			$scope.paymentRetryHistoryView = false;
 
 			$charge.plan().getPlanByCode(subscription.code).success(function(data){
 				vm.selectedSubscription=data;
@@ -223,11 +234,13 @@
 						vm.selectedSubscription.taxType = data[0].amounttype;
 						vm.selectedSubscription.taxAmount = data[0].amount;
 
+						$scope.loaderArr.push('ok');
 					}).error(function(data) {
 						console.log(data);
 						//vm.selectedPlan = plan;
 						vm.selectedSubscription.taxType = "-1";
 						vm.selectedSubscription.taxAmount = 0;
+						$scope.loaderArr.push('ok');
 					})
 
 				}).error(function(data) {
@@ -236,118 +249,121 @@
 					vm.selectedSubscription.taxType = "-1";
 					vm.selectedSubscription.taxAmount = 0;
 				})
+				$charge.profile().getByID(subscription.guAccountId).success(function(data) {
 
-        $charge.profile().getByID(subscription.guAccountId).success(function(data) {
+					vm.selectedSubscription.email_addr=data[0].email_addr;
+					$scope.loaderArr.push('ok');
 
-          vm.selectedSubscription.email_addr=data[0].email_addr;
+				}).error(function(data) {
+					console.log(data);
+					vm.selectedSubscription.email_addr="";
+					$scope.loaderArr.push('ok');
 
-        }).error(function(data) {
-          console.log(data);
-          vm.selectedSubscription.email_addr="";
+				})
+				$scope.addonPlansList=[];
+				$charge.order().getAddonsByOrderId(subscription.guOrderId).success(function(data) {
+					console.log(data);
+					for (var i = 0; i < data.length; i++) {
+						$scope.addonPlansList.push(data[i]);
 
-        })
+					}
+					$scope.loaderArr.push('ok');
 
-        $scope.addonPlansList=[];
-        $charge.order().getAddonsByOrderId(subscription.guOrderId).success(function(data) {
-          console.log(data);
-          for (var i = 0; i < data.length; i++) {
-            $scope.addonPlansList.push(data[i]);
+				}).error(function(data) {
+					console.log(data);
+					$scope.loaderArr.push('ok');
 
-          }
+				})
+				$scope.paymentRetryHistory={};
+				$charge.notification().getPaymentRetryHistory(subscription.guAccountId, subscription.code).success(function(data) {
+					console.log(data);
+					$scope.paymentRetryHistory=data;
 
-        }).error(function(data) {
-          console.log(data);
+					$scope.paymentRetryHistory.paymentFailedDate=$scope.paymentRetryHistory.failedDate;
+					$scope.paymentRetryHistory.paymentFirstFailedDate="";
+					$scope.paymentRetryHistory.paymentSecondFailedDate="";
+					$scope.paymentRetryHistory.paymentThiredFailedDate="";
 
-        })
+					$scope.paymentRetryHistory.paymentFirstSuccessDate="";
+					$scope.paymentRetryHistory.paymentSecondSuccessDate="";
+					$scope.paymentRetryHistory.paymentThiredSuccessDate="";
 
-        $scope.paymentRetryHistory={};
-        $charge.notification().getPaymentRetryHistory(subscription.guAccountId, subscription.code).success(function(data) {
-          console.log(data);
-          $scope.paymentRetryHistory=data;
+					$scope.paymentRetryHistory.firstRetryOn="";
+					$scope.paymentRetryHistory.secondRetryOn="";
+					$scope.paymentRetryHistory.thiredRetryOn="";
 
-          $scope.paymentRetryHistory.paymentFailedDate=$scope.paymentRetryHistory.failedDate;
-          $scope.paymentRetryHistory.paymentFirstFailedDate="";
-          $scope.paymentRetryHistory.paymentSecondFailedDate="";
-          $scope.paymentRetryHistory.paymentThiredFailedDate="";
+					if($scope.paymentRetryHistory.attempted==0)
+					{
+						$scope.paymentRetryHistory.firstAttemptStatus="";
+						$scope.paymentRetryHistory.secondAttemptStatus="";
+						$scope.paymentRetryHistory.thiredAttemptStatus="";
 
-          $scope.paymentRetryHistory.paymentFirstSuccessDate="";
-          $scope.paymentRetryHistory.paymentSecondSuccessDate="";
-          $scope.paymentRetryHistory.paymentThiredSuccessDate="";
+						$scope.paymentRetryHistory.firstRetryOn=$scope.paymentRetryHistory.nextRetryOn;
+					}
+					else if($scope.paymentRetryHistory.attempted==1)
+					{
+						$scope.paymentRetryHistory.firstAttemptStatus=$scope.paymentRetryHistory.status;
+						$scope.paymentRetryHistory.secondAttemptStatus="";
+						$scope.paymentRetryHistory.thiredAttemptStatus="";
 
-          $scope.paymentRetryHistory.firstRetryOn="";
-          $scope.paymentRetryHistory.secondRetryOn="";
-          $scope.paymentRetryHistory.thiredRetryOn="";
+						$scope.paymentRetryHistory.secondRetryOn=$scope.paymentRetryHistory.nextRetryOn;
 
-          if($scope.paymentRetryHistory.attempted==0)
-          {
-            $scope.paymentRetryHistory.firstAttemptStatus="";
-            $scope.paymentRetryHistory.secondAttemptStatus="";
-            $scope.paymentRetryHistory.thiredAttemptStatus="";
+						$scope.paymentRetryHistory.paymentFirstDate=$scope.paymentRetryHistory.lastRetryOn;
 
-            $scope.paymentRetryHistory.firstRetryOn=$scope.paymentRetryHistory.nextRetryOn;
-          }
-          else if($scope.paymentRetryHistory.attempted==1)
-          {
-            $scope.paymentRetryHistory.firstAttemptStatus=$scope.paymentRetryHistory.status;
-            $scope.paymentRetryHistory.secondAttemptStatus="";
-            $scope.paymentRetryHistory.thiredAttemptStatus="";
+						if($scope.paymentRetryHistory.status=="Success")
+						{
+							$scope.paymentRetryHistory.paymentFirstSuccessDate=$scope.paymentRetryHistory.lastRetryOn;
+						}
+						else if($scope.paymentRetryHistory.status=="Failed")
+						{
+							$scope.paymentRetryHistory.paymentFirstFailedDate=$scope.paymentRetryHistory.lastRetryOn;
+						}
+					}
+					else if($scope.paymentRetryHistory.attempted==2)
+					{
+						$scope.paymentRetryHistory.firstAttemptStatus="Failed";
+						$scope.paymentRetryHistory.secondAttemptStatus=$scope.paymentRetryHistory.status;
+						$scope.paymentRetryHistory.thiredAttemptStatus="";
 
-            $scope.paymentRetryHistory.secondRetryOn=$scope.paymentRetryHistory.nextRetryOn;
+						$scope.paymentRetryHistory.thiredRetryOn=$scope.paymentRetryHistory.nextRetryOn;
 
-            $scope.paymentRetryHistory.paymentFirstDate=$scope.paymentRetryHistory.lastRetryOn;
+						$scope.paymentRetryHistory.paymentSecondDate=$scope.paymentRetryHistory.lastRetryOn;
 
-            if($scope.paymentRetryHistory.status=="Success")
-            {
-              $scope.paymentRetryHistory.paymentFirstSuccessDate=$scope.paymentRetryHistory.lastRetryOn;
-            }
-            else if($scope.paymentRetryHistory.status=="Failed")
-            {
-              $scope.paymentRetryHistory.paymentFirstFailedDate=$scope.paymentRetryHistory.lastRetryOn;
-            }
-          }
-          else if($scope.paymentRetryHistory.attempted==2)
-          {
-            $scope.paymentRetryHistory.firstAttemptStatus="Failed";
-            $scope.paymentRetryHistory.secondAttemptStatus=$scope.paymentRetryHistory.status;
-            $scope.paymentRetryHistory.thiredAttemptStatus="";
+						if($scope.paymentRetryHistory.status=="Success")
+						{
+							$scope.paymentRetryHistory.paymentSecondSuccessDate=$scope.paymentRetryHistory.lastRetryOn;
+						}
+						else if($scope.paymentRetryHistory.status=="Failed")
+						{
+							$scope.paymentRetryHistory.paymentSecondFailedDate=$scope.paymentRetryHistory.lastRetryOn;
+						}
+					}
+					else if($scope.paymentRetryHistory.attempted==3)
+					{
+						$scope.paymentRetryHistory.firstAttemptStatus="Failed";
+						$scope.paymentRetryHistory.secondAttemptStatus="Failed";
+						$scope.paymentRetryHistory.thiredAttemptStatus=$scope.paymentRetryHistory.status;
 
-            $scope.paymentRetryHistory.thiredRetryOn=$scope.paymentRetryHistory.nextRetryOn;
+						$scope.paymentRetryHistory.paymentThiredDate=$scope.paymentRetryHistory.lastRetryOn;
 
-            $scope.paymentRetryHistory.paymentSecondDate=$scope.paymentRetryHistory.lastRetryOn;
+						if($scope.paymentRetryHistory.status=="Success")
+						{
+							$scope.paymentRetryHistory.paymentThiredSuccessDate=$scope.paymentRetryHistory.lastRetryOn;
+						}
+						else if($scope.paymentRetryHistory.status=="Failed")
+						{
+							$scope.paymentRetryHistory.paymentThiredFailedDate=$scope.paymentRetryHistory.lastRetryOn;
+						}
+					}
+					$scope.loaderArr.push('ok');
 
-            if($scope.paymentRetryHistory.status=="Success")
-            {
-              $scope.paymentRetryHistory.paymentSecondSuccessDate=$scope.paymentRetryHistory.lastRetryOn;
-            }
-            else if($scope.paymentRetryHistory.status=="Failed")
-            {
-              $scope.paymentRetryHistory.paymentSecondFailedDate=$scope.paymentRetryHistory.lastRetryOn;
-            }
-          }
-          else if($scope.paymentRetryHistory.attempted==3)
-          {
-            $scope.paymentRetryHistory.firstAttemptStatus="Failed";
-            $scope.paymentRetryHistory.secondAttemptStatus="Failed";
-            $scope.paymentRetryHistory.thiredAttemptStatus=$scope.paymentRetryHistory.status;
+				}).error(function(data) {
+					console.log(data);
+					$scope.loaderArr.push('ok');
 
-            $scope.paymentRetryHistory.paymentThiredDate=$scope.paymentRetryHistory.lastRetryOn;
+				})
+				$scope.loaderArr.push('ok');
 
-            if($scope.paymentRetryHistory.status=="Success")
-            {
-              $scope.paymentRetryHistory.paymentThiredSuccessDate=$scope.paymentRetryHistory.lastRetryOn;
-            }
-            else if($scope.paymentRetryHistory.status=="Failed")
-            {
-              $scope.paymentRetryHistory.paymentThiredFailedDate=$scope.paymentRetryHistory.lastRetryOn;
-            }
-          }
-
-        }).error(function(data) {
-          console.log(data);
-
-        })
-
-				$scope.isReadLoaded = true;
 			}).error(function(data){
 				//
 				vm.selectedSubscription.startDate=subscription.startDate;
@@ -360,6 +376,7 @@
 
 				vm.selectedSubscription.taxType = "-1";
 				vm.selectedSubscription.taxAmount = 0;
+				$scope.loaderArr.push('ok');
 			})
 			//vm.selectedSubscription = subscription;
 		};
@@ -413,47 +430,47 @@
 			$scope.getAuditTrailDetails(order);
 		}
 
-    var skipOrderHistory=0;
-    var takeOrderHistory=100;
-    vm.paymentHistoryList=[];
-    vm.isOrderHistoryLoaded = true;
-    $scope.moreOrderHistoryLoaded = false;
+		var skipOrderHistory=0;
+		var takeOrderHistory=100;
+		vm.paymentHistoryList=[];
+		vm.isOrderHistoryLoaded = true;
+		$scope.moreOrderHistoryLoaded = false;
 
-    $scope.getOrderHistoryDetails = function (order){
+		$scope.getOrderHistoryDetails = function (order){
 
-      var planCode=order.code;
-      var accId=order.guAccountId;
-      vm.isOrderHistoryLoaded = true;
-      $charge.order().getOrderHistoryByPlanCode(planCode,accId,skipOrderHistory,takeOrderHistory,'desc').success(function(data)
-      {
-        console.log(data);
-        skipOrderHistory+=takeOrderHistory;
-        for (var i = 0; i < data.length; i++) {
-          var objOrderHistory=data[i];
-          objOrderHistory.startDate=moment(objOrderHistory.startDate).format('L');
-          objOrderHistory.endDate=moment(objOrderHistory.endDate).format('L');
-          vm.paymentHistoryList.push(objOrderHistory);
+			var planCode=order.code;
+			var accId=order.guAccountId;
+			vm.isOrderHistoryLoaded = true;
+			$charge.order().getOrderHistoryByPlanCode(planCode,accId,skipOrderHistory,takeOrderHistory,'desc').success(function(data)
+			{
+				console.log(data);
+				skipOrderHistory+=takeOrderHistory;
+				for (var i = 0; i < data.length; i++) {
+					var objOrderHistory=data[i];
+					objOrderHistory.startDate=moment(objOrderHistory.startDate).format('L');
+					objOrderHistory.endDate=moment(objOrderHistory.endDate).format('L');
+					vm.paymentHistoryList.push(objOrderHistory);
 
-        }
+				}
 
-        if(data.length<takeOrderHistory)
-        {
-          vm.isOrderHistoryLoaded = false;
-        }
-        $scope.moreOrderHistoryLoaded = true;
+				if(data.length<takeOrderHistory)
+				{
+					vm.isOrderHistoryLoaded = false;
+				}
+				$scope.moreOrderHistoryLoaded = true;
 
-      }).error(function(data)
-      {
-        console.log(data);
-        $scope.moreOrderHistoryLoaded = true;
-        vm.isOrderHistoryLoaded = false;
-      })
-    }
+			}).error(function(data)
+			{
+				console.log(data);
+				$scope.moreOrderHistoryLoaded = true;
+				vm.isOrderHistoryLoaded = false;
+			})
+		}
 
-    $scope.searchmoreOrderHistory = function (order){
-      $scope.moreOrderHistoryLoaded = false;
-      $scope.getOrderHistoryDetails(order);
-    }
+		$scope.searchmoreOrderHistory = function (order){
+			$scope.moreOrderHistoryLoaded = false;
+			$scope.getOrderHistoryDetails(order);
+		}
 
 		$scope.sortBy = function(propertyName,status,property) {
 
@@ -544,12 +561,12 @@
 					vm.selectedListItem = subscription;
 				});
 				selectSubscription(subscription);
-			  //skipAuditTrails=0;
-			  //$scope.auditTrailList=[];
-        //$scope.getAuditTrailDetails(subscription);
-        skipOrderHistory=0;
-        vm.paymentHistoryList=[];
-        $scope.getOrderHistoryDetails(subscription);
+				//skipAuditTrails=0;
+				//$scope.auditTrailList=[];
+				//$scope.getAuditTrailDetails(subscription);
+				skipOrderHistory=0;
+				vm.paymentHistoryList=[];
+				$scope.getOrderHistoryDetails(subscription);
 				inpageReadElement.setAttribute('style','width:70%');
 			}else if(state=='close'){
 				if($scope.inpageReadPaneEdit){
@@ -638,7 +655,7 @@
 					$scope.items = [];
 					$scope.loading=true;
 					$scope.more();
-          $scope.stopPaneOpen = false;
+					$scope.stopPaneOpen = false;
 				}
 				else if(data.response=="failed"){
 					$errorCheck.getClient().LoadErrorList(data.error).onComplete(function(Response)
@@ -685,7 +702,7 @@
 					$scope.items = [];
 					$scope.loading=true;
 					$scope.more();
-          $scope.stopPaneOpen = false;
+					$scope.stopPaneOpen = false;
 				}
 				else if(data.response=="failed"){
 					$errorCheck.getClient().LoadErrorList(data.error).onComplete(function(Response)
@@ -730,11 +747,11 @@
 			//$charge.order().all(skip,take,'asc',filter).success(function(data)
 			//{
 			//	console.log(data);
-            //
+			//
 			//	if($scope.loading)
 			//	{
 			//		skip += take;
-            //
+			//
 			//		for (var i = 0; i < data.length; i++) {
 			//			$scope.items.push(data[i]);
 			//		}
@@ -743,7 +760,7 @@
 			//		//  vm.plans=$scope.items;
 			//		//},0);
 			//		vm.searchMoreInit = false;
-            //
+			//
 			//		$scope.isLoading = false;
 			//		$scope.loading = false;
 			//		$scope.isdataavailable=true;
@@ -751,9 +768,9 @@
 			//			$scope.isdataavailable=false;
 			//			$scope.hideSearchMore=true;
 			//		}
-            //
+			//
 			//	}
-            //
+			//
 			//}).error(function(data)
 			//{
 			//	console.log(data);
@@ -763,57 +780,57 @@
 			//	$scope.hideSearchMore=true;
 			//})
 
-      var dbNamePart1="";
-      var dbNamePart2="";
-      var dbName="";
-      var filter="";
-      dbNamePart1=getDomainName().split('.')[0];
-      dbNamePart2=getDomainExtension();
-      dbName=dbNamePart1+"_"+dbNamePart2;
-      //filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
-      var data={
-        "search": "*",
-        "filter": "(domain eq '"+dbName+"')",
-        "orderby" : "endDate asc",
-        "top":take,
-        "skip":skip
-      }
+			var dbNamePart1="";
+			var dbNamePart2="";
+			var dbName="";
+			var filter="";
+			dbNamePart1=getDomainName().split('.')[0];
+			dbNamePart2=getDomainExtension();
+			dbName=dbNamePart1+"_"+dbNamePart2;
+			//filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
+			var data={
+				"search": "*",
+				"filter": "(domain eq '"+dbName+"')",
+				"orderby" : "endDate asc",
+				"top":take,
+				"skip":skip
+			}
 
-      $charge.azuresearch().getAllSubscriptionPost(data).success(function(data)
-      {
-        console.log(data);
+			$charge.azuresearch().getAllSubscriptionPost(data).success(function(data)
+			{
+				console.log(data);
 
-        if($scope.loading)
-        {
-          skip += take;
+				if($scope.loading)
+				{
+					skip += take;
 
-          for (var i = 0; i < data.value.length; i++) {
-            $scope.items.push(data.value[i]);
-          }
-          vm.subscriptions=$scope.items;
-          //$timeout(function () {
-          //  vm.plans=$scope.items;
-          //},0);
-          vm.searchMoreInit = false;
+					for (var i = 0; i < data.value.length; i++) {
+						$scope.items.push(data.value[i]);
+					}
+					vm.subscriptions=$scope.items;
+					//$timeout(function () {
+					//  vm.plans=$scope.items;
+					//},0);
+					vm.searchMoreInit = false;
 
-          $scope.isLoading = false;
-          $scope.loading = false;
-          $scope.isdataavailable=true;
-          if(data.length<take){
-            $scope.isdataavailable=false;
-            $scope.hideSearchMore=true;
-          }
+					$scope.isLoading = false;
+					$scope.loading = false;
+					$scope.isdataavailable=true;
+					if(data.length<take){
+						$scope.isdataavailable=false;
+						$scope.hideSearchMore=true;
+					}
 
-        }
+				}
 
-      }).error(function(data)
-      {
-        console.log(data);
-        $scope.isSpinnerShown=false;
-        $scope.isdataavailable=false;
-        $scope.isLoading = false;
-        $scope.hideSearchMore=true;
-      })
+			}).error(function(data)
+			{
+				console.log(data);
+				$scope.isSpinnerShown=false;
+				$scope.isdataavailable=false;
+				$scope.isLoading = false;
+				$scope.hideSearchMore=true;
+			})
 
 		};
 		// we call the function twice to populate the list
@@ -992,37 +1009,37 @@
 				//}
 
 				if (keyword.length == searchLength) {
-				  console.log(keyword);
-				  //
-          skipSubscriptionSearch = 0;
-          takeSubscriptionSearch = 100;
-				  tempList = [];
+					console.log(keyword);
+					//
+					skipSubscriptionSearch = 0;
+					takeSubscriptionSearch = 100;
+					tempList = [];
 
-          var dbName="";
-          dbName=getDomainName().split('.')[0]+"_"+getDomainExtension();
-          //filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
-          var data={
-            "search": keyword+"*",
-            "searchFields": "first_name,last_name,code",
-            "filter": "(domain eq '"+dbName+"')",
-            "orderby" : "endDate asc",
-            "top":takeSubscriptionSearch,
-            "skip":skipSubscriptionSearch
-          }
+					var dbName="";
+					dbName=getDomainName().split('.')[0]+"_"+getDomainExtension();
+					//filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
+					var data={
+						"search": keyword+"*",
+						"searchFields": "first_name,last_name,code",
+						"filter": "(domain eq '"+dbName+"')",
+						"orderby" : "endDate asc",
+						"top":takeSubscriptionSearch,
+						"skip":skipSubscriptionSearch
+					}
 
-				  $charge.azuresearch().getAllSubscriptionPost(data).success(function (data) {
-				    for (var i = 0; i < data.value.length; i++) {
-				      tempList.push(data.value[i]);
-				    }
-            vm.subscriptions = tempList;
-				    //skipProfileSearch += takeProfileSearch;
-				    //$scope.loadPaging(keyword, skipProfileSearch, takeProfileSearch);
-				  }).error(function (data) {
-            vm.subscriptions = [];
-				  });
+					$charge.azuresearch().getAllSubscriptionPost(data).success(function (data) {
+						for (var i = 0; i < data.value.length; i++) {
+							tempList.push(data.value[i]);
+						}
+						vm.subscriptions = tempList;
+						//skipProfileSearch += takeProfileSearch;
+						//$scope.loadPaging(keyword, skipProfileSearch, takeProfileSearch);
+					}).error(function (data) {
+						vm.subscriptions = [];
+					});
 				}
 				else if (keyword.length == 0 || keyword == null) {
-          vm.subscriptions = $scope.items;
+					vm.subscriptions = $scope.items;
 				}
 
 				if(searchLength==0||searchLength==undefined)
@@ -1032,6 +1049,23 @@
 				}
 			}
 		}
+
+		$scope.showPaymentRetryHistry = function () {
+			$scope.paymentRetryHistoryView = true;
+			// var element = document.getElementsByTagName('md-tab-content');
+			// angular.forEach(element, function (elem) {
+			// 	$timeout(function(){
+			// 		elem.scrollTop = elem.scrollHeight - elem.clientHeight;
+			// 		// angular.element("tab-content-8").animate({ scrollTop: element.scrollHeight - element.clientHeight });
+			// 	},0);
+			// })
+			var elem = angular.element('#moreRetryAnchor').closest("[role='tabpanel']");
+			$timeout(function(){
+				//elem[0].scrollTop = elem[0].scrollHeight - elem[0].clientHeight;
+				elem.animate({ scrollTop: elem[0].scrollHeight - elem[0].clientHeight }, 'fast');
+			},0);
+		}
+
 
 	}
 })();
