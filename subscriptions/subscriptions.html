@@ -173,6 +173,9 @@
                     </div>
                 </div>
                 <md-content flex ms-scroll layout="column" class="inpage-readpane-body p-0">
+                    <div class="main-list-preloader animate-fade-in-out" layout="row" layout-sm="column" layout-align="space-around" ng-hide="isReadLoaded">
+                        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                    </div>
                     <md-tabs md-border-bottom class="inner-iconed-tabs" flex>
                         <md-tab label="Overview">
                             <md-tab-label>
@@ -181,23 +184,58 @@
                             <md-tab-body flex>
                                 <div class="p-16">
                                     <div layout="row" layout-align="space-between center">
-                                        <div>
-                                            <div layout="column" layout-align="center start">
+                                        <div layout="row" layout-align="start center">
+                                            <div layout="column" layout-align="center start" class="mr-20">
                                                 <div class="fs-20 font-accent fw-400">{{vm.selectedSubscription.code}}</div>
                                                 <div layout="row" class="op-5">
                                                     <span>by <b>{{vm.selectedSubscription.first_name}}</b></span>
                                                 </div>
                                             </div>
+                                            <div>
+                                                <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':vm.selectedSubscription.status==='Inactive','positive':vm.selectedSubscription.status==='Active'}">{{vm.selectedSubscription.status}}</span>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':vm.selectedSubscription.status==='Inactive','positive':vm.selectedSubscription.status==='Active'}">{{vm.selectedSubscription.status}}</span>
+                                        <div class="retry-state-bar" layout="row" layout-align="start center" md-ink-ripple ng-if="paymentRetryHistory.paymentFailedDate != null" ng-click="showPaymentRetryHistry()">
+                                            <!--<i class="material-icons">repeat</i>-->
+                                            <div class="retry-status {{paymentRetryHistory.firstAttemptStatus}}" layout="row" layout-align="start center">
+                                                <img src="assets/icons/retry_black.svg" alt="">
+                                                <span class="retry-val {{paymentRetryHistory.firstAttemptStatus}}">
+                                                    <label ng-if="paymentRetryHistory.attempted==1">1</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==2">2</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==3">3</label>
+                                                </span>
+                                                <span>
+                                                    <label ng-if="paymentRetryHistory.attempted==1">{{paymentRetryHistory.firstAttemptStatus}}</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==2">{{paymentRetryHistory.secondAttemptStatus}}</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==3">{{paymentRetryHistory.thiredAttemptStatus}}</label>
+                                                </span>
+                                            </div>
+                                            <!--<img src="assets/icons/retry_black.svg" alt="">-->
+                                            <!--<span class="retry-value" ng-if="paymentRetryHistory.attempted==1"><label>1<label>st</label></label></span>-->
+                                            <!--<span class="retry-value" ng-if="paymentRetryHistory.attempted==2"><label>2<label>nd</label></label></span>-->
+                                            <!--<span class="retry-value" ng-if="paymentRetryHistory.attempted==3"><label>3<label>rd</label></label></span>-->
+                                            <!--<span ng-if="paymentRetryHistory.attempted==1" class="{{paymentRetryHistory.firstAttemptStatus}}">{{paymentRetryHistory.firstAttemptStatus}}</span>-->
+                                            <!--<span ng-if="paymentRetryHistory.attempted==2" class="{{paymentRetryHistory.secondAttemptStatus}}">{{paymentRetryHistory.secondAttemptStatus}}</span>-->
+                                            <!--<span ng-if="paymentRetryHistory.attempted==3" class="{{paymentRetryHistory.thiredAttemptStatus}}">{{paymentRetryHistory.thiredAttemptStatus}}</span>-->
+                                            <span class="next-retry">
+                                                <label>Next retry </label>
+                                                {{paymentRetryHistory.nextRetryOn | limitTo:10}}
+                                            </span>
+                                            <a href="" class="ml-20" ng-click="showPaymentRetryHistry()" id="moreRetryAnchor">More</a>
+                                        </div>
+                                        <div class="retry-state-bar" layout="row" layout-align="start center" md-ink-ripple ng-if="paymentRetryHistory.paymentFailedDate == null">
+                                            <!--<i class="material-icons">repeat</i>-->
+                                            <div class="retry-status Pending" layout="row" layout-align="start center">
+                                                <i class="material-icons">payment</i>
+                                                <span>
+                                                    <label>Payment pending</label>
+                                                </span>
+                                            </div>
+                                            <a href="" class="ml-20" ng-click="showPaymentRetryHistry()" id="moreRetryAnchor">More</a>
                                         </div>
                                     </div>
                                     <md-divider class="mt-10 mb-20"></md-divider>
                                     <div layout="row">
-                                        <div class="main-list-preloader animate-fade-in-out" layout="row" layout-sm="column" layout-align="space-around" ng-hide="isReadLoaded">
-                                            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-                                        </div>
                                         <div flex class="mr-15">
                                             <!--<div layout="row" layout-align="start center" class="info-grid-row">-->
                                             <!--<div class="iconed-label"><span>Type</span></div>-->
@@ -205,180 +243,247 @@
                                             <!--</div>-->
                                             <div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">
                                                 <div flex class="iconed-label">
-                                                    <md-icon md-font-icon="icon-calendar-check"></md-icon> <span>Amount</span>
+                                                    <md-icon md-font-icon="icon-cash"></md-icon> <span>Amount</span>
                                                 </div>
                                                 <div flex class="">{{vm.selectedSubscription.unitPrice}}</div>
                                             </div>
                                             <div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">
                                               <div flex class="iconed-label">
-                                                <md-icon md-font-icon="icon-calendar-check"></md-icon> <span>Plan type</span>
+                                                <md-icon md-font-icon="icon-map"></md-icon> <span>Plan type</span>
                                               </div>
                                               <div flex class="">{{vm.selectedSubscription.type}}</div>
                                             </div>
                                             <div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">
                                                 <div flex class="iconed-label">
-                                                    <md-icon md-font-icon="icon-calendar-today"></md-icon> <span>Plan</span>
+                                                    <md-icon md-font-icon="icon-map"></md-icon> <span>Plan</span>
                                                 </div>
                                                 <div flex class="">{{vm.selectedSubscription.name}}</div>
                                             </div>
                                             <div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">
                                                 <div flex class="iconed-label">
-                                                    <md-icon md-font-icon="icon-alarm"></md-icon> <span>Last billing date</span>
+                                                    <md-icon md-font-icon="icon-calendar-check"></md-icon> <span>Last billing date</span>
                                                 </div>
                                                 <div flex class="">{{vm.selectedSubscription.lastBillDate | parseDate | date: 'dd'}} {{vm.selectedSubscription.lastBillDate | parseDate | date: 'MMMM' | limitTo:3}} {{vm.selectedSubscription.lastBillDate | parseDate | date: 'yyyy'}}</div>
                                             </div>
                                             <div flex layout="row" layout-align="start center" class="info-grid-row">
                                                 <div flex class="iconed-label">
-                                                    <md-icon md-font-icon="icon-calendar-clock"></md-icon> <span>Next scheduled date</span>
+                                                    <md-icon md-font-icon="icon-calendar-today"></md-icon> <span>Next scheduled date</span>
                                                 </div>
                                                 <div flex class="font-accent">{{vm.selectedSubscription.endDate | parseDate | date: 'dd'}} {{vm.selectedSubscription.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{vm.selectedSubscription.endDate | parseDate | date: 'yyyy'}}</div>
                                             </div>
                                         </div>
                                     </div>
-                                    <md-divider class="mt-10 mb-20" ng-if="addonPlansList.length!=0"></md-divider>
-                                    <div class="fs-20 font-accent fw-400" ng-if="addonPlansList.length!=0">Add-on Plans</div>
-                                    <div layout="row" ng-if="addonPlansList.length!=0">
-                                      <div flex class="list-offset sub-list" md-whiteframe="1dp">
-                                        <div class="list-header" layout="row" flex md-whiteframe="1dp">
-                                          <div flex>Plan</div>
-                                          <div flex>Plan Type</div>
-                                          <div flex>Quantity</div>
-                                          <!--<div flex>Last Billing Date</div>-->
-                                          <!--<div flex class="text-right">Next Scheduled Date</div>-->
-                                          <div flex class="text-right">Amount</div>
+
+                                    <md-card flex class="input-block-gen sub-list m-0 mt-30" ng-if="addonPlansList.length!=0">
+                                        <md-card-title>
+                                            <div layout="row" layout-align="start center">
+                                                <i class="material-icons">extension</i> <h3>Add-on plans</h3>
+                                            </div>
+                                        </md-card-title>
+                                        <div class="list-header" layout="row">
+                                            <div flex>Plan</div>
+                                            <div flex>Plan type</div>
+                                            <div flex>Quantity</div>
+                                            <div flex class="text-right">Amount</div>
                                         </div>
                                         <md-card-content class="p-0" flex>
-                                          <md-content class="list-content" ms-scroll>
-                                            <div layout="row" layout-align="center center" class="msg-empty-list" ng-if="addonPlansList.length == 0 || addonPlansList == null">
-                                              <span><md-icon md-font-icon="icon-information-outline"></md-icon> No Add-on Plans for this Plan</span>
-                                            </div>
-                                            <div layout="row" flex class="list-item" ng-repeat="addon in addonPlansList">
-                                              <div flex>
-                                                <span>{{addon.code}}</span>
-                                              </div>
-                                              <div flex>
-                                                <span>Add-On</span>
-                                              </div>
-                                              <div flex>
-                                                <span>{{addon.qty}}</span>
-                                              </div>
-                                              <!--<div flex>-->
-                                                <!--<span>{{addon.lastBillDate | parseDate | date: 'dd'}} {{addon.lastBillDate | parseDate | date: 'MMMM' | limitTo:3}} {{addon.lastBillDate | parseDate | date: 'yyyy'}}</span>-->
-                                              <!--</div>-->
-                                              <!--<div flex class="text-right font-accent">-->
-                                                <!--<span>{{addon.endDate | parseDate | date: 'dd'}} {{addon.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{addon.endDate | parseDate | date: 'yyyy'}}</span>-->
-                                              <!--</div>-->
-                                              <div flex class="text-right">
-                                                <span>{{addon.amount|isoCurrency:BaseCurrency}}</span>
-                                              </div>
-                                            </div>
-                                          </md-content>
+                                            <md-content class="list-content" ms-scroll>
+                                                <div layout="row" layout-align="center center" class="msg-empty-list" ng-if="addonPlansList.length == 0 || addonPlansList == null">
+                                                    <span><md-icon md-font-icon="icon-information-outline"></md-icon> No Add-on Plans for this Plan</span>
+                                                </div>
+                                                <div layout="row" flex class="list-item" ng-repeat="addon in addonPlansList">
+                                                    <div flex>
+                                                        <span>{{addon.code}}</span>
+                                                    </div>
+                                                    <div flex>
+                                                        <span>Add-On</span>
+                                                    </div>
+                                                    <div flex>
+                                                        <span>{{addon.qty}}</span>
+                                                    </div>
+                                                    <!--<div flex>-->
+                                                    <!--<span>{{addon.lastBillDate | parseDate | date: 'dd'}} {{addon.lastBillDate | parseDate | date: 'MMMM' | limitTo:3}} {{addon.lastBillDate | parseDate | date: 'yyyy'}}</span>-->
+                                                    <!--</div>-->
+                                                    <!--<div flex class="text-right font-accent">-->
+                                                    <!--<span>{{addon.endDate | parseDate | date: 'dd'}} {{addon.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{addon.endDate | parseDate | date: 'yyyy'}}</span>-->
+                                                    <!--</div>-->
+                                                    <div flex class="text-right">
+                                                        <span>{{addon.amount|isoCurrency:BaseCurrency}}</span>
+                                                    </div>
+                                                </div>
+                                            </md-content>
                                         </md-card-content>
-                                      </div>
-                                    </div>
-                                  <md-divider class="mt-10 mb-20"></md-divider>
-                                  <div class="fs-20 font-accent fw-400">Payment Retry History</div>
-                                  <div layout="row">
-                                    <div flex>
-                                      <div class="ml-35 mt-10" layout="row" layout-align="start center">
-                                        <span class="circle">Amount: </span>
-                                        <span class="label">{{paymentRetryHistory.amount|isoCurrency:paymentRetryHistory.currency}}</span>
-                                      </div>
-                                      <div class="ml-35 mt-10" layout="row" layout-align="start center">
-                                        <span class="circle">Payment Failed Date: </span>
-                                        <span class="label">{{paymentRetryHistory.paymentFailedDate}}</span>
-                                      </div>
-                                      <div class="ml-35 mt-10" layout="row" layout-align="start center">
-                                        <i class="material-icons start-process">repeat</i>
-                                      </div>
+                                    </md-card>
+                                    <!--<div layout="row" ng-if="addonPlansList.length!=0">-->
+                                      <!--<div flex class="list-offset sub-list" md-whiteframe="1dp">-->
+                                        <!--<div class="list-header" layout="row" flex md-whiteframe="1dp">-->
+                                          <!--<div flex>Plan</div>-->
+                                          <!--<div flex>Plan Type</div>-->
+                                          <!--<div flex>Quantity</div>-->
+                                          <!--&lt;!&ndash;<div flex>Last Billing Date</div>&ndash;&gt;-->
+                                          <!--&lt;!&ndash;<div flex class="text-right">Next Scheduled Date</div>&ndash;&gt;-->
+                                          <!--<div flex class="text-right">Amount</div>-->
+                                        <!--</div>-->
+                                        <!--<md-card-content class="p-0" flex>-->
+                                          <!--<md-content class="list-content" ms-scroll>-->
+                                            <!--<div layout="row" layout-align="center center" class="msg-empty-list" ng-if="addonPlansList.length == 0 || addonPlansList == null">-->
+                                              <!--<span><md-icon md-font-icon="icon-information-outline"></md-icon> No Add-on Plans for this Plan</span>-->
+                                            <!--</div>-->
+                                            <!--<div layout="row" flex class="list-item" ng-repeat="addon in addonPlansList">-->
+                                              <!--<div flex>-->
+                                                <!--<span>{{addon.code}}</span>-->
+                                              <!--</div>-->
+                                              <!--<div flex>-->
+                                                <!--<span>Add-On</span>-->
+                                              <!--</div>-->
+                                              <!--<div flex>-->
+                                                <!--<span>{{addon.qty}}</span>-->
+                                              <!--</div>-->
+                                              <!--&lt;!&ndash;<div flex>&ndash;&gt;-->
+                                                <!--&lt;!&ndash;<span>{{addon.lastBillDate | parseDate | date: 'dd'}} {{addon.lastBillDate | parseDate | date: 'MMMM' | limitTo:3}} {{addon.lastBillDate | parseDate | date: 'yyyy'}}</span>&ndash;&gt;-->
+                                              <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                              <!--&lt;!&ndash;<div flex class="text-right font-accent">&ndash;&gt;-->
+                                                <!--&lt;!&ndash;<span>{{addon.endDate | parseDate | date: 'dd'}} {{addon.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{addon.endDate | parseDate | date: 'yyyy'}}</span>&ndash;&gt;-->
+                                              <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                              <!--<div flex class="text-right">-->
+                                                <!--<span>{{addon.amount|isoCurrency:BaseCurrency}}</span>-->
+                                              <!--</div>-->
+                                            <!--</div>-->
+                                          <!--</md-content>-->
+                                        <!--</md-card-content>-->
+                                      <!--</div>-->
+                                    <!--</div>-->
+                                    <md-card flex class="input-block-gen m-0 mt-30" ng-if="paymentRetryHistoryView">
+                                        <md-card-title>
+                                            <div layout="row" layout-align="start center">
+                                                <md-icon md-font-icon="icon-credit-card-multiple"></md-icon> <h3>Payment retry history</h3>
+                                            </div>
+                                        </md-card-title>
+                                        <md-card-content class="p-0 pb-40" flex>
+                                            <div>
+                                                <div flex>
+                                                    <div layout="row">
+                                                        <div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">
+                                                            <div flex class="iconed-label">
+                                                                <md-icon md-font-icon="icon-cash"></md-icon> <span>Amount</span>
+                                                            </div>
+                                                            <div flex class="">{{paymentRetryHistory.amount|isoCurrency:paymentRetryHistory.currency}}</div>
+                                                        </div>
+                                                        <div flex="5"></div>
+                                                        <div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">
+                                                            <div flex class="iconed-label">
+                                                                <md-icon md-font-icon="icon-calendar-remove"></md-icon> <span>Payment failed date</span>
+                                                            </div>
+                                                            <div flex class="">{{paymentRetryHistory.paymentFailedDate}}</div>
+                                                        </div>
+                                                    </div>
 
-                                      <div class="process-block">
-                                        <div layout="row" flex>
-                                          <div layout="row" layout-align="start center" class="step-circle" flex="20">
-                                            <span class="circle">1st</span>
-                                            <span class="label">Retry Attempt</span>
-                                          </div>
-                                          <!--<div flex="10" layout="row" layout-align="center center">-->
-                                          <!--&lt;!&ndash;<div class="bb flex"></div>&ndash;&gt;-->
-                                          <!--</div>-->
-                                          <div class="step-body" layout="row" layout-align="start center">
-                                            <div layout="row" layout-align="start center">
-                                              <span class="mr-10">Retried On </span>
-                                              <span class="mr-10">{{paymentRetryHistory.paymentFirstDate}}</span>
-                                              <span class="ml-10"> Status: {{paymentRetryHistory.firstAttemptStatus}}</span>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="process-block">
-                                        <div layout="row" flex>
-                                          <div layout="row" layout-align="start center" class="step-circle" flex="20">
-                                            <span class="circle">2nd</span>
-                                            <span class="label">Retry attempt</span>
-                                          </div>
-                                          <!--<div flex="10" layout="row" layout-align="center center">-->
-                                          <!--&lt;!&ndash;<div class="bb flex"></div>&ndash;&gt;-->
-                                          <!--</div>-->
-                                          <div class="step-body" layout="row" layout-align="start center">
-                                            <div layout="row" layout-align="start center">
-                                              <span class="mr-10">Retried On </span>
-                                              <span class="mr-10">{{paymentRetryHistory.paymentSecondDate}}</span>
-                                              <span class="ml-10"> Status: {{paymentRetryHistory.secondAttemptStatus}}</span>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="process-block">
-                                        <div layout="row" flex>
-                                          <div layout="row" layout-align="start center" class="step-circle" flex="20">
-                                            <span class="circle">3rd</span>
-                                            <span class="label">Retry attempt</span>
-                                          </div>
-                                          <!--<div flex="10" layout="row" layout-align="center center">-->
-                                          <!--&lt;!&ndash;<div class="bb flex"></div>&ndash;&gt;-->
-                                          <!--</div>-->
-                                          <div class="step-body" layout="row" layout-align="start center">
-                                            <div layout="row" layout-align="start center">
-                                              <span class="mr-10">Retried On </span>
-                                              <span class="mr-10">{{paymentRetryHistory.paymentThiredDate}}</span>
-                                              <span class="ml-10"> Status: {{paymentRetryHistory.thiredAttemptStatus}}</span>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="process-block pb-0 pt-5">
-                                        <div layout="row" flex>
-                                          <div layout="row" layout-align="start center" class="step-circle mb-0" flex="20">
+                                                    <div class="process-block">
+                                                        <div layout="row" flex>
+                                                            <div layout="row" layout-align="start center" class="step-circle" flex="20">
+                                                                <span class="circle">1st</span>
+                                                                <span class="label">Retry</span>
+                                                            </div>
+                                                            <!--<div flex="10" layout="row" layout-align="center center">-->
+                                                            <!--&lt;!&ndash;<div class="bb flex"></div>&ndash;&gt;-->
+                                                            <!--</div>-->
+                                                            <div class="step-body" layout="row" layout-align="start center" flex ng-if="paymentRetryHistory.paymentFirstDate != null">
+                                                                <div layout="row" layout-align="start center" flex>
+                                                                    <div layout="column" flex>
+                                                                        <span>Retried on </span>
+                                                                        <span><b>{{paymentRetryHistory.paymentFirstDate}}</b></span>
+                                                                    </div>
+                                                                    <div layout="column" flex>
+                                                                        <span>Status </span>
+                                                                        <span><b>{{paymentRetryHistory.firstAttemptStatus}}</b></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="process-block">
+                                                        <div layout="row" flex>
+                                                            <div layout="row" layout-align="start center" class="step-circle" flex="20">
+                                                                <span class="circle">2nd</span>
+                                                                <span class="label">Retry</span>
+                                                            </div>
+                                                            <!--<div flex="10" layout="row" layout-align="center center">-->
+                                                            <!--&lt;!&ndash;<div class="bb flex"></div>&ndash;&gt;-->
+                                                            <!--</div>-->
+                                                            <div class="step-body" layout="row" layout-align="start center" flex ng-if="paymentRetryHistory.paymentSecondDate != null">
+                                                                <div layout="row" layout-align="start center" flex>
+                                                                    <div layout="column" flex>
+                                                                        <span>Retried on </span>
+                                                                        <span><b>{{paymentRetryHistory.paymentSecondDate}}</b></span>
+                                                                    </div>
+                                                                    <div layout="column" flex>
+                                                                        <span>Status </span>
+                                                                        <span><b>{{paymentRetryHistory.secondAttemptStatus}}</b></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="process-block">
+                                                        <div layout="row" flex>
+                                                            <div layout="row" layout-align="start center" class="step-circle" flex="20">
+                                                                <span class="circle">3rd</span>
+                                                                <span class="label">Retry</span>
+                                                            </div>
+                                                            <!--<div flex="10" layout="row" layout-align="center center">-->
+                                                            <!--&lt;!&ndash;<div class="bb flex"></div>&ndash;&gt;-->
+                                                            <!--</div>-->
+                                                            <div class="step-body" layout="row" layout-align="start center" flex ng-if="paymentRetryHistory.paymentThiredDate != null">
+                                                                <div layout="row" layout-align="start center" flex>
+                                                                    <div layout="column" flex>
+                                                                        <span>Retried on </span>
+                                                                        <span><b>{{paymentRetryHistory.paymentThiredDate}}</b></span>
+                                                                    </div>
+                                                                    <div layout="column" flex>
+                                                                        <span>Status </span>
+                                                                        <span><b>{{paymentRetryHistory.thiredAttemptStatus}}</b></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="process-block pb-0 pt-5">
+                                                        <div layout="row" flex>
+                                                            <div layout="row" layout-align="start center" class="step-circle mb-0" flex="20">
                                                                     <span class="circle end text-center">
                                                                         <!--<i class="material-icons">report</i>-->
                                                                         END
                                                                     </span>
-                                            <span class="label">Process by</span>
-                                          </div>
-                                          <!--<div flex="10" layout="row" layout-align="center center">-->
-                                          <!--&lt;!&ndash;<div class="bb flex"></div>&ndash;&gt;-->
-                                          <!--</div>-->
-                                          <div class="step-body mbm-10" layout="row" layout-align="start center">
-                                            <div layout="row" layout-align="start center">
-                                              <span class="mr-10">Deactivate Profile</span>
+                                                                <span class="label">Deactivate profile</span>
+                                                            </div>
+                                                            <!--<div flex="10" layout="row" layout-align="center center">-->
+                                                            <!--&lt;!&ndash;<div class="bb flex"></div>&ndash;&gt;-->
+                                                            <!--</div>-->
+                                                            <!--<div class="step-body mbm-10" layout="row" layout-align="start center">-->
+                                                                <!--<div layout="row" layout-align="start center">-->
+                                                                    <!--<span class="mr-10">Deactivate Profile</span>-->
+                                                                <!--</div>-->
+                                                            <!--</div>-->
+                                                        </div>
+                                                    </div>
+
+                                                    <md-divider class="mt-20"></md-divider>
+                                                    <div layout="row">
+                                                        <div flex></div>
+                                                        <div flex="5"></div>
+                                                        <div flex layout="row" layout-align="start center" class="info-grid-row">
+                                                        <div flex class="iconed-label">
+                                                            <md-icon md-font-icon="icon-calendar-check"></md-icon> <span>Next retry date</span>
+                                                        </div>
+                                                        <div flex class="">{{paymentRetryHistory.nextRetryOn}}</div>
+                                                    </div>
+                                                    </div>
+
+                                                </div>
                                             </div>
-                                          </div>
-                                        </div>
-                                      </div>
+                                        </md-card-content>
+                                    </md-card>
 
-                                      <div class="ml-35 mt-10" layout="row" layout-align="start center">
-                                        <span class="circle">Next Retry Date: </span>
-                                        <span class="label">{{paymentRetryHistory.nextRetryOn}}</span>
-                                      </div>
-                                      <div class="ml-35 mt-10" layout="row" layout-align="start center">
-
-                                      </div>
-                                      <div class="ml-35 mt-10" layout="row" layout-align="start center">
-
-                                      </div>
-
-                                    </div>
-                                  </div>
                                 </div>
                             </md-tab-body>
                         </md-tab>
