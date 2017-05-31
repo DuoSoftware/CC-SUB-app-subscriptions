@@ -182,7 +182,7 @@
                                 <md-icon md-font-icon="icon-cog"></md-icon> General
                             </md-tab-label>
                             <md-tab-body flex>
-                                <div class="p-16">
+                                <div class="p-16 pb-50">
                                     <div layout="row" layout-align="space-between center">
                                         <div layout="row" layout-align="space-between center" ng-class="{'flex':paymentRetryHistory.paymentFailedDate == null}">
                                             <div layout="column" layout-align="center start" class="mr-20">
@@ -192,7 +192,7 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':vm.selectedSubscription.status==='Inactive','positive':vm.selectedSubscription.status==='Active'}">{{vm.selectedSubscription.status}}</span>
+                                                <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':vm.selectedSubscription.orderStatus==='Inactive','positive':vm.selectedSubscription.orderStatus==='Active'}">{{vm.selectedSubscription.orderStatus}}</span>
                                             </div>
                                         </div>
                                         <div class="retry-state-bar" layout="row" layout-align="start center" md-ink-ripple ng-if="paymentRetryHistory.paymentFailedDate != null" ng-click="showPaymentRetryHistry()" id="moreRetryAnchor">
