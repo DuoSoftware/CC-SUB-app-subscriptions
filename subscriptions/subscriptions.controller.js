@@ -146,7 +146,7 @@
 		}
 
 		function getDomainExtension() {
-			var _st = gst("extension_mode");
+			var _st = gst("extention_mode");
 			return (_st != null) ? _st : "test"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
 		}
 
@@ -236,7 +236,7 @@
 
 						$scope.loaderArr.push('ok');
 					}).error(function(data) {
-						console.log(data);
+						//console.log(data);
 						//vm.selectedPlan = plan;
 						vm.selectedSubscription.taxType = "-1";
 						vm.selectedSubscription.taxAmount = 0;
@@ -244,7 +244,7 @@
 					})
 
 				}).error(function(data) {
-					console.log(data);
+					//console.log(data);
 					//vm.selectedPlan = plan;
 					vm.selectedSubscription.taxType = "-1";
 					vm.selectedSubscription.taxAmount = 0;
@@ -255,14 +255,14 @@
 					$scope.loaderArr.push('ok');
 
 				}).error(function(data) {
-					console.log(data);
+					//console.log(data);
 					vm.selectedSubscription.email_addr="";
 					$scope.loaderArr.push('ok');
 
 				})
 				$scope.addonPlansList=[];
 				$charge.order().getAddonsByOrderId(subscription.guOrderId).success(function(data) {
-					console.log(data);
+					//console.log(data);
 					for (var i = 0; i < data.length; i++) {
 						$scope.addonPlansList.push(data[i]);
 
@@ -270,13 +270,13 @@
 					$scope.loaderArr.push('ok');
 
 				}).error(function(data) {
-					console.log(data);
+					//console.log(data);
 					$scope.loaderArr.push('ok');
 
 				})
 				$scope.paymentRetryHistory={};
 				$charge.notification().getPaymentRetryHistory(subscription.guAccountId, subscription.code).success(function(data) {
-					console.log(data);
+					//console.log(data);
 					$scope.paymentRetryHistory=data;
 
 					$scope.paymentRetryHistory.paymentFailedDate=$scope.paymentRetryHistory.failedDate;
@@ -297,6 +297,8 @@
 						$scope.paymentRetryHistory.firstAttemptStatus="";
 						$scope.paymentRetryHistory.secondAttemptStatus="";
 						$scope.paymentRetryHistory.thiredAttemptStatus="";
+
+						$scope.paymentRetryHistory.status="Failed";
 
 						$scope.paymentRetryHistory.firstRetryOn=$scope.paymentRetryHistory.nextRetryOn;
 					}
@@ -358,7 +360,7 @@
 					$scope.loaderArr.push('ok');
 
 				}).error(function(data) {
-					console.log(data);
+					//console.log(data);
 					$scope.loaderArr.push('ok');
 
 				})
@@ -395,7 +397,7 @@
 			vm.isAuditTrailLoaded = true;
 			$charge.audit().getByAccountId(orderId,skipAuditTrails,takeAuditTrails,'desc').success(function(data)
 			{
-				console.log(data);
+				//console.log(data);
 				skipAuditTrails+=takeAuditTrails;
 				//$scope.auditTrailList=data;
 				for (var i = 0; i < data.length; i++) {
@@ -414,7 +416,7 @@
 
 			}).error(function(data)
 			{
-				console.log(data);
+				//console.log(data);
 				//if(data.error=="No found!")
 				//{
 				//  $scope.noAuditTrailLabel=true;
@@ -443,7 +445,7 @@
 			vm.isOrderHistoryLoaded = true;
 			$charge.order().getOrderHistoryByPlanCode(planCode,accId,skipOrderHistory,takeOrderHistory,'desc').success(function(data)
 			{
-				console.log(data);
+				//console.log(data);
 				skipOrderHistory+=takeOrderHistory;
 				for (var i = 0; i < data.length; i++) {
 					var objOrderHistory=data[i];
@@ -461,7 +463,7 @@
 
 			}).error(function(data)
 			{
-				console.log(data);
+				//console.log(data);
 				$scope.moreOrderHistoryLoaded = true;
 				vm.isOrderHistoryLoaded = false;
 			})
@@ -567,7 +569,7 @@
 				skipOrderHistory=0;
 				vm.paymentHistoryList=[];
 				$scope.getOrderHistoryDetails(subscription);
-				inpageReadElement.setAttribute('style','width:70%');
+				if(inpageReadElement != undefined) inpageReadElement.setAttribute('style','width:70%');
 			}else if(state=='close'){
 				if($scope.inpageReadPaneEdit){
 					$scope.cancelEdit();
@@ -664,7 +666,7 @@
 						notifications.toast(result,"error");
 					}).onError(function(data)
 					{
-						console.log(data);
+						//console.log(data);
 					});
 				}
 			}).error(function(data){
@@ -676,13 +678,13 @@
 						notifications.toast(result,"error");
 					}).onError(function(data)
 					{
-						console.log(data);
+						//console.log(data);
 					});
 				}
 				else{
 					notifications.toast(data,"error");
 				}
-				console.log(data);
+				//console.log(data);
 			})
 		}
 
@@ -711,7 +713,7 @@
 						notifications.toast(result,"error");
 					}).onError(function(data)
 					{
-						console.log(data);
+						//console.log(data);
 					});
 				}
 			}).error(function(data){
@@ -723,13 +725,13 @@
 						notifications.toast(result,"error");
 					}).onError(function(data)
 					{
-						console.log(data);
+						//console.log(data);
 					});
 				}
 				else{
 					notifications.toast(data,"error");
 				}
-				console.log(data);
+				//console.log(data);
 			})
 		}
 
@@ -798,7 +800,7 @@
 
 			$charge.azuresearch().getAllSubscriptionPost(data).success(function(data)
 			{
-				console.log(data);
+				//console.log(data);
 
 				if($scope.loading)
 				{
@@ -825,7 +827,7 @@
 
 			}).error(function(data)
 			{
-				console.log(data);
+				//console.log(data);
 				$scope.isSpinnerShown=false;
 				$scope.isdataavailable=false;
 				$scope.isLoading = false;
@@ -867,9 +869,9 @@
 					$scope.content.rate=$scope.currencyRate;
 
 					var planObject = $scope.content;
-					console.log(planObject);
+					//console.log(planObject);
 					$charge.plan().createPlan(planObject).success(function(data){
-						console.log(data);
+						//console.log(data);
 						if(data.status==true)
 						{
 							notifications.toast("Successfully Plan Created","success");
@@ -889,7 +891,7 @@
 						{
 							notifications.toast(data.error,"error");
 
-							console.log(data);
+							//console.log(data);
 							vm.submitted=false;
 						}
 
@@ -903,7 +905,7 @@
 						else
 						{
 							notifications.toast(data,"error");
-							console.log(data);
+							//console.log(data);
 						}
 						vm.submitted=false;
 					})
@@ -923,9 +925,9 @@
 					//vm.editSelectedPlan.rate=$scope.currencyRate;
 
 					var planObject = vm.editSelectedPlan;
-					console.log(planObject);
+					//console.log(planObject);
 					$charge.plan().updatePlan(planObject).success(function(data){
-						console.log(data);
+						//console.log(data);
 						if(data.Result==true)
 						{
 							notifications.toast("Successfully Plan Modified","success");
@@ -943,7 +945,7 @@
 						{
 							notifications.toast(data.error,"error");
 
-							console.log(data);
+							//console.log(data);
 							vm.submitted=false;
 						}
 
@@ -960,7 +962,7 @@
 						//  console.log(data);
 						//}
 						notifications.toast(data,"error");
-						console.log(data);
+						//console.log(data);
 						vm.submitted=false;
 					})
 				}else{
@@ -973,7 +975,7 @@
 		$scope.searchKeyPress = function (event,keyword,length){
 			if(event.keyCode === 13)
 			{
-				console.log("Function Reached!");
+				//console.log("Function Reached!");
 				$scope.loadByKeywordSubscription(keyword,length);
 			}
 		}
@@ -984,7 +986,7 @@
 			//$scope.selectedCurrency = $scope.BaseCurrency;
 
 		}).error(function(data) {
-			console.log(data);
+			//console.log(data);
 			$scope.BaseCurrency="USD";
 			//$scope.selectedCurrency = $scope.BaseCurrency;
 		})
@@ -1009,7 +1011,7 @@
 				//}
 
 				if (keyword.length == searchLength) {
-					console.log(keyword);
+					//console.log(keyword);
 					//
 					skipSubscriptionSearch = 0;
 					takeSubscriptionSearch = 100;
