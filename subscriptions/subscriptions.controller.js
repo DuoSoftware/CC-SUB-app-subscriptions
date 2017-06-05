@@ -226,6 +226,7 @@
 				vm.selectedSubscription.guAccountId=subscription.guAccountId;
 				vm.selectedSubscription.guOrderId=subscription.guOrderId;
 				vm.selectedSubscription.first_name=subscription.first_name;
+				vm.selectedSubscription.class=subscription.class;
 
 				$charge.tax().getTaxGrpByIDs(vm.selectedSubscription.taxID).success(function(data) {
 					var taxid=data.groupDetail[0].taxid;

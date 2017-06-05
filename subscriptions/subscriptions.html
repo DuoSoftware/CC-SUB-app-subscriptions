@@ -173,6 +173,7 @@
                     </div>
                 </div>
                 <md-content flex ms-scroll layout="column" class="inpage-readpane-body p-0">
+                    <span class="type-flag" ng-if="vm.selectedSubscription.class == 'Trial'">Trial</span>
                     <div class="main-list-preloader animate-fade-in-out" layout="row" layout-sm="column" layout-align="space-around" ng-hide="isReadLoaded">
                         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                     </div>
@@ -186,7 +187,10 @@
                                     <div layout="row" layout-align="space-between center">
                                         <div layout="row" layout-align="space-between center" ng-class="{'flex':paymentRetryHistory.paymentFailedDate == null}">
                                             <div layout="column" layout-align="center start" class="mr-20">
-                                                <div class="fs-20 font-accent fw-400">{{vm.selectedSubscription.code}}</div>
+                                                <div class="fs-20 font-accent fw-400">
+                                                    {{vm.selectedSubscription.code}}
+                                                    <!--<span class="type-flag" ng-if="vm.selectedSubscription.class == 'Trial'">Trial</span>-->
+                                                </div>
                                                 <div layout="row" class="op-5">
                                                     <span>by <b>{{vm.selectedSubscription.first_name}}</b></span>
                                                 </div>
