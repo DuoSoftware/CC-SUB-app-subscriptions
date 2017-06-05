@@ -192,26 +192,27 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':vm.selectedSubscription.status==='Inactive','positive':vm.selectedSubscription.status==='Active'}">{{vm.selectedSubscription.status}}</span>
+                                                <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':vm.selectedSubscription.orderStatus==='Stopped','positive':vm.selectedSubscription.orderStatus==='Active'}">{{vm.selectedSubscription.orderStatus}}</span>
                                             </div>
                                         </div>
                                         <!--<div flex>Payment Status:{{paymentRetryHistory.status}}</div>-->
-                                        <div class="retry-state-bar" layout="row" layout-align="start center" md-ink-ripple ng-if="paymentRetryHistory.paymentFailedDate != null && paymentRetryHistory.status != null" ng-click="showPaymentRetryHistry()" id="moreRetryAnchor">
+                                        <div class="retry-state-bar" layout="row" layout-align="start center" ng-if="paymentRetryHistory.paymentFailedDate != null && paymentRetryHistory.status != null" id="moreRetryAnchor">
                                             <!--<i class="material-icons">repeat</i>-->
                                             <!--<span class="retry-title">Payment retry status</span>-->
-                                            <div class="retry-status {{paymentRetryHistory.status}}" layout="row" layout-align="start center" md-whiteframe="1dp">
+                                            <div class="retry-status {{paymentRetryHistory.paymentState}}" layout="row" layout-align="start center" ng-class="{'Failed':paymentRetryHistory.status == ''}" ng-click="showPaymentRetryHistry()">
                                                 <img src="assets/icons/retry_black.svg" alt=""  ng-if="paymentRetryHistory.firstAttemptStatus != '' || paymentRetryHistory.secondAttemptStatus != '' || paymentRetryHistory.thiredAttemptStatus != ''">
                                                 <md-icon md-font-icon="icon-check-circle" class="retry-suc" ng-if="paymentRetryHistory.firstAttemptStatus == 'Success' || paymentRetryHistory.secondAttemptStatus == 'Success' || paymentRetryHistory.thiredAttemptStatus == 'Success'"></md-icon>
                                                 <span class="retry-val {{paymentRetryHistory.status}}">
-                                                    <label ng-if="paymentRetryHistory.attempted==1">1</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==1 && paymentRetryHistory.status != ''">1</label>
                                                     <label ng-if="paymentRetryHistory.attempted==2">2</label>
                                                     <label ng-if="paymentRetryHistory.attempted==3">3</label>
                                                 </span>
                                                 <span>
-                                                    <label ng-if="paymentRetryHistory.attempted==1">PAYMENT {{paymentRetryHistory.firstAttemptStatus}}</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==1 && paymentRetryHistory.status == ''">PAYMENT FAILED</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==1 && paymentRetryHistory.status != ''">PAYMENT {{paymentRetryHistory.firstAttemptStatus}}</label>
                                                     <label ng-if="paymentRetryHistory.attempted==2">PAYMENT {{paymentRetryHistory.secondAttemptStatus}}</label>
                                                     <label ng-if="paymentRetryHistory.attempted==3">PAYMENT {{paymentRetryHistory.thiredAttemptStatus}}</label>
-                                                    <label ng-if="paymentRetryHistory.status != null">PAYMENT {{paymentRetryHistory.status}}</label>
+                                                    <label ng-if="paymentRetryHistory.status != null && paymentRetryHistory.status != ''">PAYMENT {{paymentRetryHistory.status}}</label>
                                                 </span>
                                             </div>
                                             <span class="next-retry" ng-if="paymentRetryHistory.nextRetryOn != null">
@@ -373,7 +374,7 @@
                                                             <!--<div flex="10" layout="row" layout-align="center center">-->
                                                             <!--<!--<div class="bb flex"></div>-->
                                                             <!--</div>-->
-                                                            <div class="step-body" layout="row" layout-align="start center" flex ng-if="paymentRetryHistory.paymentFirstDate != null">
+                                                            <div class="step-body" layout="row" layout-align="start center" flex ng-if="paymentRetryHistory.status != ''">
                                                                 <div layout="row" layout-align="start center" flex>
                                                                     <div layout="column" flex>
                                                                         <span>Retried on </span>
