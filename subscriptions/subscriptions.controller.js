@@ -477,7 +477,7 @@
 
 		$scope.sortBy = function(propertyName,status,property) {
 
-			if(propertyName == 'lastBillingDate'){
+			if(propertyName == 'lastBillDate'){
 				angular.forEach(vm.subscriptions, function (sub) {
 					sub.lastBillDate = new Date(sub.lastBillDate);
 				});
