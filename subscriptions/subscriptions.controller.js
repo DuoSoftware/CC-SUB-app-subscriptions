@@ -142,7 +142,7 @@
 
 		function getDomainName() {
 			var _st = gst("domain");
-			return (_st != null) ? _st : ""; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
+			return (_st != null) ? _st : "suvenCom"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
 		}
 
 		function getDomainExtension() {
@@ -226,6 +226,7 @@
 				vm.selectedSubscription.guAccountId=subscription.guAccountId;
 				vm.selectedSubscription.guOrderId=subscription.guOrderId;
 				vm.selectedSubscription.first_name=subscription.first_name;
+				vm.selectedSubscription.class=subscription.class;
 
 				$charge.tax().getTaxGrpByIDs(vm.selectedSubscription.taxID).success(function(data) {
 					var taxid=data.groupDetail[0].taxid;
@@ -476,7 +477,7 @@
 
 		$scope.sortBy = function(propertyName,status,property) {
 
-			if(propertyName == 'lastBillingDate'){
+			if(propertyName == 'lastBillDate'){
 				angular.forEach(vm.subscriptions, function (sub) {
 					sub.lastBillDate = new Date(sub.lastBillDate);
 				});

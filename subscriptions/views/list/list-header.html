@@ -2,13 +2,13 @@
     <div layout="row">
         <span layout="column" layout-align="center center" class="header-text">Customer</span>
         <div layout="column" layout="center center">
-            <md-button ng-hide="showUser" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('user',true,'User')">
+            <md-button ng-hide="showUser" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('first_name',true,'User')">
                 <md-icon class="sort_btn_icon merged" md-font-icon="icon-chevron-up"></md-icon>
                 <md-icon md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
-            <md-button ng-show="showUser" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('user',null,'User')">
-                <md-icon ng-if="reverse==true" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
-                <md-icon ng-if="reverse==false" md-font-icon="icon-chevron-down"></md-icon>
+            <md-button ng-show="showUser" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('first_name',null,'User')">
+                <md-icon ng-if="reverse==false" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>
+                <md-icon ng-if="reverse==true" md-font-icon="icon-chevron-down"></md-icon>
             </md-button>
         </div>
     </div>

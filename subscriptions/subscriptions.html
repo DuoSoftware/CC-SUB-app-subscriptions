@@ -21,7 +21,7 @@
     <div ng-switch-when="default" class="center" layout="column" flex>
         <!-- CONTENT HEADER- V NAV-->
         <div layout="column" layout-align="start start">
-            <div class="v-header" layout="row" flex fill-width>
+            <div class="v-header" layout="column" flex fill-width>
                 <div class="title" layout="column" layout-align="center start">
                     <div class="logo" layout="row" layout-align="start center">
                         <span class="logo-icon">
@@ -30,7 +30,7 @@
                         <span class="logo-text">Subscriptions</span>
                     </div>
                 </div>
-                <div class="search-wrapper md-whiteframe-4dp" layout="row" layout-align="start center" flex="50">
+                <div class="search-wrapper md-whiteframe-4dp" layout="row" layout-align="start center" flex>
                     <md-button class="md-icon-button sidenav-toggle" ng-click="vm.toggleSidenav('main-sidenav')" hide-gt-md aria-label="Toggle Sidenav">
                         <md-icon class="icon" md-font-icon="icon-menu"></md-icon>
                     </md-button>
@@ -65,7 +65,7 @@
         <!--</div>-->
         <!-- / CONTENT HEADER -->
 
-        <div layout="row" style="height:100%">
+        <div layout="row" flex>
             <!-- CONTENT CARD -->
             <div class="content-card" layout="column" ng-if="!inpageReadPaneEdit && !editOff" flex ng-class="{'flex-30':showInpageReadpane}">
 
@@ -173,6 +173,7 @@
                     </div>
                 </div>
                 <md-content flex ms-scroll layout="column" class="inpage-readpane-body p-0">
+                    <span class="type-flag" ng-if="vm.selectedSubscription.class == 'Trial'">Trial</span>
                     <div class="main-list-preloader animate-fade-in-out" layout="row" layout-sm="column" layout-align="space-around" ng-hide="isReadLoaded">
                         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                     </div>
@@ -182,59 +183,46 @@
                                 <md-icon md-font-icon="icon-cog"></md-icon> General
                             </md-tab-label>
                             <md-tab-body flex>
-                                <div class="p-16 pb-40">
+                                <div class="p-16">
                                     <div layout="row" layout-align="space-between center">
                                         <div layout="row" layout-align="space-between center" ng-class="{'flex':paymentRetryHistory.paymentFailedDate == null}">
                                             <div layout="column" layout-align="center start" class="mr-20">
-                                                <div class="fs-20 font-accent fw-400">{{vm.selectedSubscription.code}}</div>
+                                                <div class="fs-20 font-accent fw-400">
+                                                    {{vm.selectedSubscription.code}}
+                                                    <!--<span class="type-flag" ng-if="vm.selectedSubscription.class == 'Trial'">Trial</span>-->
+                                                </div>
                                                 <div layout="row" class="op-5">
                                                     <span>by <b>{{vm.selectedSubscription.first_name}}</b></span>
                                                 </div>
                                             </div>
                                             <div>
-                                                <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':vm.selectedSubscription.orderStatus==='Inactive','positive':vm.selectedSubscription.orderStatus==='Active'}">{{vm.selectedSubscription.orderStatus}}</span>
+                                                <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':vm.selectedSubscription.orderStatus==='Stopped','positive':vm.selectedSubscription.orderStatus==='Active'}">{{vm.selectedSubscription.orderStatus}}</span>
                                             </div>
                                         </div>
-                                        <div>Payment Status:{{paymentRetryHistory.status}}</div>
-                                        <!--<div class="retry-state-bar" layout="row" layout-align="start center" md-ink-ripple ng-if="paymentRetryHistory.paymentFailedDate != null" ng-click="showPaymentRetryHistry()" id="moreRetryAnchor">-->
-                                            <!--<!--<i class="material-icons">repeat</i>-->
-                                            <!--<!--<span class="retry-title">Payment retry status</span>-->
-                                            <!--<div class="retry-status {{paymentRetryHistory.status}}" layout="row" layout-align="start center">-->
-                                                <!--<img src="assets/icons/retry_black.svg" alt="" ng-if="paymentRetryHistory.firstAttemptStatus == 'Failed' || paymentRetryHistory.secondAttemptStatus == 'Failed' || paymentRetryHistory.thiredAttemptStatus == 'Failed'">-->
-                                                <!--<md-icon md-font-icon="icon-check-circle" class="retry-suc" ng-if="paymentRetryHistory.firstAttemptStatus == 'Success' || paymentRetryHistory.secondAttemptStatus == 'Success' || paymentRetryHistory.thiredAttemptStatus == 'Success'"></md-icon>-->
-                                                <!--<span class="retry-val {{paymentRetryHistory.firstAttemptStatus}}">-->
-                                                    <!--<label ng-if="paymentRetryHistory.attempted==1">1</label>-->
-                                                    <!--<label ng-if="paymentRetryHistory.attempted==2">2</label>-->
-                                                    <!--<label ng-if="paymentRetryHistory.attempted==3">3</label>-->
-                                                <!--</span>-->
-                                                <!--<span>-->
-                                                    <!--<label ng-if="paymentRetryHistory.attempted==1">PAYMENT {{paymentRetryHistory.firstAttemptStatus}}</label>-->
-                                                    <!--<label ng-if="paymentRetryHistory.attempted==2">PAYMENT {{paymentRetryHistory.secondAttemptStatus}}</label>-->
-                                                    <!--<label ng-if="paymentRetryHistory.attempted==3">PAYMENT {{paymentRetryHistory.thiredAttemptStatus}}</label>-->
-                                                <!--</span>-->
-                                            <!--</div>-->
-                                            <!--<!--<img src="assets/icons/retry_black.svg" alt="">-->
-                                            <!--<!--<span class="retry-value" ng-if="paymentRetryHistory.attempted==1"><label>1<label>st</label></label></span>-->
-                                            <!--<!--<span class="retry-value" ng-if="paymentRetryHistory.attempted==2"><label>2<label>nd</label></label></span>-->
-                                            <!--<!--<span class="retry-value" ng-if="paymentRetryHistory.attempted==3"><label>3<label>rd</label></label></span>-->
-                                            <!--<!--<span ng-if="paymentRetryHistory.attempted==1" class="{{paymentRetryHistory.firstAttemptStatus}}">{{paymentRetryHistory.firstAttemptStatus}}</span>-->
-                                            <!--<!--<span ng-if="paymentRetryHistory.attempted==2" class="{{paymentRetryHistory.secondAttemptStatus}}">{{paymentRetryHistory.secondAttemptStatus}}</span>-->
-                                            <!--<!--<span ng-if="paymentRetryHistory.attempted==3" class="{{paymentRetryHistory.thiredAttemptStatus}}">{{paymentRetryHistory.thiredAttemptStatus}}</span>-->
-                                            <!--<span class="next-retry" ng-if="paymentRetryHistory.nextRetryOn != null">-->
-                                                <!--<label>Next retry </label>-->
-                                                <!--{{paymentRetryHistory.nextRetryOn | limitTo:10}}-->
-                                            <!--</span>-->
-                                            <!--<!--<a href="" class="ml-20" ng-click="showPaymentRetryHistry()" id="moreRetryAnchor">More</a>-->
-                                        <!--</div>-->
-                                        <div class="retry-state-bar" layout="row" layout-align="start center" md-ink-ripple ng-if="paymentRetryHistory.paymentFailedDate == null">
+                                        <!--<div flex>Payment Status:{{paymentRetryHistory.status}}</div>-->
+                                        <div class="retry-state-bar" layout="row" layout-align="start center" ng-if="paymentRetryHistory.paymentFailedDate != null && paymentRetryHistory.status != null" id="moreRetryAnchor">
                                             <!--<i class="material-icons">repeat</i>-->
-                                            <div class="retry-status Pending" layout="row" layout-align="start center">
-                                                <i class="material-icons">payment</i>
+                                            <!--<span class="retry-title">Payment retry status</span>-->
+                                            <div class="retry-status {{paymentRetryHistory.paymentState}}" layout="row" layout-align="start center" ng-class="{'Failed':paymentRetryHistory.status == ''}" ng-click="showPaymentRetryHistry()">
+                                                <img src="assets/icons/retry_black.svg" alt=""  ng-if="paymentRetryHistory.firstAttemptStatus != '' || paymentRetryHistory.secondAttemptStatus != '' || paymentRetryHistory.thiredAttemptStatus != ''">
+                                                <md-icon md-font-icon="icon-check-circle" class="retry-suc" ng-if="paymentRetryHistory.firstAttemptStatus == 'Success' || paymentRetryHistory.secondAttemptStatus == 'Success' || paymentRetryHistory.thiredAttemptStatus == 'Success'"></md-icon>
+                                                <span class="retry-val {{paymentRetryHistory.status}}">
+                                                    <label ng-if="paymentRetryHistory.attempted==1 && paymentRetryHistory.status != ''">1</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==2">2</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==3">3</label>
+                                                </span>
                                                 <span>
-                                                    <label>Payment pending</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==1 && paymentRetryHistory.status == ''">PAYMENT FAILED</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==1 && paymentRetryHistory.status != ''">PAYMENT {{paymentRetryHistory.firstAttemptStatus}}</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==2">PAYMENT {{paymentRetryHistory.secondAttemptStatus}}</label>
+                                                    <label ng-if="paymentRetryHistory.attempted==3">PAYMENT {{paymentRetryHistory.thiredAttemptStatus}}</label>
+                                                    <label ng-if="paymentRetryHistory.status != null && paymentRetryHistory.status != ''">PAYMENT {{paymentRetryHistory.status}}</label>
                                                 </span>
                                             </div>
-                                            <a href="" class="ml-20" ng-click="showPaymentRetryHistry()" id="moreRetryAnchor">More</a>
+                                            <span class="next-retry" ng-if="paymentRetryHistory.nextRetryOn != null">
+                                                <label>Next retry </label>
+                                                {{paymentRetryHistory.nextRetryOn | limitTo:10}}
+                                            </span>
                                         </div>
                                     </div>
                                     <md-divider class="mt-10 mb-20"></md-divider>
@@ -381,7 +369,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="process-block">
+                                                    <div class="process-block pt-30">
                                                         <div layout="row" flex>
                                                             <div layout="row" layout-align="start center" class="step-circle" flex="20">
                                                                 <span class="circle">1st</span>
@@ -390,7 +378,7 @@
                                                             <!--<div flex="10" layout="row" layout-align="center center">-->
                                                             <!--<!--<div class="bb flex"></div>-->
                                                             <!--</div>-->
-                                                            <div class="step-body" layout="row" layout-align="start center" flex ng-if="paymentRetryHistory.paymentFirstDate != null">
+                                                            <div class="step-body" layout="row" layout-align="start center" flex ng-if="paymentRetryHistory.status != ''">
                                                                 <div layout="row" layout-align="start center" flex>
                                                                     <div layout="column" flex>
                                                                         <span>Retried on </span>
@@ -452,12 +440,12 @@
                                                     </div>
                                                     <div class="process-block pb-0 pt-5">
                                                         <div layout="row" flex>
-                                                            <div layout="row" layout-align="start center" class="step-circle mb-0" flex="20">
+                                                            <div layout="row" layout-align="start center" class="step-circle mb-0" flex="25">
                                                                     <span class="circle end text-center">
                                                                         <!--<i class="material-icons">report</i>-->
                                                                         END
                                                                     </span>
-                                                                <span class="label">Deactivate profile</span>
+                                                                <span class="label w-120">Deactivate profile</span>
                                                             </div>
                                                             <!--<div flex="10" layout="row" layout-align="center center">-->
                                                             <!--<!--<div class="bb flex"></div>-->
@@ -478,7 +466,7 @@
                                                         <div flex class="iconed-label">
                                                             <md-icon md-font-icon="icon-calendar-check"></md-icon> <span>Next retry date</span>
                                                         </div>
-                                                        <div flex class="">{{paymentRetryHistory.nextRetryOn}}</div>
+                                                        <div flex>{{paymentRetryHistory.nextRetryOn}}</div>
                                                     </div>
                                                     </div>
 
@@ -496,7 +484,7 @@
                             </md-tab-label>
                             <md-tab-body>
                                 <div class="md-padding">
-                                    <div flex class="list-offset sub-list" md-whiteframe="1dp">
+                                    <div flex class="list-offset sub-list">
                                         <div class="list-header" layout="row" flex md-whiteframe="1dp">
                                             <div flex>Plan</div>
                                             <div flex>Start</div>

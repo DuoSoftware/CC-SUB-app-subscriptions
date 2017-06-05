@@ -6,7 +6,7 @@
 <meta name="view" content="list-view.html">
 
 <div class="main-list-preloader animate-fade-in-out" layout="row" layout-sm="column" layout-align="space-around" ng-hide="!isLoading">
-  <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
 
 <!-- INVOICE LIST ITEMS -->
@@ -14,37 +14,38 @@
      ng-click="switchInfoPane('show',subscription)"
      ng-class="{'selected': vm.selectedListItem === subscription && showInpageReadpane}">
 
-  <div layout="row" layout-align="start center" flex>
+    <span class="type-flag" ng-if="subscription.class == 'Trial'">Trial</span>
+    <div layout="row" layout-align="start center" flex>
 
-    <div flex layout="row">
-      <div class="dual-info" layout="column" layout-align="center start">
-        <span>{{subscription.first_name}}</span>
-        <!--<div class="dual-info-sub">-->
-          <!--{{subscription.code}}-->
-        <!--</div>-->
-      </div>
-    </div>
+        <div flex layout="row">
+            <div class="dual-info" layout="column" layout-align="center start">
+                <span>{{subscription.first_name}}</span>
+                <!--<div class="dual-info-sub">-->
+                <!--{{subscription.code}}-->
+                <!--</div>-->
+            </div>
+        </div>
 
-    <div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
-      {{subscription.code}}
-    </div>
+        <div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+            {{subscription.code}}
+        </div>
 
-    <div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
-      {{subscription.uom}}
-    </div>
+        <div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+            {{subscription.uom}}
+        </div>
 
-    <div flex="20" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
-      <span>{{subscription.lastBillDate | parseDate | date}}</span>
-    </div>
+        <div flex="20" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+            <span>{{subscription.lastBillDate | parseDate | date}}</span>
+        </div>
 
-    <div flex="20" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
-      <span>{{subscription.endDate | parseDate | date}}</span>
-    </div>
+        <div flex="20" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+            <span>{{subscription.endDate | parseDate | date}}</span>
+        </div>
 
-    <div class="status" layout="column" layout-align="center start" ng-class="{'flex-30':showInpageReadpane == true,'flex-10': showInpageReadpane == false}">
-      <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':subscription.status==='Stopped','positive':subscription.status==='Active'}">{{subscription.status}}</span>
+        <div class="status" layout="column" layout-align="center start" ng-class="{'flex-30':showInpageReadpane == true,'flex-10': showInpageReadpane == false}">
+            <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':subscription.status==='Stopped','positive':subscription.status==='Active'}">{{subscription.status}}</span>
+        </div>
     </div>
-  </div>
 </div>
 <!-- PRODUCT LIST ITEMS
 
