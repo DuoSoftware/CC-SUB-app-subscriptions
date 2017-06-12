@@ -26,11 +26,15 @@
             </div>
         </div>
 
-        <div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+        <div flex layout="column" layout-align="center start" ng-if="!showInpageReadpane">
             {{subscription.code}}
         </div>
 
         <div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+            {{subscription.email}}
+        </div>
+
+        <div flex="10" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
             {{subscription.uom}}
         </div>
 
@@ -43,7 +47,7 @@
         </div>
 
         <div class="status" layout="column" layout-align="center start" ng-class="{'flex-30':showInpageReadpane == true,'flex-10': showInpageReadpane == false}">
-            <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':subscription.status==='Stopped','positive':subscription.status==='Active'}">{{subscription.status}}</span>
+            <span class="pill" layout="row" layout-align="center center" ng-class="{'partial':subscription.status==='Pending','positive':subscription.status==='Active','negative':subscription.status==='Stopped'}">{{subscription.status}}</span>
         </div>
     </div>
 </div>
