@@ -142,7 +142,7 @@
 
 		function getDomainName() {
 			var _st = gst("domain");
-			return (_st != null) ? _st : ""; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
+			return (_st != null) ? _st : "gihan"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
 		}
 
 		function getDomainExtension() {
@@ -226,7 +226,6 @@
 				vm.selectedSubscription.guAccountId=subscription.guAccountId;
 				vm.selectedSubscription.guOrderId=subscription.guOrderId;
 				vm.selectedSubscription.first_name=subscription.first_name;
-				vm.selectedSubscription.class=subscription.class;
 
 				$charge.tax().getTaxGrpByIDs(vm.selectedSubscription.taxID).success(function(data) {
 					var taxid=data.groupDetail[0].taxid;
@@ -444,7 +443,7 @@
 			var planCode=order.code;
 			var accId=order.guAccountId;
 			vm.isOrderHistoryLoaded = true;
-			$charge.order().getOrderHistoryByPlanCode(planCode,accId,skipOrderHistory,takeOrderHistory,'desc').success(function(data)
+			$charge.order().getOrderHistoryByAccID(accId,skipOrderHistory,takeOrderHistory,'desc').success(function(data)
 			{
 				//console.log(data);
 				skipOrderHistory+=takeOrderHistory;
@@ -477,7 +476,7 @@
 
 		$scope.sortBy = function(propertyName,status,property) {
 
-			if(propertyName == 'lastBillDate'){
+			if(propertyName == 'lastBillingDate'){
 				angular.forEach(vm.subscriptions, function (sub) {
 					sub.lastBillDate = new Date(sub.lastBillDate);
 				});
@@ -736,6 +735,73 @@
 			})
 		}
 
+    var skipProfiles=0;
+    var takeProfiles=100;
+    $scope.profileList=[];
+    vm.loadingProfiles = false;
+
+    $scope.loadProfiles = function(){
+      //
+      vm.loadingProfiles = true;
+
+      var dbNamePart1="";
+      var dbNamePart2="";
+      var dbName="";
+      var filter="";
+      dbNamePart1=getDomainName().split('.')[0];
+      dbNamePart2=getDomainExtension();
+      dbName=dbNamePart1+"_"+dbNamePart2;
+      //filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
+      var data={
+        "search": "*",
+        "filter": "(domain eq '"+dbName+"')",
+        "orderby" : "createddate desc",
+        "top":takeProfiles,
+        "skip":skipProfiles
+      }
+
+      $charge.azuresearch().getAllProfilesPost(data).success(function(data)
+      {
+        //console.log(data);
+        if(vm.loadingProfiles)
+        {
+          skipProfiles += takeProfiles;
+          //
+
+          for (var i = 0; i < data.value.length; i++) {
+            //
+            if(data.value[i].status==0)
+            {
+              data.value[i].status=false;
+            }
+            else
+            {
+              data.value[i].status=true;
+            }
+            data.value[i].createddate = new Date(data.value[i].createddate);
+            $scope.profileList.push(data.value[i]);
+
+          }
+
+          vm.loadingProfiles = false;
+          if(data.value.length<takeProfiles){
+            $scope.more("");
+          }
+          else
+          {
+            $scope.loadProfiles();
+          }
+        }
+      }).error(function(data)
+      {
+        //console.log(data);
+        vm.loadingProfiles = false;
+        $scope.more("");
+      })
+
+    };
+    $scope.loadProfiles();
+
 		$scope.isLoading = true;
 		$scope.isdataavailable=true;
 		$scope.hideSearchMore=false;
@@ -744,7 +810,7 @@
 		var take=100;
 		$scope.loading = true;
 
-		$scope.more = function(filter){
+		$scope.more = function(status){
 
 			$scope.isLoading = true;
 			//$charge.order().all(skip,take,'asc',filter).success(function(data)
@@ -787,17 +853,42 @@
 			var dbNamePart2="";
 			var dbName="";
 			var filter="";
+      var data={};
 			dbNamePart1=getDomainName().split('.')[0];
 			dbNamePart2=getDomainExtension();
 			dbName=dbNamePart1+"_"+dbNamePart2;
 			//filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
-			var data={
-				"search": "*",
-				"filter": "(domain eq '"+dbName+"')",
-				"orderby" : "endDate asc",
-				"top":take,
-				"skip":skip
-			}
+      //and status eq 'active'
+      if(status=='')
+      {
+        data={
+          "search": "*",
+          "filter": "(domain eq '"+dbName+"' and status eq 'Active')",
+          "orderby" : "endDate asc",
+          "top":take,
+          "skip":skip
+        }
+      }
+      else if(status=='All')
+      {
+        data={
+          "search": "*",
+          "filter": "(domain eq '"+dbName+"')",
+          "orderby" : "endDate asc",
+          "top":take,
+          "skip":skip
+        }
+      }
+      else
+      {
+        data={
+          "search": "*",
+          "filter": "(domain eq '"+dbName+"' and status eq '"+status+"')",
+          "orderby" : "endDate asc",
+          "top":take,
+          "skip":skip
+        }
+      }
 
 			$charge.azuresearch().getAllSubscriptionPost(data).success(function(data)
 			{
@@ -808,12 +899,20 @@
 					skip += take;
 
 					for (var i = 0; i < data.value.length; i++) {
+            for (var j = 0; j < $scope.profileList.length; j++) {
+              if($scope.profileList[j].profileId==data.value[i].guAccountId)
+              {
+                data.value[i].first_name=$scope.profileList[j].first_name;
+                data.value[i].last_name=$scope.profileList[j].last_name;
+                break;
+              }
+            }
 						$scope.items.push(data.value[i]);
 					}
 					vm.subscriptions=$scope.items;
 					//$timeout(function () {
 					//  vm.plans=$scope.items;
-					//},0);
+					//},0);profileId
 					vm.searchMoreInit = false;
 
 					$scope.isLoading = false;
@@ -837,7 +936,7 @@
 
 		};
 		// we call the function twice to populate the list
-		$scope.more("");
+		//$scope.more("");
 
 		$scope.applyFilters = function (filter){
 			skip=0;

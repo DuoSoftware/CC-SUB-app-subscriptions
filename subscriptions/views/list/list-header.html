@@ -14,6 +14,22 @@
     </div>
 </div>
 
+<!--<div class="productName" layout="column" layout-align="center start" flex ng-if="!showInpageReadpane">-->
+    <!--<div layout="row">-->
+        <!--<span layout="column" layout-align="center center" class="header-text">Email</span>-->
+        <!--<div layout="column" layout="center center">-->
+            <!--<md-button ng-hide="showEmail" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('email',true,'Email')">-->
+                <!--<md-icon class="sort_btn_icon merged" md-font-icon="icon-chevron-up"></md-icon>-->
+                <!--<md-icon md-font-icon="icon-chevron-down"></md-icon>-->
+            <!--</md-button>-->
+            <!--<md-button ng-show="showEmail" class="sort_btn md-icon-button" layout="column" layout="center center" ng-click="sortBy('email',null,'Email')">-->
+                <!--<md-icon ng-if="reverse==false" class="sort_btn_icon" md-font-icon="icon-chevron-up"></md-icon>-->
+                <!--<md-icon ng-if="reverse==true" md-font-icon="icon-chevron-down"></md-icon>-->
+            <!--</md-button>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
 <div class="productName" layout="column" layout-align="center start" flex="15" ng-if="!showInpageReadpane">
     <div layout="row">
         <span layout="column" layout-align="center center" class="header-text">Plan</span>
@@ -30,7 +46,7 @@
     </div>
 </div>
 
-<div class="productName" layout="column" layout-align="center start" flex="15" ng-if="!showInpageReadpane">
+<div class="productName" layout="column" layout-align="center start" flex="10" ng-if="!showInpageReadpane">
     <div layout="row">
         <span layout="column" layout-align="center center" class="header-text">Order Type</span>
         <div layout="column" layout="center center">
@@ -46,7 +62,7 @@
     </div>
 </div>
 
-<div class="productName" layout="column" layout-align="center start" flex="20" ng-if="!showInpageReadpane">
+<div class="productName" layout="column" layout-align="center start" flex="15" ng-if="!showInpageReadpane">
     <div layout="row">
         <span layout="column" layout-align="center center" class="header-text">Last Billing Date</span>
         <div layout="column" layout="center center">
@@ -62,7 +78,7 @@
     </div>
 </div>
 
-<div class="productName" layout="column" layout-align="center start" flex="20" ng-if="!showInpageReadpane">
+<div class="productName" layout="column" layout-align="center start" flex="15" ng-if="!showInpageReadpane">
     <div layout="row">
         <span layout="column" layout-align="center center" class="header-text">Next Scheduled Date</span>
         <div layout="column" layout="center center">
@@ -100,7 +116,7 @@
 
             <md-menu-content width="3" class="list-filter-menu">
                 <md-menu-item>
-                    <md-button layout="row" layout-align="start center" ng-click="applyFilters('')">
+                    <md-button layout="row" layout-align="start center" ng-click="applyFilters('All')">
                         <md-icon md-font-icon="icon-label" class="filter-label s16"></md-icon>
                         <span>All</span>
                     </md-button>
