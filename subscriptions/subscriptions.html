@@ -37,7 +37,7 @@
 
                     <div class="search" flex layout="row" layout-align="start center">
                         <md-icon md-font-icon="icon-magnify" class="icon s24"></md-icon>
-                        <input flex ng-model="vm.search" type="text" ng-keypress="searchKeyPress($event,vm.search,vm.search.length)" ng-change="loadByKeywordSubscription(vm.search,3)" placeholder="Search for subscriptions">
+                        <input flex ng-model="vm.search" type="text" ng-keypress="searchKeyPress($event,vm.search,vm.search.length)" ng-change="loadByKeywordSubscription(vm.search,3)" placeholder="Search for subscriptions using 'email' and 'Plan Code'">
                     </div>
                 </div>
             </div>
@@ -489,7 +489,7 @@
                                             <div flex>Plan</div>
                                             <div flex>Start</div>
                                             <div flex>End</div>
-                                            <div flex>Occurrences</div>
+                                            <!--<div flex>Occurrences</div>-->
                                             <div flex class="text-right">Amount</div>
                                             <div flex class="text-right">Status</div>
                                         </div>
@@ -508,9 +508,9 @@
                                                     <div flex>
                                                         <span>{{history.endDate | date:'yyyy.MM.dd'}}</span>
                                                     </div>
-                                                    <div flex>
-                                                        <span>{{history.occurences}}</span>
-                                                    </div>
+                                                    <!--<div flex>-->
+                                                        <!--<span>{{history.occurences}}</span>-->
+                                                    <!--</div>-->
                                                     <div flex class="text-right">
                                                         <span>{{history.amount|isoCurrency:BaseCurrency}}</span>
                                                     </div>
