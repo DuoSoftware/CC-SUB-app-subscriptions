@@ -20,9 +20,9 @@
         <div flex layout="row">
             <div class="dual-info" layout="column" layout-align="center start">
                 <span>{{subscription.first_name}} {{subscription.last_name}}</span>
-                <!--<div class="dual-info-sub">-->
-                <!--{{subscription.code}}-->
-                <!--</div>-->
+                <div class="dual-info-sub">
+                {{subscription.email}}
+                </div>
             </div>
         </div>
 
@@ -30,9 +30,9 @@
             {{subscription.code}}
         </div>
 
-        <div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
-            {{subscription.email}}
-        </div>
+        <!--<div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">-->
+            <!--{{subscription.email}}-->
+        <!--</div>-->
 
         <div flex="10" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
             {{subscription.uom}}

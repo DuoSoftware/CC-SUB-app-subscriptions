@@ -142,7 +142,7 @@
 
 		function getDomainName() {
 			var _st = gst("domain");
-			return (_st != null) ? _st : "gihan"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
+			return (_st != null) ? _st : ""; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
 		}
 
 		function getDomainExtension() {
@@ -226,6 +226,7 @@
 				vm.selectedSubscription.guAccountId=subscription.guAccountId;
 				vm.selectedSubscription.guOrderId=subscription.guOrderId;
 				vm.selectedSubscription.first_name=subscription.first_name;
+				vm.selectedSubscription.class=subscription.class;
 
 				$charge.tax().getTaxGrpByIDs(vm.selectedSubscription.taxID).success(function(data) {
 					var taxid=data.groupDetail[0].taxid;
@@ -1122,7 +1123,7 @@
 					//filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
 					var data={
 						"search": keyword+"*",
-						"searchFields": "first_name,last_name,code",
+						"searchFields": "email,code",
 						"filter": "(domain eq '"+dbName+"')",
 						"orderby" : "endDate asc",
 						"top":takeSubscriptionSearch,
