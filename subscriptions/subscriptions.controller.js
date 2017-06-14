@@ -64,6 +64,12 @@
 		//  'nextScheduledDate':new Date(),
 		//  'status':'Stopped'
 		//}];
+		$scope.showUser = false;
+		$scope.showCode = false;
+		$scope.showType = false;
+		$scope.showLast = false;
+		$scope.showNext = false;
+		$scope.showState = false;
 
 		$scope.subscriptionHistory = [{
 			'date':new Date(),
@@ -482,9 +488,7 @@
 					sub.lastBillDate = new Date(sub.lastBillDate);
 				});
 			}
-			$scope.$watch(function () {
-				vm.subscriptions=$filter('orderBy')(vm.subscriptions, propertyName, $scope.reverse);
-			});
+			vm.subscriptions=$filter('orderBy')(vm.subscriptions, propertyName, $scope.reverse);
 
 			$scope.reverse =!$scope.reverse;
 			if(status!=null) {
