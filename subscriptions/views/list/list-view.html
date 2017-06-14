@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <div flex layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+        <div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
             {{subscription.code}}
         </div>
 
@@ -34,15 +34,15 @@
             <!--{{subscription.email}}-->
         <!--</div>-->
 
-        <div flex="10" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+        <div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
             {{subscription.uom}}
         </div>
 
-        <div flex="20" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+        <div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
             <span>{{subscription.lastBillDate | parseDate | date}}</span>
         </div>
 
-        <div flex="20" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
+        <div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
             <span>{{subscription.endDate | parseDate | date}}</span>
         </div>
 
