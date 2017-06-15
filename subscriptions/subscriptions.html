@@ -196,7 +196,7 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <span class="pill" layout="row" layout-align="center center" ng-class="{'negative':vm.selectedSubscription.orderStatus==='Stopped','positive':vm.selectedSubscription.orderStatus==='Active'}">{{vm.selectedSubscription.orderStatus}}</span>
+                                                <span class="pill" layout="row" layout-align="center center" ng-class="{'partial':vm.selectedSubscription.orderStatus==='Pending','negative':vm.selectedSubscription.orderStatus==='Stopped','positive':vm.selectedSubscription.orderStatus==='Active'}">{{vm.selectedSubscription.orderStatus}}</span>
                                             </div>
                                         </div>
                                         <!--<div flex>Payment Status:{{paymentRetryHistory.status}}</div>-->
