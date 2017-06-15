@@ -868,7 +868,7 @@
       {
         data={
           "search": "*",
-          "filter": "(domain eq '"+dbName+"' and status eq 'Active')",
+          "filter": "(domain eq '"+dbName+"' and status ne 'Stopped')",
           "orderby" : "endDate asc",
           "top":take,
           "skip":skip
