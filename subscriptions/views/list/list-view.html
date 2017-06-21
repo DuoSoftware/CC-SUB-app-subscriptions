@@ -12,7 +12,8 @@
 <!-- INVOICE LIST ITEMS -->
 <div class="list-item" layout="row" layout-align="center center" flex ng-repeat="subscription in vm.subscriptions | filter:vm.search | filter: global.search"
      ng-click="switchInfoPane('show',subscription)"
-     ng-class="{'selected': vm.selectedListItem === subscription && showInpageReadpane}">
+     ng-class="{'selected': vm.selectedListItem === subscription && showInpageReadpane,
+     'pl-25':subscription.class == 'Trial'}">
 
     <span class="type-flag" ng-if="subscription.class == 'Trial'">Trial</span>
     <div layout="row" layout-align="start center" flex>
