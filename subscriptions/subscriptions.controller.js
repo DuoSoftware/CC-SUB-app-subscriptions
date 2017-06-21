@@ -256,9 +256,18 @@
 					vm.selectedSubscription.taxType = "-1";
 					vm.selectedSubscription.taxAmount = 0;
 				})
-				$charge.profile().getByID(subscription.guAccountId).success(function(data) {
+				$charge.profile().getByIDWithStripeKey(subscription.guAccountId).success(function(data) {
 
 					vm.selectedSubscription.email_addr=data[0].email_addr;
+					vm.selectedSubscription.category=data[0].category;
+					vm.selectedSubscription.createdDate=data[0].createddate;
+					vm.selectedSubscription.contact=data[0].business_contact_no;
+					vm.selectedSubscription.hasCards=data[0].stripeCustId;
+					vm.selectedSubscription.gatewayType=data[0].gatewayType;
+					if(data[0].bill_zip_post != '' && data[0].bill_city != '' && data[0].bill_country != '')
+						vm.selectedSubscription.billAddress=data[0].bill_zip_post+', '+data[0].bill_city+', '+data[0].bill_country;
+					if(data[0].ship_zip_post != '' && data[0].ship_city != '' && data[0].ship_country != '')
+						vm.selectedSubscription.shipAddress=data[0].ship_zip_post+', '+data[0].ship_city+', '+data[0].ship_country;
 					$scope.loaderArr.push('ok');
 
 				}).error(function(data) {

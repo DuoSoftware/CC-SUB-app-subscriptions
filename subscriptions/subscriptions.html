@@ -183,61 +183,162 @@
                                 <md-icon md-font-icon="icon-cog"></md-icon> General
                             </md-tab-label>
                             <md-tab-body flex>
-                                <div class="p-16">
-                                    <div layout="row" layout-align="space-between center">
-                                        <div layout="row" layout-align="space-between center" ng-class="{'flex':paymentRetryHistory.paymentFailedDate == null}">
-                                            <div layout="column" layout-align="center start" class="mr-20">
-                                                <div class="fs-20 font-accent fw-400">
-                                                    {{vm.selectedSubscription.code}}
-                                                    <!--<span class="type-flag" ng-if="vm.selectedSubscription.class == 'Trial'">Trial</span>-->
-                                                </div>
-                                                <div layout="row" class="op-5">
-                                                    <span>by <b>{{vm.selectedSubscription.first_name}}</b></span>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span class="pill" layout="row" layout-align="center center" ng-class="{'partial':vm.selectedSubscription.orderStatus==='Pending','negative':vm.selectedSubscription.orderStatus==='Stopped','positive':vm.selectedSubscription.orderStatus==='Active'}">{{vm.selectedSubscription.orderStatus}}</span>
-                                            </div>
-                                        </div>
-                                        <!--<div flex>Payment Status:{{paymentRetryHistory.status}}</div>-->
-                                        <div class="retry-state-bar" layout="row" layout-align="start center" ng-if="paymentRetryHistory.paymentFailedDate != null && paymentRetryHistory.status != null" id="moreRetryAnchor">
-                                            <!--<i class="material-icons">repeat</i>-->
-                                            <!--<span class="retry-title">Payment retry status</span>-->
-                                            <div class="retry-status {{paymentRetryHistory.status}}" layout="row" layout-align="start center" ng-click="showPaymentRetryHistry()">
-                                                <img src="assets/icons/retry_black.svg" alt=""  ng-if="paymentRetryHistory.firstAttemptStatus != '' || paymentRetryHistory.secondAttemptStatus != '' || paymentRetryHistory.thiredAttemptStatus != ''">
-                                                <md-icon md-font-icon="icon-check-circle" class="retry-suc" ng-if="paymentRetryHistory.firstAttemptStatus == 'Success' || paymentRetryHistory.secondAttemptStatus == 'Success' || paymentRetryHistory.thiredAttemptStatus == 'Success'"></md-icon>
-                                                <span class="retry-val {{paymentRetryHistory.status}}">
+                                <div class="pt-16 ph-16 pb-50">
+                                    <!--Contact Info portion-->
+                                    <div layout="row" flex>
+                                        <div layout="column" flex>
+                                            <div class="pos-rel">
+                                                <div layout="row" layout-align="space-between center">
+                                                    <div layout="row" layout-align="space-between center" ng-class="{'flex':paymentRetryHistory.paymentFailedDate == null}">
+                                                        <div layout="column" layout-align="center start" class="mr-20">
+                                                            <div class="fs-20 font-accent fw-400">
+                                                                {{vm.selectedSubscription.code}}
+                                                                <!--<span class="type-flag" ng-if="vm.selectedSubscription.class == 'Trial'">Trial</span>-->
+                                                            </div>
+                                                            <div layout="row" class="op-5">
+                                                                <span>by <b>{{vm.selectedSubscription.first_name}}</b></span>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <span class="pill" layout="row" layout-align="center center" ng-class="{'partial':vm.selectedSubscription.orderStatus==='Pending','negative':vm.selectedSubscription.orderStatus==='Stopped','positive':vm.selectedSubscription.orderStatus==='Active'}">{{vm.selectedSubscription.orderStatus}}</span>
+                                                        </div>
+                                                        <div layout="row" layout-align="start center" class="more-collapse" ng-style="showMoreUserInfo ? {'right':'10px','bottom':'0px', 'background':'#fafafa'} : null">
+                                                            <md-button class="md-icon-button m-0" ng-click="contentExpandHandler()"><md-icon md-font-icon="icon-chevron-down" ng-if="!showMoreUserInfo"></md-icon><md-icon md-font-icon="icon-chevron-up" ng-if="showMoreUserInfo"></md-icon> </md-button><label ng-if="showMoreUserInfo">Less</label><label ng-if="!showMoreUserInfo">More</label>
+                                                        </div>
+                                                    </div>
+                                                    <!--<div flex>Payment Status:{{paymentRetryHistory.status}}</div>-->
+                                                    <div class="retry-state-bar" layout="row" layout-align="start center" ng-if="paymentRetryHistory.paymentFailedDate != null && paymentRetryHistory.status != null" id="moreRetryAnchor">
+                                                        <!--<i class="material-icons">repeat</i>-->
+                                                        <!--<span class="retry-title">Payment retry status</span>-->
+                                                        <div class="retry-status {{paymentRetryHistory.status}}" layout="row" layout-align="start center" ng-click="showPaymentRetryHistry()">
+                                                            <img src="assets/icons/retry_black.svg" alt=""  ng-if="paymentRetryHistory.firstAttemptStatus != '' || paymentRetryHistory.secondAttemptStatus != '' || paymentRetryHistory.thiredAttemptStatus != ''">
+                                                            <md-icon md-font-icon="icon-check-circle" class="retry-suc" ng-if="paymentRetryHistory.firstAttemptStatus == 'Success' || paymentRetryHistory.secondAttemptStatus == 'Success' || paymentRetryHistory.thiredAttemptStatus == 'Success'"></md-icon>
+                                                            <span class="retry-val {{paymentRetryHistory.status}}">
                                                     <label ng-if="paymentRetryHistory.attempted==1">1</label>
                                                     <label ng-if="paymentRetryHistory.attempted==2">2</label>
                                                     <label ng-if="paymentRetryHistory.attempted==3">3</label>
                                                 </span>
-                                                <span>
+                                                            <span>
                                                     <label ng-if="paymentRetryHistory.attempted==0">PAYMENT FAILED</label>
                                                     <label ng-if="paymentRetryHistory.attempted==1">PAYMENT {{paymentRetryHistory.firstAttemptStatus}}</label>
                                                     <label ng-if="paymentRetryHistory.attempted==2">PAYMENT {{paymentRetryHistory.secondAttemptStatus}}</label>
                                                     <label ng-if="paymentRetryHistory.attempted==3">PAYMENT {{paymentRetryHistory.thiredAttemptStatus}}</label>
-                                                    <!--<label ng-if="paymentRetryHistory.status != null && paymentRetryHistory.status != ''">PAYMENT {{paymentRetryHistory.status}}</label>-->
+                                                                <!--<label ng-if="paymentRetryHistory.status != null && paymentRetryHistory.status != ''">PAYMENT {{paymentRetryHistory.status}}</label>-->
                                                 </span>
-                                            </div>
-                                            <span class="next-retry" ng-if="paymentRetryHistory.nextRetryOn != null">
+                                                        </div>
+                                                        <span class="next-retry" ng-if="paymentRetryHistory.nextRetryOn != null">
                                                 <label>Next retry </label>
                                                 {{paymentRetryHistory.nextRetryOn | limitTo:10}}
                                             </span>
+                                                    </div>
+                                                </div>
+                                                <md-divider class="mt-10"></md-divider>
+                                                <div layout="row" flex ng-if="showMoreUserInfo" class="p-10 light-gray">
+                                                    <div layout="column" class="pos-rel" flex>
+                                                        <div layout="row">
+                                                            <div layout="row" layout-align="start center" class="info-grid-row bordered" flex>
+                                                                <div class="iconed-label" layout="row" layout-align="start center" flex>
+                                                                    <md-icon md-font-icon="icon-email"></md-icon> <span flex>Email</span>
+                                                                </div>
+                                                                <div flex>{{vm.selectedSubscription.email_addr}}</div>
+                                                            </div>
+                                                            <div flex="5"></div>
+                                                            <div layout="row" layout-align="start center" class="info-grid-row bordered" flex>
+                                                                <div class="iconed-label" layout="row" layout-align="start center" flex>
+                                                                    <md-icon md-font-icon="icon-map"></md-icon> <span flex>User category</span>
+                                                                </div>
+                                                                <div flex class="">{{vm.selectedSubscription.category}}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div layout="row">
+                                                            <div layout="row" layout-align="start center" class="info-grid-row bordered" flex>
+                                                                <div class="iconed-label" layout="row" layout-align="start center" flex>
+                                                                    <md-icon md-font-icon="icon-calendar-check"></md-icon> <span flex>Registered date</span>
+                                                                </div>
+                                                                <div flex class="">{{vm.selectedSubscription.createdDate.split(' ')[0]}}</div>
+                                                            </div>
+                                                            <div flex="5"></div>
+                                                            <div layout="row" layout-align="start center" class="info-grid-row bordered" flex>
+                                                                <div class="iconed-label" layout="row" layout-align="start center" flex>
+                                                                    <md-icon md-font-icon="icon-phone"></md-icon> <span flex>Contact</span>
+                                                                </div>
+                                                                <div flex class="">{{vm.selectedSubscription.contact != '' ? vm.selectedSubscription.contact : '-'}}</div>
+                                                            </div>                                                  </div>
+                                                        <div layout="row" class="mt-20">
+                                                            <div layout="row" layout-align="start center" class="info-grid-row bordered" flex>
+                                                                <div class="iconed-label" layout="row" layout-align="start center" flex="25">
+                                                                    <md-icon md-font-icon="icon-home"></md-icon> <span flex>Billing address</span>
+                                                                </div>
+                                                                <div flex class="">{{vm.selectedSubscription.billAddress ? vm.selectedSubscription.billAddress : '-'}}</div>
+                                                            </div>
+                                                            <div class="info-grid-row bordered" flex="5"></div>
+                                                        </div>
+                                                        <div layout="row">
+                                                            <div layout="row" layout-align="start center" class="info-grid-row bordered" flex>
+                                                                <div class="iconed-label" layout="row" layout-align="start center" flex="25">
+                                                                    <i class="material-icons">local_shipping</i> <span flex>Shipping address</span>
+                                                                </div>
+                                                                <div flex class="">{{vm.selectedSubscription.billAddress ? vm.selectedSubscription.billAddress : '-'}}</div>
+                                                            </div>
+                                                            <div class="info-grid-row" flex="5"></div>
+                                                        </div>
+                                                        <div layout="row" class="mt-20">
+                                                            <div layout="row" layout-align="start center" class="info-grid-row" flex>
+                                                                <div class="iconed-label" layout="row" layout-align="start center" flex>
+                                                                    <md-icon md-font-icon="icon-credit-card-multiple"></md-icon> <span flex>Cards</span>
+                                                                </div>
+                                                                <div flex ng-if="vm.selectedSubscription.hasCards != null"><md-icon md-font-icon="icon-credit-card" class="font-accent"></md-icon> Available</div>
+                                                                <div flex class="op-5" ng-if="vm.selectedSubscription.hasCards == null"><i>Not available</i></div>
+                                                            </div>
+                                                            <div flex="5"></div>
+                                                            <div layout="row" layout-align="start center" class="info-grid-row" flex>
+                                                                <div class="iconed-label" layout="row" layout-align="start center" flex>
+                                                                    <i class="material-icons">local_atm</i>
+                                                                    <span flex>Payment gateway</span>
+                                                                </div>
+                                                                <div flex>
+                                                                    <!--{{customer_supplier.profile.gatewayType}}-->
+                                                                    <div class="online_{{vm.selectedSubscription.gatewayType | lowercase}} scale-down-5" style="margin-left: -40px"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <md-divider class="mt-10 mb-20"></md-divider>
+                                    <!--<div layout="row" layout-align="end end" class="more-chevron">-->
+                                        <!--<div layout="row" layout-align="start center">-->
+                                            <!--<md-button class="md-icon-button m-0" ng-click="contentExpandHandler()"><md-icon md-font-icon="icon-chevron-down" ng-if="!showMoreUserInfo"></md-icon><md-icon md-font-icon="icon-chevron-up" ng-if="showMoreUserInfo"></md-icon> </md-button><label ng-if="showMoreUserInfo">Less</label><label ng-if="!showMoreUserInfo">More</label>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <!-- / Contact Info portion-->
+                                    <div layout="row" layout-align="space-between center" class="mv-20">
+                                        <div class="m-0 labled-numbers big" flex>
+                                            <div>Amount</div>
+                                            <div class="pos-rel">
+                                                <span class="font-accent-dark">{{vm.selectedSubscription.unitPrice | isoCurrency:BaseCurrency:0}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="m-0 labled-numbers big" flex>
+                                            <div>Period</div>
+                                            <div class="pos-rel">
+                                                <span>{{vm.selectedSubscription.startDate|parseDate | date:'dd.mm.yyyy'}} </span><span>-</span><span> {{vm.selectedSubscription.endDate|parseDate| date:'dd.mm.yyyy'}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div layout="row">
                                         <div flex class="mr-15">
                                             <!--<div layout="row" layout-align="start center" class="info-grid-row">-->
                                             <!--<div class="iconed-label"><span>Type</span></div>-->
                                             <!--<span class="secondary-state-capsule">{{vm.selectedPlan.type}}</span>-->
                                             <!--</div>-->
-                                            <div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">
-                                                <div flex class="iconed-label">
-                                                    <md-icon md-font-icon="icon-cash"></md-icon> <span>Amount</span>
-                                                </div>
-                                                <div flex class="">{{vm.selectedSubscription.unitPrice}}</div>
-                                            </div>
+                                            <!--<div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">-->
+                                                <!--<div flex class="iconed-label">-->
+                                                    <!--<md-icon md-font-icon="icon-cash"></md-icon> <span>Amount</span>-->
+                                                <!--</div>-->
+                                                <!--<div flex class="">{{vm.selectedSubscription.unitPrice}}</div>-->
+                                            <!--</div>-->
                                             <div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">
                                               <div flex class="iconed-label">
                                                 <md-icon md-font-icon="icon-map"></md-icon> <span>Plan type</span>
@@ -250,6 +351,12 @@
                                                 </div>
                                                 <div flex class="">{{vm.selectedSubscription.name}}</div>
                                             </div>
+                                            <!--<div flex layout="row" layout-align="start center" class="info-grid-row mb-20">-->
+                                                <!--<div flex class="iconed-label">-->
+                                                    <!--<md-icon md-font-icon="icon-calendar"></md-icon> <span>Period</span>-->
+                                                <!--</div>-->
+                                                <!--<div flex class=""><span>{{vm.selectedSubscription.startDate|parseDate | date:'dd.mm.yyyy'}} </span>-<span> {{vm.selectedSubscription.endDate|parseDate| date:'dd.mm.yyyy'}}</span></div>-->
+                                            <!--</div>-->
                                             <div flex layout="row" layout-align="start center" class="info-grid-row bordered-dark">
                                                 <div flex class="iconed-label">
                                                     <md-icon md-font-icon="icon-calendar-check"></md-icon> <span>Last billing date</span>
