@@ -314,16 +314,16 @@
                                     <!--</div>-->
                                     <!-- / Contact Info portion-->
                                     <div layout="row" layout-align="space-between center" class="mv-20">
-                                        <div class="m-0 labled-numbers big" flex>
+                                        <div class="m-0 labled-numbers big light-blue" flex>
                                             <div>Amount</div>
                                             <div class="pos-rel">
                                                 <span class="font-accent-dark">{{vm.selectedSubscription.unitPrice | isoCurrency:BaseCurrency:0}}</span>
                                             </div>
                                         </div>
-                                        <div class="m-0 labled-numbers big" flex>
+                                        <div class="m-0 labled-numbers big light-gray" flex>
                                             <div>Period</div>
                                             <div class="pos-rel">
-                                                <span>{{vm.selectedSubscription.startDate|parseDate | date:'dd.mm.yyyy'}} </span><span>-</span><span> {{vm.selectedSubscription.endDate|parseDate| date:'dd.mm.yyyy'}}</span>
+                                                <span>{{vm.selectedSubscription.startDate | limitTo:10}}</span><span> -    </span><span>{{vm.selectedSubscription.endDate | limitTo:10}}</span>
                                             </div>
                                         </div>
                                     </div>
