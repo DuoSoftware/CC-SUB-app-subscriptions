@@ -670,8 +670,9 @@
 					vm.subscriptions=[];
 					$scope.items = [];
 					$scope.loading=true;
-					$scope.more();
+					$scope.more("");
 					$scope.stopPaneOpen = false;
+          $scope.showInpageReadpane = false;
 				}
 				else if(data.response=="failed"){
 					$errorCheck.getClient().LoadErrorList(data.error).onComplete(function(Response)
@@ -717,8 +718,9 @@
 					vm.subscriptions=[];
 					$scope.items = [];
 					$scope.loading=true;
-					$scope.more();
+					$scope.more("");
 					$scope.stopPaneOpen = false;
+          $scope.showInpageReadpane = false;
 				}
 				else if(data.response=="failed"){
 					$errorCheck.getClient().LoadErrorList(data.error).onComplete(function(Response)

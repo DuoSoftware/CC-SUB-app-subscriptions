@@ -608,6 +608,7 @@
                                                 <div layout="row" flex class="list-item" ng-repeat="history in vm.paymentHistoryList" ng-hide="isTenantPaymentHistoryClicked">
                                                     <div flex>
                                                         <span>{{history.code}}</span>
+                                                        <div class="fs-12 op-5">{{history.class}}</div>
                                                     </div>
                                                     <div flex>
                                                         <span>{{history.startDate | date:'yyyy.MM.dd'}}</span>
