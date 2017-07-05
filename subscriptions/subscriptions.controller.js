@@ -148,7 +148,7 @@
 
 		function getDomainName() {
 			var _st = gst("domain");
-			return (_st != null) ? _st : ""; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
+			return (_st != null) ? _st : "gihan"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
 		}
 
 		function getDomainExtension() {
@@ -233,6 +233,7 @@
 				vm.selectedSubscription.guOrderId=subscription.guOrderId;
 				vm.selectedSubscription.first_name=subscription.first_name;
 				vm.selectedSubscription.class=subscription.class;
+				vm.selectedSubscription.remark=subscription.remark;//endofsubscription
 
 				$charge.tax().getTaxGrpByIDs(vm.selectedSubscription.taxID).success(function(data) {
 					var taxid=data.groupDetail[0].taxid;
