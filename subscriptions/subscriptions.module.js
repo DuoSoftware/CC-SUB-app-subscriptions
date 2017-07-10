@@ -1,8 +1,8 @@
 ////////////////////////////////
 // App : Subscription
 // Owner  : Gihan Herath
-// Last changed date : 2017/07/05
-// Version : 6.1.0.14
+// Last changed date : 2017/07/10
+// Version : 6.1.0.15
 // Modified By : Kasun
 /////////////////////////////////
 
@@ -32,12 +32,25 @@
           }
         },
         resolve: {
-          security: ['$q','mesentitlement', function($q,mesentitlement){
-            var entitledStatesReturn = mesentitlement.stateDepResolver('subscriptions');
+			security: ['$q','mesentitlement','$timeout','$rootScope','$state','$location', function($q,mesentitlement,$timeout,$rootScope,$state, $location){
 
-            if(entitledStatesReturn !== true){
-              return $q.reject("unauthorized");
-            };
+			  return $q(function(resolve, reject) {
+				  $timeout(function() {
+					  if ($rootScope.isBaseSet2) {
+						  resolve(function () {
+							  mesentitlementProvider.setStateCheck("subscriptions");
+
+							  var entitledStatesReturn = mesentitlement.stateDepResolver('subscriptions');
+
+							  if(entitledStatesReturn !== true){
+								  return $q.reject("unauthorized");
+							  };
+						  });
+					  } else {
+						  return $location.path('/guide');
+					  }
+				  });
+			  });
           }]
         },
         bodyClass: 'subscriptions'
