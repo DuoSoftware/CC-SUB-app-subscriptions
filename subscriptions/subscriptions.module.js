@@ -1,8 +1,8 @@
 ////////////////////////////////
 // App : Subscription
 // Owner  : Gihan Herath
-// Last changed date : 2017/07/10
-// Version : 6.1.0.15
+// Last changed date : 2017/08/24
+// Version : 6.1.0.16
 // Modified By : Kasun
 /////////////////////////////////
 
@@ -19,7 +19,21 @@
   function config($stateProvider, $translatePartialLoaderProvider, msApiProvider, msNavigationServiceProvider, mesentitlementProvider)
   {
 
-    mesentitlementProvider.setStateCheck("plans");
+
+    function gst(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        //debugger;
+        return null;
+    }
+    /** Check for Super admin */
+    var isSuperAdmin = gst('isSuperAdmin');
+    /** Check for Super admin - END */
 
     // State
     $stateProvider
@@ -36,7 +50,7 @@
 
 			  return $q(function(resolve, reject) {
 				  $timeout(function() {
-					  if ($rootScope.isBaseSet2) {
+					  if ($rootScope.isBaseSet2 && isSuperAdmin != 'true') {
 						  resolve(function () {
 							  mesentitlementProvider.setStateCheck("subscriptions");
 
@@ -61,15 +75,17 @@
 
     // Navigation
 
-    msNavigationServiceProvider.saveItem('subscriptions', {
-      title    : 'Subscriptions',
-      icon     : 'icon-leaf',
-      state    : 'app.subscriptions',
-      /*stateParams: {
-       'param1': 'page'
-       },*/
-      weight   : 6
-    });
+    if(isSuperAdmin != 'true'){
+      msNavigationServiceProvider.saveItem('subscriptions', {
+        title    : 'Subscriptions',
+        icon     : 'icon-leaf',
+        state    : 'app.subscriptions',
+        /*stateParams: {
+         'param1': 'page'
+         },*/
+        weight   : 6
+      });
+    }
   }
 
   function parseDateFilter(){
