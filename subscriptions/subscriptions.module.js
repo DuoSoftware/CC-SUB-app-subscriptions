@@ -2,95 +2,77 @@
 // App : Subscription
 // Owner  : Gihan Herath
 // Last changed date : 2017/08/24
-// Version : 6.1.0.16
+// Version : 6.1.0.15
 // Modified By : Kasun
 /////////////////////////////////
 
 (function ()
 {
-  'use strict';
+	'use strict';
 
-  angular
-    .module('app.subscriptions', [])
-    .config(config)
-    .filter('parseDate',parseDateFilter);
+	angular
+		.module('app.subscriptions', [])
+		.config(config)
+		.filter('parseDate',parseDateFilter);
 
-  /** @ngInject */
-  function config($stateProvider, $translatePartialLoaderProvider, msApiProvider, msNavigationServiceProvider, mesentitlementProvider)
-  {
+	/** @ngInject */
+	function config($stateProvider, $translatePartialLoaderProvider, msApiProvider, msNavigationServiceProvider, mesentitlementProvider)
+	{
 
+		// State
+		$stateProvider
+			.state('app.subscriptions', {
+				url    : '/subscriptions',
+				views  : {
+					'subscriptions@app': {
+						templateUrl: 'app/main/subscriptions/subscriptions.html',
+						controller : 'SubscriptionsController as vm'
+					}
+				},
+				resolve: {
+					security: ['$q','mesentitlement','$timeout','$rootScope','$state','$location', function($q,mesentitlement,$timeout,$rootScope,$state, $location){
 
-    function gst(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-        }
-        //debugger;
-        return null;
-    }
-    /** Check for Super admin */
-    var isSuperAdmin = gst('isSuperAdmin');
-    /** Check for Super admin - END */
+						return $q(function(resolve, reject) {
+							$timeout(function() {
+								if ($rootScope.isBaseSet2) {
+									resolve(function () {
+										mesentitlementProvider.setStateCheck("subscriptions");
 
-    // State
-    $stateProvider
-      .state('app.subscriptions', {
-        url    : '/subscriptions',
-        views  : {
-          'subscriptions@app': {
-            templateUrl: 'app/main/subscriptions/subscriptions.html',
-            controller : 'SubscriptionsController as vm'
-          }
-        },
-        resolve: {
-			security: ['$q','mesentitlement','$timeout','$rootScope','$state','$location', function($q,mesentitlement,$timeout,$rootScope,$state, $location){
+										var entitledStatesReturn = mesentitlement.stateDepResolver('subscriptions');
 
-			  return $q(function(resolve, reject) {
-				  $timeout(function() {
-					  if ($rootScope.isBaseSet2 && isSuperAdmin != 'true') {
-						  resolve(function () {
-							  mesentitlementProvider.setStateCheck("subscriptions");
+										if(entitledStatesReturn !== true){
+											return $q.reject("unauthorized");
+										};
+									});
+								} else {
+									return $location.path('/guide');
+								}
+							});
+						});
+					}]
+				},
+				bodyClass: 'subscriptions'
+			});
 
-							  var entitledStatesReturn = mesentitlement.stateDepResolver('subscriptions');
+		// //Api
+		// msApiProvider.register('cc_invoice.invoices', ['app/data/cc_invoice/invoices.json']);
 
-							  if(entitledStatesReturn !== true){
-								  return $q.reject("unauthorized");
-							  };
-						  });
-					  } else {
-						  return $location.path('/guide');
-					  }
-				  });
-			  });
-          }]
-        },
-        bodyClass: 'subscriptions'
-      });
+		// Navigation
 
-    // //Api
-    // msApiProvider.register('cc_invoice.invoices', ['app/data/cc_invoice/invoices.json']);
+		msNavigationServiceProvider.saveItem('subscriptions', {
+			title    : 'Subscriptions',
+			icon     : 'icon-leaf',
+			state    : 'app.subscriptions',
+			/*stateParams: {
+			 'param1': 'page'
+			 },*/
+			weight   : 6
+		});
+	}
 
-    // Navigation
-
-    if(isSuperAdmin != 'true'){
-      msNavigationServiceProvider.saveItem('subscriptions', {
-        title    : 'Subscriptions',
-        icon     : 'icon-leaf',
-        state    : 'app.subscriptions',
-        /*stateParams: {
-         'param1': 'page'
-         },*/
-        weight   : 6
-      });
-    }
-  }
-
-  function parseDateFilter(){
-    return function(input){
-      return new Date(input);
-    };
-  }
+	function parseDateFilter(){
+		return function(input){
+			return new Date(input);
+		};
+	}
 })();
