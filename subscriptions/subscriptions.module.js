@@ -1,78 +1,81 @@
 ////////////////////////////////
 // App : Subscription
 // Owner  : Gihan Herath
-// Last changed date : 2017/08/24
-// Version : 6.1.0.15
-// Modified By : Kasun
+// Last changed date : 2017/08/30
+// Version : 6.1.0.16
+// Modified By : Gihan
 /////////////////////////////////
 
 (function ()
 {
-	'use strict';
+  'use strict';
 
-	angular
-		.module('app.subscriptions', [])
-		.config(config)
-		.filter('parseDate',parseDateFilter);
+  angular
+    .module('app.subscriptions', [])
+    .config(config)
+    .filter('parseDate',parseDateFilter);
 
-	/** @ngInject */
-	function config($stateProvider, $translatePartialLoaderProvider, msApiProvider, msNavigationServiceProvider, mesentitlementProvider)
-	{
+  /** @ngInject */
+  function config($stateProvider, $translatePartialLoaderProvider, msApiProvider, msNavigationServiceProvider, mesentitlementProvider)
+  {
 
-		// State
-		$stateProvider
-			.state('app.subscriptions', {
-				url    : '/subscriptions',
-				views  : {
-					'subscriptions@app': {
-						templateUrl: 'app/main/subscriptions/subscriptions.html',
-						controller : 'SubscriptionsController as vm'
-					}
-				},
-				resolve: {
-					security: ['$q','mesentitlement','$timeout','$rootScope','$state','$location', function($q,mesentitlement,$timeout,$rootScope,$state, $location){
+    mesentitlementProvider.setStateCheck("plans");
 
-						return $q(function(resolve, reject) {
-							$timeout(function() {
-								if ($rootScope.isBaseSet2) {
-									resolve(function () {
-										mesentitlementProvider.setStateCheck("subscriptions");
+    // State
+    $stateProvider
+      .state('app.subscriptions', {
+        url    : '/subscriptions',
+        views  : {
+          'subscriptions@app': {
+            templateUrl: 'app/main/subscriptions/subscriptions.html',
+            controller : 'SubscriptionsController as vm'
+          }
+        },
+        resolve: {
+			security: ['$q','mesentitlement','$timeout','$rootScope','$state','$location', function($q,mesentitlement,$timeout,$rootScope,$state, $location){
 
-										var entitledStatesReturn = mesentitlement.stateDepResolver('subscriptions');
+			  return $q(function(resolve, reject) {
+				  $timeout(function() {
+					  if (true) {
+					  //if ($rootScope.isBaseSet2) {
+						  resolve(function () {
+							  mesentitlementProvider.setStateCheck("subscriptions");
 
-										if(entitledStatesReturn !== true){
-											return $q.reject("unauthorized");
-										};
-									});
-								} else {
-									return $location.path('/guide');
-								}
-							});
-						});
-					}]
-				},
-				bodyClass: 'subscriptions'
-			});
+							  var entitledStatesReturn = mesentitlement.stateDepResolver('subscriptions');
 
-		// //Api
-		// msApiProvider.register('cc_invoice.invoices', ['app/data/cc_invoice/invoices.json']);
+							  if(entitledStatesReturn !== true){
+								  return $q.reject("unauthorized");
+							  };
+						  });
+					  } else {
+						  return $location.path('/guide');
+					  }
+				  });
+			  });
+          }]
+        },
+        bodyClass: 'subscriptions'
+      });
 
-		// Navigation
+    // //Api
+    // msApiProvider.register('cc_invoice.invoices', ['app/data/cc_invoice/invoices.json']);
 
-		msNavigationServiceProvider.saveItem('subscriptions', {
-			title    : 'Subscriptions',
-			icon     : 'icon-leaf',
-			state    : 'app.subscriptions',
-			/*stateParams: {
-			 'param1': 'page'
-			 },*/
-			weight   : 6
-		});
-	}
+    // Navigation
 
-	function parseDateFilter(){
-		return function(input){
-			return new Date(input);
-		};
-	}
+    msNavigationServiceProvider.saveItem('subscriptions', {
+      title    : 'Subscriptions',
+      icon     : 'icon-leaf',
+      state    : 'app.subscriptions',
+      /*stateParams: {
+       'param1': 'page'
+       },*/
+      weight   : 6
+    });
+  }
+
+  function parseDateFilter(){
+    return function(input){
+      return new Date(input);
+    };
+  }
 })();
