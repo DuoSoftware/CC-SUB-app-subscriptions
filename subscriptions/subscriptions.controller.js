@@ -16,7 +16,7 @@
 		.controller('SubscriptionsController', SubscriptionsController);
 
 	/** @ngInject */
-	function SubscriptionsController($scope, $timeout, $mdDialog, $mdMedia, $mdSidenav, $filter, $charge, $errorCheck, notifications, $azureSearchHandle)
+	function SubscriptionsController($scope, $timeout, $mdDialog, $mdMedia, $mdSidenav, $filter, $charge, $errorCheck, notifications, $azureSearchHandle, logHelper)
 	{
 		var vm = this;
 
@@ -148,7 +148,7 @@
 
 		function getDomainName() {
 			var _st = gst("domain");
-			return (_st != null) ? _st : "gihan"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
+			return (_st != null) ? _st : ""; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
 		}
 
 		function getDomainExtension() {
@@ -276,6 +276,11 @@
 					vm.selectedSubscription.email_addr="";
 					$scope.loaderArr.push('ok');
 
+          $scope.infoJson= {};
+          $scope.infoJson.message =JSON.stringify(data);
+          $scope.infoJson.app ='subscriptions';
+          logHelper.error( $scope.infoJson);
+
 				})
 				$scope.addonPlansList=[];
 				$charge.order().getAddonsByOrderId(subscription.guOrderId).success(function(data) {
@@ -289,6 +294,11 @@
 				}).error(function(data) {
 					//console.log(data);
 					$scope.loaderArr.push('ok');
+
+          $scope.infoJson= {};
+          $scope.infoJson.message =JSON.stringify(data);
+          $scope.infoJson.app ='subscriptions';
+          logHelper.error( $scope.infoJson);
 
 				})
 				$scope.paymentRetryHistory={};
@@ -380,6 +390,11 @@
 					//console.log(data);
 					$scope.loaderArr.push('ok');
 
+          $scope.infoJson= {};
+          $scope.infoJson.message =JSON.stringify(data);
+          $scope.infoJson.app ='subscriptions';
+          logHelper.error( $scope.infoJson);
+
 				})
 				$scope.loaderArr.push('ok');
 
@@ -396,6 +411,11 @@
 				vm.selectedSubscription.taxType = "-1";
 				vm.selectedSubscription.taxAmount = 0;
 				$scope.loaderArr.push('ok');
+
+        $scope.infoJson= {};
+        $scope.infoJson.message =JSON.stringify(data);
+        $scope.infoJson.app ='subscriptions';
+        logHelper.error( $scope.infoJson);
 			})
 			//vm.selectedSubscription = subscription;
 		};
@@ -483,6 +503,11 @@
 				//console.log(data);
 				$scope.moreOrderHistoryLoaded = true;
 				vm.isOrderHistoryLoaded = false;
+
+        $scope.infoJson= {};
+        $scope.infoJson.message =JSON.stringify(data);
+        $scope.infoJson.app ='subscriptions';
+        logHelper.error( $scope.infoJson);
 			})
 		}
 
@@ -667,6 +692,11 @@
 				if(data.response=="succeeded") {
 					notifications.toast("Subscription has Stopped", "success");
 
+          $scope.infoJson= {};
+          $scope.infoJson.message =schedule.code+' - '+schedule.email_addr+' - '+'Subscription has Stopped';//JSON.stringify(data);
+          $scope.infoJson.app ='subscriptions';
+          logHelper.info( $scope.infoJson);
+
 					skip = 0;
 					vm.subscriptions=[];
 					$scope.items = [];
@@ -680,6 +710,11 @@
 					{
 						var result=Response;
 						notifications.toast(result,"error");
+
+            $scope.infoJson= {};
+            $scope.infoJson.message =schedule.code+' - '+schedule.email_addr+' - '+'Subscription Stopping Failed; '+result;
+            $scope.infoJson.app ='subscriptions';
+            logHelper.error( $scope.infoJson);
 					}).onError(function(data)
 					{
 						//console.log(data);
@@ -692,6 +727,11 @@
 					{
 						var result=Response;
 						notifications.toast(result,"error");
+
+            $scope.infoJson= {};
+            $scope.infoJson.message =schedule.code+' - '+schedule.email_addr+' - '+'Subscription Stopping Failed; '+result;
+            $scope.infoJson.app ='subscriptions';
+            logHelper.error( $scope.infoJson);
 					}).onError(function(data)
 					{
 						//console.log(data);
@@ -715,6 +755,11 @@
 				if(data.response=="succeeded") {
 					notifications.toast("Subscription will Stop at the end of Billing Circle", "success");
 
+          $scope.infoJson= {};
+          $scope.infoJson.message =schedule.code+' - '+schedule.email_addr+' - '+'Subscription will Stop at the end of Billing Circle';//JSON.stringify(data);
+          $scope.infoJson.app ='subscriptions';
+          logHelper.info( $scope.infoJson);
+
 					skip = 0;
 					vm.subscriptions=[];
 					$scope.items = [];
@@ -728,6 +773,11 @@
 					{
 						var result=Response;
 						notifications.toast(result,"error");
+
+            $scope.infoJson= {};
+            $scope.infoJson.message =schedule.code+' - '+schedule.email_addr+' - '+'Subscription Stopping Failed; '+result;
+            $scope.infoJson.app ='subscriptions';
+            logHelper.error( $scope.infoJson);
 					}).onError(function(data)
 					{
 						//console.log(data);
@@ -740,6 +790,11 @@
 					{
 						var result=Response;
 						notifications.toast(result,"error");
+
+            $scope.infoJson= {};
+            $scope.infoJson.message =schedule.code+' - '+schedule.email_addr+' - '+'Subscription Stopping Failed; '+result;
+            $scope.infoJson.app ='subscriptions';
+            logHelper.error( $scope.infoJson);
 					}).onError(function(data)
 					{
 						//console.log(data);
@@ -844,6 +899,11 @@
         //console.log(data);
         vm.loadingProfiles = false;
         $scope.more("");
+
+        $scope.infoJson= {};
+        $scope.infoJson.message =JSON.stringify(data);
+        $scope.infoJson.app ='subscriptions';
+        logHelper.error( $scope.infoJson);
       });
 
     };
@@ -1021,6 +1081,11 @@
         $scope.isdataavailable=false;
         $scope.isLoading = false;
         $scope.hideSearchMore=true;
+
+        $scope.infoJson= {};
+        $scope.infoJson.message =JSON.stringify(data);
+        $scope.infoJson.app ='subscriptions';
+        logHelper.error( $scope.infoJson);
       });
 
     };
