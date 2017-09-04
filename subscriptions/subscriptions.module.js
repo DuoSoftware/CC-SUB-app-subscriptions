@@ -36,8 +36,8 @@
 
 			  return $q(function(resolve, reject) {
 				  $timeout(function() {
-					  if (true) {
-					  //if ($rootScope.isBaseSet2) {
+					  // if (true) {
+					  if ($rootScope.isBaseSet2) {
 						  resolve(function () {
 							  mesentitlementProvider.setStateCheck("subscriptions");
 
