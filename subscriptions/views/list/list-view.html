@@ -52,6 +52,9 @@
         </div>
     </div>
 </div>
+<div class="invoice-list-item" ng-hide="hideSearchMore || vm.searchMoreInit" layout="row" layout-align="center center">
+  <md-button ng-click="loadByKeywordSubscription(vm.search,vm.search.length)" class="md-primary" style="font-size: 12px;font-weight: 400"><md-icon md-font-icon="icon-magnify"></md-icon> More</md-button>
+</div>
 <!-- PRODUCT LIST ITEMS
 
 <!-- PRODUCT LIST ITEMS

@@ -16,7 +16,7 @@
 		.controller('SubscriptionsController', SubscriptionsController);
 
 	/** @ngInject */
-	function SubscriptionsController($scope, $timeout, $mdDialog, $mdMedia, $mdSidenav, $filter, $charge, $errorCheck, notifications)
+	function SubscriptionsController($scope, $timeout, $mdDialog, $mdMedia, $mdSidenav, $filter, $charge, $errorCheck, notifications, $azureSearchHandle, logHelper)
 	{
 		var vm = this;
 
@@ -276,6 +276,11 @@
 					vm.selectedSubscription.email_addr="";
 					$scope.loaderArr.push('ok');
 
+          $scope.infoJson= {};
+          $scope.infoJson.message =JSON.stringify(data);
+          $scope.infoJson.app ='subscriptions';
+          logHelper.error( $scope.infoJson);
+
 				})
 				$scope.addonPlansList=[];
 				$charge.order().getAddonsByOrderId(subscription.guOrderId).success(function(data) {
@@ -289,6 +294,11 @@
 				}).error(function(data) {
 					//console.log(data);
 					$scope.loaderArr.push('ok');
+
+          $scope.infoJson= {};
+          $scope.infoJson.message =JSON.stringify(data);
+          $scope.infoJson.app ='subscriptions';
+          logHelper.error( $scope.infoJson);
 
 				})
 				$scope.paymentRetryHistory={};
@@ -380,6 +390,11 @@
 					//console.log(data);
 					$scope.loaderArr.push('ok');
 
+          $scope.infoJson= {};
+          $scope.infoJson.message =JSON.stringify(data);
+          $scope.infoJson.app ='subscriptions';
+          logHelper.error( $scope.infoJson);
+
 				})
 				$scope.loaderArr.push('ok');
 
@@ -396,6 +411,11 @@
 				vm.selectedSubscription.taxType = "-1";
 				vm.selectedSubscription.taxAmount = 0;
 				$scope.loaderArr.push('ok');
+
+        $scope.infoJson= {};
+        $scope.infoJson.message =JSON.stringify(data);
+        $scope.infoJson.app ='subscriptions';
+        logHelper.error( $scope.infoJson);
 			})
 			//vm.selectedSubscription = subscription;
 		};
@@ -460,12 +480,12 @@
 			var planCode=order.code;
 			var accId=order.guAccountId;
 			vm.isOrderHistoryLoaded = true;
-			$charge.order().getOrderHistoryByAccID(accId,skipOrderHistory,takeOrderHistory,'desc').success(function(data)
+			$charge.orderhistory().getOrderHistoryByAccID(accId,skipOrderHistory,takeOrderHistory,'desc').success(function(data)
 			{
 				//console.log(data);
 				skipOrderHistory+=takeOrderHistory;
-				for (var i = 0; i < data.length; i++) {
-					var objOrderHistory=data[i];
+				for (var i = 0; i < data.result.length; i++) {
+					var objOrderHistory=data.result[i];
 					objOrderHistory.startDate=moment(objOrderHistory.startDate).format('L');
 					objOrderHistory.endDate=moment(objOrderHistory.endDate).format('L');
 					vm.paymentHistoryList.push(objOrderHistory);
@@ -483,6 +503,11 @@
 				//console.log(data);
 				$scope.moreOrderHistoryLoaded = true;
 				vm.isOrderHistoryLoaded = false;
+
+        $scope.infoJson= {};
+        $scope.infoJson.message =JSON.stringify(data);
+        $scope.infoJson.app ='subscriptions';
+        logHelper.error( $scope.infoJson);
 			})
 		}
 
@@ -667,6 +692,11 @@
 				if(data.response=="succeeded") {
 					notifications.toast("Subscription has Stopped", "success");
 
+          $scope.infoJson= {};
+          $scope.infoJson.message =schedule.code+' - '+schedule.email_addr+' - '+'Subscription has Stopped';//JSON.stringify(data);
+          $scope.infoJson.app ='subscriptions';
+          logHelper.info( $scope.infoJson);
+
 					skip = 0;
 					vm.subscriptions=[];
 					$scope.items = [];
@@ -680,6 +710,11 @@
 					{
 						var result=Response;
 						notifications.toast(result,"error");
+
+            $scope.infoJson= {};
+            $scope.infoJson.message =schedule.code+' - '+schedule.email_addr+' - '+'Subscription Stopping Failed; '+result;
+            $scope.infoJson.app ='subscriptions';
+            logHelper.error( $scope.infoJson);
 					}).onError(function(data)
 					{
 						//console.log(data);
@@ -692,6 +727,11 @@
 					{
 						var result=Response;
 						notifications.toast(result,"error");
+
+            $scope.infoJson= {};
+            $scope.infoJson.message =schedule.code+' - '+schedule.email_addr+' - '+'Subscription Stopping Failed; '+result;
+            $scope.infoJson.app ='subscriptions';
+            logHelper.error( $scope.infoJson);
 					}).onError(function(data)
 					{
 						//console.log(data);
@@ -715,6 +755,11 @@
 				if(data.response=="succeeded") {
 					notifications.toast("Subscription will Stop at the end of Billing Circle", "success");
 
+          $scope.infoJson= {};
+          $scope.infoJson.message =schedule.code+' - '+schedule.email_addr+' - '+'Subscription will Stop at the end of Billing Circle';//JSON.stringify(data);
+          $scope.infoJson.app ='subscriptions';
+          logHelper.info( $scope.infoJson);
+
 					skip = 0;
 					vm.subscriptions=[];
 					$scope.items = [];
@@ -728,6 +773,11 @@
 					{
 						var result=Response;
 						notifications.toast(result,"error");
+
+            $scope.infoJson= {};
+            $scope.infoJson.message =schedule.code+' - '+schedule.email_addr+' - '+'Subscription Stopping Failed; '+result;
+            $scope.infoJson.app ='subscriptions';
+            logHelper.error( $scope.infoJson);
 					}).onError(function(data)
 					{
 						//console.log(data);
@@ -740,6 +790,11 @@
 					{
 						var result=Response;
 						notifications.toast(result,"error");
+
+            $scope.infoJson= {};
+            $scope.infoJson.message =schedule.code+' - '+schedule.email_addr+' - '+'Subscription Stopping Failed; '+result;
+            $scope.infoJson.app ='subscriptions';
+            logHelper.error( $scope.infoJson);
 					}).onError(function(data)
 					{
 						//console.log(data);
@@ -761,47 +816,76 @@
       //
       vm.loadingProfiles = true;
 
-      var dbNamePart1="";
-      var dbNamePart2="";
-      var dbName="";
-      var filter="";
-      dbNamePart1=getDomainName().split('.')[0];
-      dbNamePart2=getDomainExtension();
-      dbName=dbNamePart1+"_"+dbNamePart2;
-      //filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
-      var data={
-        "search": "*",
-        "filter": "(domain eq '"+dbName+"')",
-        "orderby" : "createddate desc",
-        "top":takeProfiles,
-        "skip":skipProfiles
-      }
+      //var dbNamePart1="";
+      //var dbNamePart2="";
+      //var dbName="";
+      //var filter="";
+      //dbNamePart1=getDomainName().split('.')[0];
+      //dbNamePart2=getDomainExtension();
+      //dbName=dbNamePart1+"_"+dbNamePart2;
+      ////filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
+      //var data={
+      //  "search": "*",
+      //  "filter": "(domain eq '"+dbName+"')",
+      //  "orderby" : "createddate desc",
+      //  "top":takeProfiles,
+      //  "skip":skipProfiles
+      //}
+      //
+      //$charge.azuresearch().getAllProfilesPost(data).success(function(data)
+      //{
+      //  //console.log(data);
+      //  if(vm.loadingProfiles)
+      //  {
+      //    skipProfiles += takeProfiles;
+      //    //
+      //
+      //    for (var i = 0; i < data.value.length; i++) {
+      //      //
+      //      if(data.value[i].status==0)
+      //      {
+      //        data.value[i].status=false;
+      //      }
+      //      else
+      //      {
+      //        data.value[i].status=true;
+      //      }
+      //      data.value[i].createddate = new Date(data.value[i].createddate);
+      //      $scope.profileList.push(data.value[i]);
+      //
+      //    }
+      //
+      //    vm.loadingProfiles = false;
+      //    if(data.value.length<takeProfiles){
+      //      $scope.more("");
+      //    }
+      //    else
+      //    {
+      //      $scope.loadProfiles();
+      //    }
+      //  }
+      //}).error(function(data)
+      //{
+      //  //console.log(data);
+      //  vm.loadingProfiles = false;
+      //  $scope.more("");
+      //})
 
-      $charge.azuresearch().getAllProfilesPost(data).success(function(data)
+      $azureSearchHandle.getClient().SearchRequest("profile",skipProfiles,takeProfiles,'desc',"").onComplete(function(Response)
       {
-        //console.log(data);
         if(vm.loadingProfiles)
         {
           skipProfiles += takeProfiles;
           //
 
-          for (var i = 0; i < data.value.length; i++) {
+          for (var i = 0; i < Response.length; i++) {
             //
-            if(data.value[i].status==0)
-            {
-              data.value[i].status=false;
-            }
-            else
-            {
-              data.value[i].status=true;
-            }
-            data.value[i].createddate = new Date(data.value[i].createddate);
-            $scope.profileList.push(data.value[i]);
+            $scope.profileList.push(Response[i]);
 
           }
 
           vm.loadingProfiles = false;
-          if(data.value.length<takeProfiles){
+          if(Response.length<takeProfiles){
             $scope.more("");
           }
           else
@@ -809,12 +893,18 @@
             $scope.loadProfiles();
           }
         }
-      }).error(function(data)
+
+      }).onError(function(data)
       {
         //console.log(data);
         vm.loadingProfiles = false;
         $scope.more("");
-      })
+
+        $scope.infoJson= {};
+        $scope.infoJson.message =JSON.stringify(data);
+        $scope.infoJson.app ='subscriptions';
+        logHelper.error( $scope.infoJson);
+      });
 
     };
     $scope.loadProfiles();
@@ -827,131 +917,178 @@
 		var take=100;
 		$scope.loading = true;
 
-		$scope.more = function(status){
+    $scope.more = function(status){
 
-			$scope.isLoading = true;
-			//$charge.order().all(skip,take,'asc',filter).success(function(data)
-			//{
-			//	console.log(data);
-			//
-			//	if($scope.loading)
-			//	{
-			//		skip += take;
-			//
-			//		for (var i = 0; i < data.length; i++) {
-			//			$scope.items.push(data[i]);
-			//		}
-			//		vm.subscriptions=$scope.items;
-			//		//$timeout(function () {
-			//		//  vm.plans=$scope.items;
-			//		//},0);
-			//		vm.searchMoreInit = false;
-			//
-			//		$scope.isLoading = false;
-			//		$scope.loading = false;
-			//		$scope.isdataavailable=true;
-			//		if(data.length<take){
-			//			$scope.isdataavailable=false;
-			//			$scope.hideSearchMore=true;
-			//		}
-			//
-			//	}
-			//
-			//}).error(function(data)
-			//{
-			//	console.log(data);
-			//	$scope.isSpinnerShown=false;
-			//	$scope.isdataavailable=false;
-			//	$scope.isLoading = false;
-			//	$scope.hideSearchMore=true;
-			//})
+      $scope.isLoading = true;
+      //$charge.order().all(skip,take,'asc',filter).success(function(data)
+      //{
+      //	console.log(data);
+      //
+      //	if($scope.loading)
+      //	{
+      //		skip += take;
+      //
+      //		for (var i = 0; i < data.length; i++) {
+      //			$scope.items.push(data[i]);
+      //		}
+      //		vm.subscriptions=$scope.items;
+      //		//$timeout(function () {
+      //		//  vm.plans=$scope.items;
+      //		//},0);
+      //		vm.searchMoreInit = false;
+      //
+      //		$scope.isLoading = false;
+      //		$scope.loading = false;
+      //		$scope.isdataavailable=true;
+      //		if(data.length<take){
+      //			$scope.isdataavailable=false;
+      //			$scope.hideSearchMore=true;
+      //		}
+      //
+      //	}
+      //
+      //}).error(function(data)
+      //{
+      //	console.log(data);
+      //	$scope.isSpinnerShown=false;
+      //	$scope.isdataavailable=false;
+      //	$scope.isLoading = false;
+      //	$scope.hideSearchMore=true;
+      //})
 
-			var dbNamePart1="";
-			var dbNamePart2="";
-			var dbName="";
-			var filter="";
-      var data={};
-			dbNamePart1=getDomainName().split('.')[0];
-			dbNamePart2=getDomainExtension();
-			dbName=dbNamePart1+"_"+dbNamePart2;
-			//filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
-      //and status eq 'active'
-      if(status=='')
+      //	var dbNamePart1="";
+      //	var dbNamePart2="";
+      //	var dbName="";
+      //	var filter="";
+      //var data={};
+      //	dbNamePart1=getDomainName().split('.')[0];
+      //	dbNamePart2=getDomainExtension();
+      //	dbName=dbNamePart1+"_"+dbNamePart2;
+      //	//filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
+      ////and status eq 'active'
+      //if(status=='')
+      //{
+      //  data={
+      //    "search": "*",
+      //    "filter": "(domain eq '"+dbName+"' and status ne 'Stopped')",
+      //    "orderby" : "endDate asc",
+      //    "top":take,
+      //    "skip":skip
+      //  }
+      //}
+      //else if(status=='All')
+      //{
+      //  data={
+      //    "search": "*",
+      //    "filter": "(domain eq '"+dbName+"')",
+      //    "orderby" : "endDate asc",
+      //    "top":take,
+      //    "skip":skip
+      //  }
+      //}
+      //else
+      //{
+      //  data={
+      //    "search": "*",
+      //    "filter": "(domain eq '"+dbName+"' and status eq '"+status+"')",
+      //    "orderby" : "endDate asc",
+      //    "top":take,
+      //    "skip":skip
+      //  }
+      //}
+      //
+      //$charge.azuresearch().getAllSubscriptionPost(data).success(function(data)
+      //{
+      //  //console.log(data);
+      //
+      //  if($scope.loading)
+      //  {
+      //    skip += take;
+      //
+      //    for (var i = 0; i < data.value.length; i++) {
+      //      for (var j = 0; j < $scope.profileList.length; j++) {
+      //        if($scope.profileList[j].profileId==data.value[i].guAccountId)
+      //        {
+      //          data.value[i].first_name=$scope.profileList[j].first_name;
+      //          data.value[i].last_name=$scope.profileList[j].last_name;
+      //          break;
+      //        }
+      //      }
+      //      $scope.items.push(data.value[i]);
+      //    }
+      //    vm.subscriptions=$scope.items;
+      //    //$timeout(function () {
+      //    //  vm.plans=$scope.items;
+      //    //},0);profileId
+      //    vm.searchMoreInit = false;
+      //
+      //    $scope.isLoading = false;
+      //    $scope.loading = false;
+      //    $scope.isdataavailable=true;
+      //    if(data.length<take){
+      //      $scope.isdataavailable=false;
+      //      $scope.hideSearchMore=true;
+      //    }
+      //
+      //  }
+      //
+      //}).error(function(data)
+      //{
+      //  //console.log(data);
+      //  $scope.isSpinnerShown=false;
+      //  $scope.isdataavailable=false;
+      //  $scope.isLoading = false;
+      //  $scope.hideSearchMore=true;
+      //})
+
+      $azureSearchHandle.getClient().SearchRequest("subscription",skip,take,'asc',status).onComplete(function(Response)
       {
-        data={
-          "search": "*",
-          "filter": "(domain eq '"+dbName+"' and status ne 'Stopped')",
-          "orderby" : "endDate asc",
-          "top":take,
-          "skip":skip
-        }
-      }
-      else if(status=='All')
-      {
-        data={
-          "search": "*",
-          "filter": "(domain eq '"+dbName+"')",
-          "orderby" : "endDate asc",
-          "top":take,
-          "skip":skip
-        }
-      }
-      else
-      {
-        data={
-          "search": "*",
-          "filter": "(domain eq '"+dbName+"' and status eq '"+status+"')",
-          "orderby" : "endDate asc",
-          "top":take,
-          "skip":skip
-        }
-      }
+        if($scope.loading)
+        {
+          skip += take;
 
-			$charge.azuresearch().getAllSubscriptionPost(data).success(function(data)
-			{
-				//console.log(data);
-
-				if($scope.loading)
-				{
-					skip += take;
-
-					for (var i = 0; i < data.value.length; i++) {
+          for (var i = 0; i < Response.length; i++) {
             for (var j = 0; j < $scope.profileList.length; j++) {
-              if($scope.profileList[j].profileId==data.value[i].guAccountId)
+              if($scope.profileList[j].profileId==Response[i].guAccountId)
               {
-                data.value[i].first_name=$scope.profileList[j].first_name;
-                data.value[i].last_name=$scope.profileList[j].last_name;
+                Response[i].first_name=$scope.profileList[j].first_name;
+                Response[i].last_name=$scope.profileList[j].last_name;
                 break;
               }
             }
-						$scope.items.push(data.value[i]);
-					}
-					vm.subscriptions=$scope.items;
-					//$timeout(function () {
-					//  vm.plans=$scope.items;
-					//},0);profileId
-					vm.searchMoreInit = false;
+            $scope.items.push(Response[i]);
+          }
+          vm.subscriptions=$scope.items;
+          //$timeout(function () {
+          //  vm.plans=$scope.items;
+          //},0);profileId
+          vm.searchMoreInit = false;
 
-					$scope.isLoading = false;
-					$scope.loading = false;
-					$scope.isdataavailable=true;
-					if(data.length<take){
-						$scope.isdataavailable=false;
-						$scope.hideSearchMore=true;
-					}
+          $scope.isLoading = false;
+          $scope.loading = false;
+          $scope.isdataavailable=true;
+          if(Response.length<take){
+            $scope.isdataavailable=false;
+            $scope.hideSearchMore=true;
+          }
 
-				}
+        }
 
-			}).error(function(data)
-			{
-				//console.log(data);
-				$scope.isSpinnerShown=false;
-				$scope.isdataavailable=false;
-				$scope.isLoading = false;
-				$scope.hideSearchMore=true;
-			})
+      }).onError(function(data)
+      {
+        //console.log(data);
+        $scope.isSpinnerShown=false;
+        $scope.isdataavailable=false;
+        $scope.isLoading = false;
+        $scope.hideSearchMore=true;
 
-		};
+        $scope.infoJson= {};
+        $scope.infoJson.message =JSON.stringify(data);
+        $scope.infoJson.app ='subscriptions';
+        logHelper.error( $scope.infoJson);
+      });
+
+    };
 		// we call the function twice to populate the list
 		//$scope.more("");
 
@@ -1112,7 +1249,7 @@
 		var skipSubscriptionSearch, takeSubscriptionSearch;
 		var tempList;
 		$scope.loadByKeywordSubscription= function (keyword,length) {
-			if($scope.items.length==100) {
+			if($scope.items.length>=100) {
 				//
 				if(length==undefined)
 				{
@@ -1164,7 +1301,7 @@
 				if(searchLength==0||searchLength==undefined)
 				{
 					$scope.loading=true;
-					$scope.more();
+					$scope.more("");
 				}
 			}
 		}
