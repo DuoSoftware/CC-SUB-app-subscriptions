@@ -1,8 +1,8 @@
 ////////////////////////////////
 // App : Subscription
 // Owner  : Gihan Herath
-// Last changed date : 2017/08/31
-// Version : 6.1.0.16
+// Last changed date : 2017/10/30
+// Version : 6.1.0.17
 // Modified By : Gihan
 /////////////////////////////////
 
@@ -36,6 +36,7 @@
 
 			  return $q(function(resolve, reject) {
 				  $timeout(function() {
+					  //if (true) {
 					  if ($rootScope.isBaseSet2) {
 						  resolve(function () {
 							  mesentitlementProvider.setStateCheck("subscriptions");

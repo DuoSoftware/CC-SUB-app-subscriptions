@@ -39,6 +39,8 @@
                         <md-icon md-font-icon="icon-magnify" class="icon s24"></md-icon>
                         <input flex ng-model="vm.search" type="text" ng-keypress="searchKeyPress($event,vm.search,vm.search.length)" ng-change="loadByKeywordSubscription(vm.search,3)" placeholder="Search for subscriptions *eg: someone@example.com">
                     </div>
+                    <md-button class="md-raised md-accent main-app-create" layout="row" layout-align="center center" aria-label="compose" ng-disabled="vm.activePlanPaneIndex == 1" ng-click="toggleEdit()" ng-if="!inpageReadPaneEdit"><span class="fs-18 mr-10">+</span> NEW
+                    </md-button>
                 </div>
             </div>
             <!--<div class="v-nav">-->
@@ -67,13 +69,13 @@
 
         <div layout="row" flex>
             <!-- CONTENT CARD -->
-            <div class="content-card" layout="column" ng-if="!inpageReadPaneEdit && !editOff" flex ng-class="{'flex-30':showInpageReadpane}">
+            <div class="content-card" layout="column" flex ng-class="{'flex-30':showInpageReadpane}">
 
                 <!-- CONTENT TOOLBAR -->
                 <div class="toolbar list-header" layout="row" layout-align="space-between center" ng-if="vm.activePlanPaneIndex === 0">
                     <div ng-include="'app/main/subscriptions/views/list/list-header.html'" layout="row" flex layout-align="start center"></div>
                 </div>
-                <div class="toolbar" layout="row" layout-align="space-between center" ng-if="vm.activePlanPaneIndex === 1 && !editOff">
+                <div class="toolbar" layout="row" layout-align="space-between center" ng-if="vm.activePlanPaneIndex === 1">
                     <md-button class="md-icon-button"
                                ng-click="vm.closeReadPane()"
                                aria-label="Back">
@@ -105,6 +107,14 @@
                             <md-tab-body>
                                 <div class="content plan-display-pane"
                                      ng-include="'app/main/subscriptions/views/read/read-view.html'" ms-scroll>
+                                </div>
+                                <div md-whiteframe="8dp" layout="row" layout-align="space-between center" class="bottom-fixed-bar fixed">
+                                  <div layout="row"></div>
+
+                                  <div layout="row" class="layout-row">
+                                    <md-button ng-click="clearform()">Clear</md-button>
+                                    <md-button ng-disabled="vm.submitted" type="submit" form="subscriptionForm" class="md-raised md-accent">Save</md-button>
+                                  </div>
                                 </div>
                             </md-tab-body>
                         </md-tab>
@@ -368,7 +378,15 @@
                                                 <div flex class="iconed-label">
                                                     <md-icon md-font-icon="icon-calendar-today"></md-icon> <span>Next scheduled date</span>
                                                 </div>
-                                                <div flex class="font-accent">{{vm.selectedSubscription.endDate | parseDate | date: 'dd'}} {{vm.selectedSubscription.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{vm.selectedSubscription.endDate | parseDate | date: 'yyyy'}}</div>
+                                                <div flex class="font-accent" ng-if="!scheduledDateEditing">
+                                                  {{vm.selectedSubscription.endDate | parseDate | date: 'dd'}} {{vm.selectedSubscription.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{vm.selectedSubscription.endDate | parseDate | date: 'yyyy'}}
+                                                  <span class=""><a ng-click="editNextScheduledDate()">Change date</a></span>
+                                                </div>
+                                                <div flex class="font-accent" ng-if="scheduledDateEditing">
+                                                  <md-datepicker ng-model="vm.selectedSubscription.endDate" md-max-date="maxDateAvailable" md-open-on-focus></md-datepicker>
+                                                  <span class=""><a ng-click="saveNextScheduledDate(vm.selectedSubscription)">Save</a></span>
+                                                  <span class=""><a ng-click="cancelEditNextScheduledDate()">Cancel</a></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -95,7 +95,7 @@
 		vm.selectSubscription = selectSubscription;
 
 		$scope.showFilers=true;
-		$scope.submitPlan=submitPlan;
+		$scope.submitSubscription=submitSubscription;
 		$scope.plan={
 			billing_cycle: "auto"
 		};
@@ -106,6 +106,7 @@
 		$scope.currencyRate = 1;
 		$scope.decimalPoint = 2;
 		$scope.content={};
+    $scope.subscriptionUser={};
 		$scope.paymentRetryHistory = {};
 		$scope.paymentRetryHistory.paymentFailedDate = null;
 		//////////
@@ -153,6 +154,9 @@
 
 		function getDomainExtension() {
 			var _st = gst("extension_mode");
+      if(_st=="sandbox"){
+        _st="test";
+      }
 			return (_st != null) ? _st : "test"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
 		}
 
@@ -516,6 +520,48 @@
 			$scope.getOrderHistoryDetails(order);
 		}
 
+    $scope.$watch(function () {
+      vm.subscriptionContentHeight = window.innerHeight - 145;
+    });
+
+    $scope.toggleEdit = function () {
+
+      // if($scope.editOff==true)
+      // {
+      // 	if(vm.changePlanForm.$pristine && vm.changePlanForm.$dirty ){
+      // 		var confirm = $mdDialog.confirm()
+      // 			.title('Are you sure?')
+      // 			.textContent('Fields have changed and you might have unsaved data. Are you sure you want to leave this page?')
+      // 			.ariaLabel('Are you sure?')
+      // 			.targetEvent()
+      // 			.ok('Yes')
+      // 			.cancel('Stay');
+      //
+      // 		$mdDialog.show(confirm).then(function() {
+      // 			vm.changePlanForm.$pristine = false;
+      // 			vm.changePlanForm.$dirty = false;
+      // 			$scope.editOff = false;
+      // 			vm.pageTitle = "Create Plan";
+      // 		}, function() {
+      // 		});
+      // 	}else {
+      // 		$scope.editOff = false;
+      // 		vm.pageTitle = "Create Plan";
+      // 	}
+      // 	vm.activePlanPaneIndex = 0;
+      // }
+      // else
+      // {
+      $scope.editOff = true;
+      //vm.pageTitle = "View Subscription";
+      //skip=0;
+      //$scope.items = [];
+      //$scope.more();
+      vm.activePlanPaneIndex = 1;
+      $scope.showInpageReadpane = false;
+      // }
+    };
+
 		$scope.sortBy = function(propertyName,status,property) {
 
 			if(propertyName == 'lastBillingDate'){
@@ -807,6 +853,86 @@
 			})
 		}
 
+    $scope.scheduledDateEditing=false;
+
+    $scope.editNextScheduledDate = function(){
+      $scope.scheduledDateEditing=true;
+      $scope.originalNextscheduledDate=angular.copy(vm.selectedSubscription.endDate);
+    }
+
+    $scope.cancelEditNextScheduledDate = function(){
+      $scope.scheduledDateEditing=false;
+      vm.selectedSubscription.endDate=angular.copy($scope.originalNextscheduledDate);
+    }
+
+    $scope.saveNextScheduledDate = function(selectedSubscription){
+      //updateSubscription
+      var updateInfo={
+        "email":selectedSubscription.email_addr,
+        "planCode":selectedSubscription.code,
+        "endDate": selectedSubscription.endDate
+      }
+
+      $charge.subscription().updateSubscription(updateInfo).success(function(data){
+        if(data.response=="succeeded") {
+          notifications.toast("Next subscription date updated", "success");
+
+          $scope.infoJson= {};
+          $scope.infoJson.message ='Subscription updated';//JSON.stringify(data);
+          $scope.infoJson.app ='subscriptions';
+          logHelper.info( $scope.infoJson);
+
+          skip = 0;
+          vm.subscriptions=[];
+          $scope.items = [];
+          $scope.loading=true;
+          $scope.more("");
+          $scope.stopPaneOpen = false;
+          $scope.showInpageReadpane = false;
+        }
+        else if(data.response=="failed"){
+          $errorCheck.getClient().LoadErrorList(data.error).onComplete(function(Response)
+          {
+            var result=Response;
+            notifications.toast(result,"error");
+
+            $scope.infoJson= {};
+            $scope.infoJson.message ='Subscription update Failed;';
+            $scope.infoJson.app ='subscriptions';
+            logHelper.error( $scope.infoJson);
+          }).onError(function(data)
+          {
+            //console.log(data);
+          });
+          vm.selectedSubscription.endDate=angular.copy($scope.originalNextscheduledDate);
+        }
+      }).error(function(data){
+        //
+        if(data.response=="failed"){
+          $errorCheck.getClient().LoadErrorList(data.error).onComplete(function(Response)
+          {
+            var result=Response;
+            notifications.toast(result,"error");
+
+            $scope.infoJson= {};
+            $scope.infoJson.message ='Subscription update Failed;';
+            $scope.infoJson.app ='subscriptions';
+            logHelper.error( $scope.infoJson);
+          }).onError(function(data)
+          {
+            //console.log(data);
+          });
+        }
+        else{
+          notifications.toast(data,"error");
+        }
+        vm.selectedSubscription.endDate=angular.copy($scope.originalNextscheduledDate);
+        //console.log(data);
+      })
+
+      $scope.scheduledDateEditing=false;
+    }
+
     var skipProfiles=0;
     var takeProfiles=100;
     $scope.profileList=[];
@@ -908,6 +1034,52 @@
 
     };
     $scope.loadProfiles();
+
+    var skipPlans=0;
+    var takePlans=100;
+    $scope.planList=[];
+    vm.loadingPlans = false;
+
+    $scope.loadPlans = function(){
+      //
+      vm.loadingPlans = true;
+
+      $azureSearchHandle.getClient().SearchRequest("plan",skipPlans,takePlans,'desc',"Active").onComplete(function(Response)
+      {
+        if(vm.loadingPlans)
+        {
+          skipPlans += takePlans;
+          //
+
+          for (var i = 0; i < Response.length; i++) {
+            //
+            $scope.planList.push(Response[i]);
+
+          }
+
+          vm.loadingPlans = false;
+          if(Response.length<takePlans){
+
+          }
+          else
+          {
+            $scope.loadPlans();
+          }
+        }
+
+      }).onError(function(data)
+      {
+        //console.log(data);
+        vm.loadingPlans = false;
+
+        $scope.infoJson= {};
+        $scope.infoJson.message =JSON.stringify(data);
+        $scope.infoJson.app ='subscriptions';
+        logHelper.error( $scope.infoJson);
+      });
+
+    };
+    $scope.loadPlans();
 
 		$scope.isLoading = true;
 		$scope.isdataavailable=true;
@@ -1100,48 +1272,303 @@
 			$scope.more(filter);
 		}
 
+    vm.querySearch =  function (query) {
+
+      //Custom Filter
+      //
+      var results=[];
+      var len=0;
+
+      if($scope.profileList!="" && $scope.profileList!=undefined)
+      {
+        for (var i = 0, len = $scope.profileList.length; i<len; ++i){
+          //console.log($scope.allBanks[i].value.value);first_name last_name
+
+          if($scope.profileList[i].first_name!="" && $scope.profileList[i].first_name!=undefined)
+          {
+            if($scope.profileList[i].first_name.toLowerCase().indexOf(query.toLowerCase()) == 0)
+            {
+              results.push($scope.profileList[i]);
+            }
+            else if($scope.profileList[i].last_name.toLowerCase().indexOf(query.toLowerCase()) == 0)
+            {
+              results.push($scope.profileList[i]);
+            }
+          }
+        }
+      }
+      return results;
+    }
+
+    vm.querySearchPlan =  function (query) {
+
+      //Custom Filter
+      //
+      var results=[];
+      var len=0;
+
+      if($scope.planList!="" && $scope.planList!=undefined)
+      {
+        for (var i = 0, len = $scope.planList.length; i<len; ++i){
+          //console.log($scope.allBanks[i].value.value);first_name last_name
+
+          if($scope.planList[i].name!="" && $scope.planList[i].name!=undefined)
+          {
+            if($scope.planList[i].name.toLowerCase().indexOf(query.toLowerCase()) == 0)
+            {
+              results.push($scope.planList[i]);
+            }
+          }
+        }
+      }
+      return results;
+    }
+
+    $scope.planAddonList=[];
+
+    $scope.checkBasePlanForAddons= function (selectedPlan) {
+      $scope.planAddonList=[];
+      if(selectedPlan != null && selectedPlan.type=="Base-Plan")
+      {
+        var basePlanCode = selectedPlan.code;
+        $charge.plan().getAddonsforBasePlan(basePlanCode).success(function(data){
+          //console.log(data);
+          $scope.planAddonList=data;
+
+        }).error(function(data){
+          //
+
+        })
+      }
+    }
+
+    var skipSubsProfile,takeSubsProfile;
+    var tempProfileListSupp;
+    $scope.filteredUsersSupp = [];
+    vm.isAutoDisabled = false;
+    //var autoElem = angular.element('#invoice-auto');
+    $scope.searchMreSupp=false;
+    $scope.loadProfileByKeyword= function (keyword,category) {
+      //
+      $scope.waitForSearchMoreKeywordSupp=keyword;
+      if(!$scope.searchMreSupp) {
+        //
+        if ($scope.profileList.length >= 100) {
+          if (keyword != undefined) {
+            if (keyword.length == 3) {
+              vm.isAutoDisabled = true;
+              skipSubsProfile = 0;
+              takeSubsProfile = 10;
+              var tempProfileListSupp = [];
+              $scope.filteredUsersSupp = [];
+              $charge.profile().filterByCatKey(skipSubsProfile,takeSubsProfile,category,keyword).success(function (data) {
+                for (var i = 0; i < data.length; i++) {
+                  var obj = data[i];
+                  if(obj.profile_type=='Individual')
+                  {
+                    tempProfileListSupp.push({
+                      profilename : obj.first_name,
+                      profileId : obj.profileId,
+                      othername : obj.last_name,
+                      profile_type : obj.profile_type,
+                      bill_addr:obj.bill_addr,
+                      category:obj.category,
+                      email:obj.email_addr
+                    });
+                  }
+                  else if(obj.profile_type=='Business') {
+                    tempProfileListSupp.push({
+                      profilename : obj.business_name,
+                      profileId : obj.profileId,
+                      othername : obj.business_contact_name,
+                      profile_type : obj.profile_type,
+                      bill_addr:obj.bill_addr,
+                      category:obj.category,
+                      email:obj.email_addr
+
+                    });
+                  }
+
+                }
+                $scope.filteredUsersSupp = tempProfileListSupp;
+                vm.isAutoDisabled = false;
+                //autoElem.focus();
+                setTimeout(function(){
+                  document.querySelector('#acProfileId').focus();
+                },0);
+                if (data.length < take)
+                  $scope.searchMreSupp = true;
+                $timeout.cancel($scope.waitForSearchMoreSupp);
+                //skip += take;
+                //$scope.loadPaging(keyword, rows, index, status, skip, take);
+              }).error(function (data) {
+                vm.isAutoDisabled = false;
+                setTimeout(function(){
+                  document.querySelector('#acProfileId').focus();
+                },0);
+                //autoElem.empty();
+                //
+                //vm.products = [];
+                //vm.selectedProduct = null;
+              });
+            }
+            else if(keyword.length>3)
+            {
+              //
+              skipSubsProfile = 0;
+              takeSubsProfile = 10;
+              tempProfileListSupp = [];
+              vm.isAutoDisabled = true;
+              $scope.filteredUsersSupp = [];
+              $charge.profile().filterByCatKey(skipSubsProfile,takeSubsProfile,category,keyword).success(function (data) {
+                for (var i = 0; i < data.length; i++) {
+                  var obj = data[i];
+                  if(obj.profile_type=='Individual')
+                  {
+                    tempProfileListSupp.push({
+                      profilename : obj.first_name,
+                      profileId : obj.profileId,
+                      othername : obj.last_name,
+                      profile_type : obj.profile_type,
+                      bill_addr:obj.bill_addr,
+                      category:obj.category,
+                      email:obj.email_addr
+                    });
+                  }
+                  else if(obj.profile_type=='Business') {
+                    tempProfileListSupp.push({
+                      profilename : obj.business_name,
+                      profileId : obj.profileId,
+                      othername : obj.business_contact_name,
+                      profile_type : obj.profile_type,
+                      bill_addr:obj.bill_addr,
+                      category:obj.category,
+                      email:obj.email_addr
+
+                    });
+                  }
+
+                }
+                $scope.filteredUsersSupp = tempProfileListSupp;
+                vm.isAutoDisabled = false;
+                setTimeout(function(){
+                  document.querySelector('#acProfileId').focus();
+                },0);
+
+                if (data.length < takeSubsProfile)
+                  $scope.searchMreSupp = true;
+                $timeout.cancel($scope.waitForSearchMoreSupp);
+              }).error(function (data) {
+                vm.isAutoDisabled = false;
+                setTimeout(function(){
+                  document.querySelector('#acProfileId').focus();
+                },0);
+                //autoElem.empty();
+              });
+            }
+            else if (keyword.length == 0 || keyword == null) {
+              $scope.filteredUsersSupp = $scope.profileList;
+              $scope.searchMreSupp = false;
+            }
+          }
+          else if (keyword == undefined) {
+            $scope.filteredUsersSupp = $scope.profileList;
+            $scope.searchMreSupp = false;
+          }
+        }
+      }
+      else if (keyword == undefined || keyword.length == 0) {
+        $scope.filteredUsersSupp = $scope.profileList;
+        $scope.searchMreSupp = false;
+      }
+    }
+
+
+    $scope.toggleProfileSearchMre= function (ev) {
+      //
+      if (ev.keyCode === 8) {
+        $timeout.cancel($scope.waitForSearchMoreSupp);
+        $scope.waitForSearchMoreSupp = $timeout(function myFunction() {
+          // do something
+          if($scope.searchMreSupp)
+          {
+            $scope.searchMreSupp = false;
+            //$scope.loadProfileByKeyword($scope.waitForSearchMoreKeywordSupp,'Supplier');
+          }
+        },1000);
+        //$scope.searchMreSupp = false;
+      }
+    }
+
 		$scope.clearform = function (){
 			$scope.content={};
-			vm.editSelectedPlan={};
-			$scope.content.billingCycleType="auto";
-			$scope.content.trailDays=30;
-			billingCycleHandler("auto");
+			$scope.content.startDate=new Date();
+			$scope.subscriptionUser={};
+			//vm.editSelectedPlan={};
 		}
 
 		vm.submitted=false;
 
-		function submitPlan (planForm){
+		function submitSubscription (subscriptionForm){
 
-			if(planForm == 'changePlanForm'){
-				if (vm.changePlanForm.$valid == true) {
+			if(subscriptionForm == 'subscriptionForm'){
+				if (vm.subscriptionForm.$valid == true) {
 					vm.submitted=true;
-					if($scope.content.billingCycleType=="auto")
-					{
-						$scope.content.billingCycle=-1;
-					}
-					//$scope.content.unitPrice=JSON.stringify($scope.content.unitPrice);
-					$scope.content.rate=$scope.currencyRate;
 
-					var planObject = $scope.content;
-					//console.log(planObject);
-					$charge.plan().createPlan(planObject).success(function(data){
+          $scope.content.email=$scope.subscriptionUser.selectedUser.email_addr;
+          $scope.content.planCode=$scope.subscriptionUser.selectedPlan.code;
+          $scope.content.addOns=[];
+          for(var i=0; i<$scope.planAddonList.length; i++)
+          {
+            $scope.content.addOns.push({
+              "code": $scope.planAddonList[i],
+              "qty": 1
+            })
+          }
+          if($scope.content.startDate == undefined)
+          {
+            $scope.content.startDate = moment(new Date()).format('YYYY-MM-DD');
+          }
+          else
+          {
+            $scope.content.startDate = moment($scope.content.startDate).format('YYYY-MM-DD');
+          }
+
+          if($scope.content.coupon == undefined)
+          {
+            $scope.content.coupon = "";
+          }
+
+          if($scope.content.note == undefined)
+          {
+            $scope.content.note = "";
+          }
+
+					var subscriptionObject = $scope.content;
+					//console.log(planObject);createSubscription
+					$charge.subscription().createSubscription(subscriptionObject).success(function(data){
 						//console.log(data);
-						if(data.status==true)
+						if(data.response=="succeeded")
 						{
-							notifications.toast("Successfully Plan Created","success");
+							notifications.toast("Successfully Subscribed to Plan '"+$scope.subscriptionUser.selectedPlan.name+"'","success");
 							$scope.clearform();
 							vm.submitted=false;
 
-							$scope.editOff = false;
-							vm.pageTitle = "Create Plan";
+              $scope.infoJson= {};
+              $scope.infoJson.message ='Subscription added';//JSON.stringify(data);
+              $scope.infoJson.app ='subscriptions';
+              logHelper.info( $scope.infoJson);
 
-							skip=0;
-							$scope.items = [];
-							$scope.loading=true;
-							$scope.more();
-							//$window.location.href='#/paymentlist';
+              skip = 0;
+              vm.subscriptions=[];
+              $scope.items = [];
+              $scope.loading=true;
+              $scope.more("");
+              $scope.stopPaneOpen = false;
+              $scope.showInpageReadpane = false;
+              closeReadPane();
 						}
-						else if(data.status==false)
+						else if(data.response=="failed")
 						{
 							notifications.toast(data.error,"error");
 
@@ -1153,18 +1580,40 @@
 						//
 						if(data==201)
 						{
-							notifications.toast("Successfully Plan Created","success");
+							notifications.toast("Successfully Subscribed to Plan '"+$scope.subscriptionUser.selectedPlan.name+"'","success");
 							$scope.clearform();
 						}
 						else
 						{
-							notifications.toast(data,"error");
+							//notifications.toast(data,"error");
 							//console.log(data);
+              $errorCheck.getClient().LoadErrorList(data.error).onComplete(function(Response)
+              {
+                var result=Response;
+                notifications.toast(result,"error");
+
+                $scope.infoJson= {};
+                $scope.infoJson.message =result;
+                $scope.infoJson.app ='plans';
+                logHelper.error( $scope.infoJson);
+                //$scope.errorlist=Response;
+                //for(var i=0; i<$scope.errorlist.length; i++)
+                //{
+                //  var errmsg=$scope.errorlist[i];
+                //  if(data.error[errmsg])
+                //  {
+                //    notifications.toast(data.error[errmsg][0],"error");
+                //  }
+                //}
+              }).onError(function(data)
+              {
+                //console.log(data);
+              });
 						}
 						vm.submitted=false;
 					})
 				}else{
-					angular.element(document.querySelector('#changePlanForm')).find('.ng-invalid:visible:first').focus();
+					angular.element(document.querySelector('#subscriptionForm')).find('.ng-invalid:visible:first').focus();
 				}
 				//toggleinnerView('add');
 			}
