@@ -498,7 +498,7 @@
 
 				}
 
-				if(data.length<takeOrderHistory)
+				if(data.result.length<takeOrderHistory)
 				{
 					vm.isOrderHistoryLoaded = false;
 				}
