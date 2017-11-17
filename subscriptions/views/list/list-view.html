@@ -9,6 +9,10 @@
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 </div>
 
+<div class="main-empty-list" ng-if="vm.subscriptions.length == 0">
+    <img src="assets/images/empty_list.jpg" alt="Nothing to show">
+</div>
+
 <!-- INVOICE LIST ITEMS -->
 <div class="list-item" layout="row" layout-align="center center" flex ng-repeat="subscription in vm.subscriptions | filter:vm.search | filter: global.search"
      ng-click="switchInfoPane('show',subscription)"

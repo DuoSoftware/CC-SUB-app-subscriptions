@@ -1,180 +1,162 @@
-
-
-
-<div id="subscriptions-read" class="compact page-layout blank" layout="row">
-  <div class="subscriptions-read-container" flex>
-    <!-- READ PLAN -->
-    <!-- / READ PLAN -->
-    <div class="content-wrapper" flex>
-      <md-content class="overflow-hidden pb-50" id="createPlanContent" ms-scroll>
-        <form id="subscriptionForm" name="vm.subscriptionForm" ng-submit="submitSubscription('subscriptionForm')" novalidate>
-          <!--CREATE NEW INVOICE _ CARDED=================================================-->
-          <md-card flex class="input-block-gen">
+<md-content class="overflow-hidden" id="createPlanContent" ms-scroll>
+    <form id="subscriptionForm" name="vm.subscriptionForm" ng-submit="submitSubscription('subscriptionForm')" novalidate>
+        <!--CREATE NEW INVOICE _ CARDED=================================================-->
+        <md-card flex class="input-block-gen">
             <md-card-title>
-              <div layout="row" layout-align="start center">
-                <md-icon md-font-icon="icon-cog"></md-icon> <h3>Subscription details</h3>
-              </div>
+                <div layout="row" layout-align="start center">
+                    <md-icon md-font-icon="icon-cog"></md-icon> <h3>General details</h3>
+                </div>
             </md-card-title>
             <md-card-content>
-              <!--<div layout="row" layout-align="center center">-->
+                <!--<div layout="row" layout-align="center center">-->
                 <!--<md-input-container>-->
-                  <!--<md-radio-group name="planType" ng-required ng-model="content.type" ng-init="content.type = 'Base-Plan'" layout="row" class="cc-switch-buttons-group">-->
-                    <!--<md-radio-button value="Base-Plan" class="cc-switch-buttons" md-ink-ripple ng-disabled="content.type == 'Base-Plan'" ng-style="content.type == 'Add-on' ? {'z-index':'1'} : {'z-index':'0'}">Base-plan</md-radio-button>-->
-                    <!--<md-radio-button value="Add-on" class="cc-switch-buttons" md-ink-ripple ng-disabled="content.type == 'Add-on'" ng-style="content.type == 'Base-Plan' ? {'z-index':'1'} : {'z-index':'0'}">Add-on</md-radio-button>-->
-                  <!--</md-radio-group>-->
+                <!--<md-radio-group name="planType" ng-required ng-model="content.type" ng-init="content.type = 'Base-Plan'" layout="row" class="cc-switch-buttons-group">-->
+                <!--<md-radio-button value="Base-Plan" class="cc-switch-buttons" md-ink-ripple ng-disabled="content.type == 'Base-Plan'" ng-style="content.type == 'Add-on' ? {'z-index':'1'} : {'z-index':'0'}">Base-plan</md-radio-button>-->
+                <!--<md-radio-button value="Add-on" class="cc-switch-buttons" md-ink-ripple ng-disabled="content.type == 'Add-on'" ng-style="content.type == 'Base-Plan' ? {'z-index':'1'} : {'z-index':'0'}">Add-on</md-radio-button>-->
+                <!--</md-radio-group>-->
                 <!--</md-input-container>-->
-              <!--</div>-->
-              <div layout="row">
-                <div class="rel" flex="30" layout="row">
-                  <div layout="row" layout-align="center center" class="preloader-dot-auto" ng-show="vm.isAutoDisabled" >
-                    <img src="assets/images/142.gif" alt=""/>
-                  </div>
-                  <md-autocomplete flex required
-                                   md-input-id="acProfileId"
-                                   ng-keydown="toggleProfileSearchMre($event)"
-                                   ng-required="true"
-                                   md-select-on-match
-                                   ng-keypress="enter($event)"
-                                   ng-disabled="vm.isAutoDisabled"
-                                   md-input-name="autocompleteField1"
-                                   md-no-cache="vm.noCache"
-                                   md-selected-item="subscriptionUser.selectedUser"
-                                   md-search-text="vm.searchText1"
-                                   md-items="item in vm.querySearch(vm.searchText1)"
-                                   md-search-text-change=""
-                                   md-item-text="item.first_name"
-                                   md-floating-label="Profile"
-                                   md-min-length=""
-                                   autocomplete-validator style="height: 65px;">
-                    <md-item-template>
-                      <span md-highlight-text="vm.searchText1">{{item.first_name+" "+item.last_name}}</span>
-                      <!--+" "+item.last_name-->
-                    </md-item-template>
-                    <div ng-messages="vm.subscriptionForm.autocompleteField1.$error">
-                      <div ng-message="invalidInput" ng-if="!vm.subscriptionForm.autocompleteField1.$error.required">Please select a valid name</div>
+                <!--</div>-->
+                <div layout="row">
+                    <div class="rel" flex="30" layout="row">
+                        <md-progress-circular ng-if="vm.isAutoDisabled"></md-progress-circular>
+                        <md-autocomplete flex required class="mt-20"
+                                         md-input-id="acProfileId"
+                                         ng-keydown="toggleProfileSearchMre($event)"
+                                         ng-required="true"
+                                         md-select-on-match
+                                         ng-keypress="enter($event)"
+                                         ng-disabled="vm.isAutoDisabled"
+                                         md-input-name="autocompleteField1"
+                                         md-no-cache="vm.noCache"
+                                         md-selected-item="subscriptionUser.selectedUser"
+                                         md-search-text="vm.searchText1"
+                                         md-items="item in vm.querySearch(vm.searchText1)"
+                                         md-search-text-change=""
+                                         md-item-text="item.first_name"
+                                         md-floating-label="Profile"
+                                         md-min-length=""
+                                         autocomplete-validator>
+                            <md-item-template>
+                                <span md-highlight-text="vm.searchText1">{{item.first_name+" "+item.last_name}}</span>
+                                <!--+" "+item.last_name-->
+                            </md-item-template>
+                            <div ng-messages="vm.subscriptionForm.autocompleteField1.$error">
+                                <div ng-message="invalidInput" ng-if="!vm.subscriptionForm.autocompleteField1.$error.required">Please select a valid name</div>
+                            </div>
+                        </md-autocomplete>
+                        <!--<md-input-container>-->
+                        <!--<md-button ng-click="addNewUser($event, 'Supplier')" class="md-icon-button md-accent"><md-icon md-font-icon="icon-plus-circle"></md-icon><md-tooltip>Add new</md-tooltip> </md-button>-->
+                        <!--</md-input-container>-->
                     </div>
-                  </md-autocomplete>
-                  <!--<md-input-container>-->
-                    <!--<md-button ng-click="addNewUser($event, 'Supplier')" class="md-icon-button md-accent"><md-icon md-font-icon="icon-plus-circle"></md-icon><md-tooltip>Add new</md-tooltip> </md-button>-->
-                  <!--</md-input-container>-->
-                </div>
-                <div flex="5"></div>
-                <!--<md-input-container flex="30">-->
-                  <!--<label>Plan name</label>-->
-                  <!--<input type="text" ng-required="true" min="" name="planName" ng-maxlength="30" ng-model="content.plan">-->
-                  <!--<div ng-messages="vm.subscriptionForm.planName.$error">-->
+                    <div flex="5"></div>
+                    <!--<md-input-container flex="30">-->
+                    <!--<label>Plan name</label>-->
+                    <!--<input type="text" ng-required="true" min="" name="planName" ng-maxlength="30" ng-model="content.plan">-->
+                    <!--<div ng-messages="vm.subscriptionForm.planName.$error">-->
                     <!--<div ng-message="maxlength">Plan name must be between 1-30 characters</div>-->
-                  <!--</div>-->
-                <!--</md-input-container>-->
-                <div class="rel" flex="30" layout="row">
-                  <div layout="row" layout-align="center center" class="preloader-dot-auto" ng-show="vm.isAutoDisabledPlan" >
-                    <img src="assets/images/142.gif" alt=""/>
-                  </div>
-                  <md-autocomplete flex required
-                                   md-input-id="acPlanId"
-                                   ng-keydown=""
-                                   ng-required="true"
-                                   md-select-on-match
-                                   ng-keypress="enter($event)"
-                                   ng-disabled="vm.isAutoDisabledPlan"
-                                   md-input-name="autocompleteField2"
-                                   md-no-cache="vm.noCache"
-                                   md-selected-item="subscriptionUser.selectedPlan"
-                                   md-selected-item-change="checkBasePlanForAddons(subscriptionUser.selectedPlan)"
-                                   md-search-text="vm.searchText2"
-                                   md-items="item in vm.querySearchPlan(vm.searchText2)"
-                                   md-search-text-change=""
-                                   md-item-text="item.name"
-                                   md-floating-label="Plan"
-                                   md-min-length=""
-                                   autocomplete-validator style="height: 65px;">
-                    <md-item-template>
-                      <span md-highlight-text="vm.searchText2">{{item.name}}</span>
-                      <!--+" "+item.last_name-->
-                    </md-item-template>
-                    <div ng-messages="vm.subscriptionForm.autocompleteField2.$error">
-                      <div ng-message="invalidInput" ng-if="!vm.subscriptionForm.autocompleteField2.$error.required">Please select a valid plan</div>
+                    <!--</div>-->
+                    <!--</md-input-container>-->
+                    <div class="rel" flex="30" layout="row">
+                        <md-progress-circular ng-if="vm.isAutoDisabledPlan"></md-progress-circular>
+                        <md-autocomplete flex required class="mt-20"
+                                         md-input-id="acPlanId"
+                                         ng-keydown=""
+                                         ng-required="true"
+                                         md-select-on-match
+                                         ng-keypress="enter($event)"
+                                         ng-disabled="vm.isAutoDisabledPlan"
+                                         md-input-name="autocompleteField2"
+                                         md-no-cache="vm.noCache"
+                                         md-selected-item="subscriptionUser.selectedPlan"
+                                         md-selected-item-change="checkBasePlanForAddons(subscriptionUser.selectedPlan)"
+                                         md-search-text="vm.searchText2"
+                                         md-items="item in vm.querySearchPlan(vm.searchText2)"
+                                         md-search-text-change=""
+                                         md-item-text="item.name"
+                                         md-floating-label="Plan"
+                                         md-min-length=""
+                                         autocomplete-validator>
+                            <md-item-template>
+                                <span md-highlight-text="vm.searchText2">{{item.name}}</span>
+                                <!--+" "+item.last_name-->
+                            </md-item-template>
+                            <div ng-messages="vm.subscriptionForm.autocompleteField2.$error">
+                                <div ng-message="invalidInput" ng-if="!vm.subscriptionForm.autocompleteField2.$error.required">Please select a valid plan</div>
+                            </div>
+                        </md-autocomplete>
+                        <!--<md-input-container>-->
+                        <!--<md-button ng-click="addNewUser($event, 'Supplier')" class="md-icon-button md-accent"><md-icon md-font-icon="icon-plus-circle"></md-icon><md-tooltip>Add new</md-tooltip> </md-button>-->
+                        <!--</md-input-container>-->
                     </div>
-                  </md-autocomplete>
-                  <!--<md-input-container>-->
-                  <!--<md-button ng-click="addNewUser($event, 'Supplier')" class="md-icon-button md-accent"><md-icon md-font-icon="icon-plus-circle"></md-icon><md-tooltip>Add new</md-tooltip> </md-button>-->
-                  <!--</md-input-container>-->
+                    <div flex="5"></div>
+                    <md-input-container flex="30">
+                        <label>Start date</label>
+                        <md-datepicker ng-model="content.startDate" md-max-date="maxDateAvailable"></md-datepicker>
+                    </md-input-container>
                 </div>
-              </div>
 
             </md-card-content>
-          </md-card>
+        </md-card>
 
-          <md-card flex class="input-block-gen">
-            <md-card-content>
-              <div layout="row" class="row-offset">
-
-                <div layout="column" flex="30">
-                  <md-input-container flex>
-                    <label>Quantity</label>
-                    <input type="number" ng-required="true" min="0" max="100000000000000000" name="Quantity" ng-model="content.qty" style="text-align: right">
-                    <div ng-messages="vm.subscriptionForm.Quantity.$error">
-                      <div ng-message="max">Quantity must be between 1-18 digits</div>
-                      <div ng-message="min">Quantity must be between 1-18 digits</div>
-                    </div>
-                  </md-input-container>
-                  <!--<md-checkbox ng-disabled="!content.add_pricingScheme" ng-model="content.default_price" ng-change="changeDefaultPrice(features,content.unitPrice,content.default_price,content.add_pricingScheme,'add')" aria-label="Default UnitPrice" class="md-primary dep-checkbox" ng-class="{'black-text':content.default_price}">Get default price</md-checkbox><span class="fs-12" ng-if="!content.add_pricingScheme"> (Add pricing scheme to set a default price)</span>-->
-                </div>
-
-                <div flex="5"></div>
-                <md-input-container flex="30">
-                  <label>Start Date</label>
-                  <md-datepicker ng-model="content.startDate" md-max-date="maxDateAvailable" md-open-on-focus></md-datepicker>
-                </md-input-container>
-
-              </div>
-
-              <div layout="row">
-                <div flex="30" layout="row">
-                  <md-input-container flex>
-                    <label>Coupon Code</label>
-                    <input ng-required="false" type="text" name="coupon" ng-maxlength="30" md-maxlength="30" ng-model="content.coupon">
-                    <div ng-messages="vm.subscriptionForm.coupon.$error">
-                      <div ng-message="maxlength">Coupon Code must be between 1-30 characters</div>
-                    </div>
-                  </md-input-container>
-                </div>
-              </div>
-
-              <div layout="row">
-                <md-input-container flex>
-                  <label>Note</label>
-                  <input type="text" ng-required="false" ng-maxlength="300" md-maxlength="300" name="note" ng-model="content.note">
-                  <div ng-messages="vm.subscriptionForm.note.$error">
-                    <div ng-message="maxlength">Note must be between 1-300 characters</div>
-                  </div>
-                </md-input-container>
-              </div>
-
-            </md-card-content>
-          </md-card>
-
-          <md-card flex class="input-block-gen" ng-if="planAddonList.length!=0">
+        <md-card flex class="input-block-gen">
             <md-card-title>
-              <div layout="row" layout-align="start center">
-                <md-icon md-font-icon="icon-cog"></md-icon> <h3>Add-ons for Selected Plan</h3>
-              </div>
+                <div layout="row" layout-align="start center">
+                    <md-icon md-font-icon="icon-cog"></md-icon> <h3>Additional details</h3>
+                </div>
             </md-card-title>
             <md-card-content>
-              <div ng-repeat="addon in planAddonList" class="plan-feature-row" flex>
-                <span class="additional-feature">{{addon}}</span>
-              </div>
+                <div layout="row" class="row-offset">
+
+                    <div layout="column" flex="30">
+                        <md-input-container flex>
+                            <label>Quantity</label>
+                            <input type="number" ng-required="true" min="0" max="100000000000000000" name="Quantity" ng-model="content.qty" style="text-align: right">
+                            <div ng-messages="vm.subscriptionForm.Quantity.$error">
+                                <div ng-message="max">Quantity must be between 1-18 digits</div>
+                                <div ng-message="min">Quantity must be between 1-18 digits</div>
+                            </div>
+                        </md-input-container>
+                        <!--<md-checkbox ng-disabled="!content.add_pricingScheme" ng-model="content.default_price" ng-change="changeDefaultPrice(features,content.unitPrice,content.default_price,content.add_pricingScheme,'add')" aria-label="Default UnitPrice" class="md-primary dep-checkbox" ng-class="{'black-text':content.default_price}">Get default price</md-checkbox><span class="fs-12" ng-if="!content.add_pricingScheme"> (Add pricing scheme to set a default price)</span>-->
+                    </div>
+
+                    <div flex="5"></div>
+
+                    <md-input-container flex="30">
+                        <label>Coupon Code</label>
+                        <input ng-required="false" type="text" name="coupon" ng-maxlength="30" md-maxlength="30" ng-model="content.coupon">
+                        <div ng-messages="vm.subscriptionForm.coupon.$error">
+                            <div ng-message="maxlength">Coupon Code must be between 1-30 characters</div>
+                        </div>
+                    </md-input-container>
+
+                </div>
+
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Note</label>
+                        <input type="text" ng-required="false" ng-maxlength="300" md-maxlength="300" name="note" ng-model="content.note">
+                        <div ng-messages="vm.subscriptionForm.note.$error">
+                            <div ng-message="maxlength">Note must be between 1-300 characters</div>
+                        </div>
+                    </md-input-container>
+                </div>
+
             </md-card-content>
-          </md-card>
+        </md-card>
 
-        </form>
-      </md-content>
-    </div>
+        <md-card flex class="input-block-gen" ng-if="planAddonList.length!=0">
+            <md-card-title>
+                <div layout="row" layout-align="start center">
+                    <md-icon md-font-icon="icon-cog"></md-icon> <h3>Add-ons for Selected Plan</h3>
+                </div>
+            </md-card-title>
+            <md-card-content>
+                <div ng-repeat="addon in planAddonList" class="plan-feature-row" flex>
+                    <span class="additional-feature">{{addon}}</span>
+                </div>
+            </md-card-content>
+        </md-card>
 
-    <!-- Use the following element to add breaks to your pages -->
-    <!-- This will make sure that the section after this element will be printed on a new page -->
-    <div class="page-break"></div>
-
-  </div>
-</div>
+    </form>
+</md-content>
 
