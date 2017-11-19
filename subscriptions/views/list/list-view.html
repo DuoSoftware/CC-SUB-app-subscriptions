@@ -10,7 +10,14 @@
 </div>
 
 <div class="main-empty-list" ng-if="vm.subscriptions.length == 0">
-    <img src="assets/images/empty_list.jpg" alt="Nothing to show">
+    <div>
+        <img src="assets/images/empty-list.gif" alt="Nothing to show">
+        <h2>Nothing to Show</h2>
+        <div>
+            <span>You can change that here.</span>
+            <md-button class="md-accent md-raised" ng-click="toggleEdit()">Add a Subscription</md-button>
+        </div>
+    </div>
 </div>
 
 <!-- INVOICE LIST ITEMS -->
