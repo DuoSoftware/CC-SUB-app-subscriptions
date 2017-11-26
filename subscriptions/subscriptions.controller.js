@@ -1337,10 +1337,12 @@
 
 		$scope.planAddonList=[];
 
+		$scope.loadingPlanDetails = false;
 		$scope.checkBasePlanForAddons= function (selectedPlan) {
 			$scope.planAddonList=[];
 			if(selectedPlan != null && selectedPlan.type=="Base-Plan")
 			{
+				$scope.loadingPlanDetails = true;
 				var basePlanCode = selectedPlan.code;
 				$charge.plan().getAddonsforBasePlan(basePlanCode).success(function(data){
 					//console.log(data);
@@ -1350,6 +1352,16 @@
 					//
 
 				})
+
+				$charge.plan().getPlanByCode(selectedPlan.code).success(function(data){
+					$scope.subscriptionUser.selectedPlan.trailDays = data.trailDays;
+					$scope.subscriptionUser.selectedPlan.billingInterval = data.billingInterval;
+					$scope.subscriptionUser.selectedPlan.priceScheme = data.priceScheme;
+					$scope.loadingPlanDetails = false;
+				}).error(function (res) {
+					notifications.toast("Error loading plan details", "error");
+					$scope.loadingPlanDetails = false;
+				});
 			}
 		}
 
