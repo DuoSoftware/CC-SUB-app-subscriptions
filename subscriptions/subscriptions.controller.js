@@ -108,11 +108,11 @@
 		$scope.content={
 			startDate:new Date()
 		};
-		$scope.subscriptionUser={
-			selectedPlan:{
-				startDate : new Date()
-			}
-		};
+		// $scope.subscriptionUser={
+		// 	selectedPlan:{
+		// 		startDate : new Date()
+		// 	}
+		// };
 		$scope.paymentRetryHistory = {};
 		$scope.paymentRetryHistory.paymentFailedDate = null;
 		//////////
