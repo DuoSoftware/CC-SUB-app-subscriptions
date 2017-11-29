@@ -16,7 +16,7 @@
 		.controller('SubscriptionsController', SubscriptionsController);
 
 	/** @ngInject */
-	function SubscriptionsController($scope, $timeout, $mdDialog, $mdMedia, $mdSidenav, $filter, $charge, $errorCheck, notifications, $azureSearchHandle, logHelper)
+	function SubscriptionsController($scope, $timeout, $mdDialog, $mdMedia, $mdSidenav, $filter, $charge, $errorCheck, notifications, $azureSearchHandle, logHelper, $rootScope)
 	{
 		var vm = this;
 
@@ -108,11 +108,8 @@
 		$scope.content={
 			startDate:new Date()
 		};
-		// $scope.subscriptionUser={
-		// 	selectedPlan:{
-		// 		startDate : new Date()
-		// 	}
-		// };
+		$scope.subscriptionUser={};
+		$scope.tempNewDate = new Date();
 		$scope.paymentRetryHistory = {};
 		$scope.paymentRetryHistory.paymentFailedDate = null;
 		//////////
@@ -1799,5 +1796,97 @@
 		}
 
 
+		// Kasun_Wijeratne_27_NOV_2017
+		$scope.accGeneralLoaded = true;
+		vm.userInfo = {};
+		$scope.getUserInfoByID = function() {
+			try{
+				$charge.myAccountEngine().getUserInfoByID().success(function (response) {
+					response.data = response;
+					vm.userInfo = response.data.Result;
+					if($rootScope.tenantType == 'member'){
+						vm.userInfo.UserType = 'Member';
+						vm.userInfo.domain = domain;
+					}
+					if (response.data.Result.UserType === "admin") {
+						$scope.isUserAdmin = true;
+					}
+
+					$scope.accGeneralLoaded = true;
+				}).error(function (data) {
+					console.log(data);
+				});
+
+			}catch(ex){
+				ex.app = "myAccount";
+				logHelper.error(ex);
+			}
+		}
+
+		var skip=0;
+		var take=100;
+		$scope.isPlansLoading = false;
+		$scope.more = function(selectedPlan, status){
+
+			$scope.isPlansLoading = true;
+			$azureSearchHandle.getClient().SearchRequest("plan",skip,take,'desc',status).onComplete(function(Response)
+			{
+				if($scope.loading)
+				{
+					skip += take;
+
+					for (var i = 0; i < Response.length; i++) {
+						Response[i].isSelected = false;
+						$scope.items.push(Response[i]);
+					}
+					$timeout(function () {
+						vm.plans=$scope.items;
+					});
+					//$timeout(function () {
+					//  vm.plans=$scope.items;
+					//},0);bofoxoc@evyush.com/dimezif@12hosting.net
+					vm.searchMoreInit = false;
+
+					$scope.isPlansLoading = false;
+					$scope.isdataavailable=true;
+
+					if(Response.length<take){
+						$scope.isdataavailable=false;
+						$scope.hideSearchMore=true;
+					}
+				}
+
+			}).onError(function(data)
+			{
+				//console.log(data);
+				$scope.isSpinnerShown=false;
+				$scope.isdataavailable=false;
+				$scope.isPlansLoading = false;
+				$scope.hideSearchMore=true;
+
+				$scope.infoJson= {};
+				$scope.infoJson.message =JSON.stringify(data);
+				$scope.infoJson.app ='plans';
+				logHelper.error( $scope.infoJson);
+			});
+
+		};
+		$scope.more("","");
+
+		$scope.loadUserDetails = function (user) {
+			$scope.accGeneralLoaded = false;
+			$scope.getUserInfoByID();
+		}
+
+		$scope.selectPlanForSubscription = function (plan) {
+			angular.forEach(vm.plans, function (p) {
+				if(plan.code == p.code){
+					plan.isSelected =true;
+				}else{
+					p.isSelected = false;
+				}
+			});
+		}
+		// Kasun_Wijeratne_27_NOV_2017 - END
 	}
 })();

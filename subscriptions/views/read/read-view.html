@@ -10,7 +10,23 @@
                 </md-card-title>
                 <md-card-content>
                     <div layout="row">
-                        <div class="pos-rel" flex="30" layout="row">
+                        <md-input-container flex="30">
+                            <label>Start date</label>
+                            <md-datepicker ng-model="subscriptionUser.selectedPlan.startDate" md-max-date="maxDateAvailable"></md-datepicker>
+                        </md-input-container>
+                    </div>
+                </md-card-content>
+            </md-card>
+
+            <md-card flex class="input-block-gen">
+                <md-card-title>
+                    <div layout="row" layout-align="start center">
+                        <md-icon md-font-icon="icon-cog"></md-icon> <h3>Customer details</h3>
+                    </div>
+                </md-card-title>
+                <md-card-content>
+                    <div layout="row" layout-align="start center">
+                        <div class="pos-rel" flex layout="row">
                             <md-progress-circular ng-if="vm.isAutoDisabled" class="autocomp-preloader"></md-progress-circular>
                             <md-autocomplete flex required class="mt-20"
                                              md-input-id="acProfileId"
@@ -24,7 +40,7 @@
                                              md-selected-item="subscriptionUser.selectedUser"
                                              md-search-text="vm.searchText1"
                                              md-items="item in vm.querySearch(vm.searchText1)"
-                                             md-search-text-change=""
+                                             md-selected-item-change="loadUserDetails(subscriptionUser.selectedUser)"
                                              md-item-text="item.first_name"
                                              md-floating-label="Profile"
                                              md-min-length=""
@@ -39,42 +55,225 @@
                             </md-autocomplete>
                         </div>
                         <div flex="5"></div>
-                        <div class="pos-rel" flex="30" layout="row">
-                            <md-progress-circular ng-if="loadingPlanDetails" class="autocomp-preloader"></md-progress-circular>
-                            <md-autocomplete flex required class="mt-20"
-                                             md-input-id="acPlanId"
-                                             ng-keydown=""
-                                             ng-required="true"
-                                             md-select-on-match
-                                             ng-keypress="enter($event)"
-                                             ng-disabled="loadingPlanDetails"
-                                             md-input-name="autocompleteField2"
-                                             md-no-cache="vm.noCache"
-                                             md-selected-item="subscriptionUser.selectedPlan"
-                                             md-selected-item-change="checkBasePlanForAddons(subscriptionUser.selectedPlan)"
-                                             md-search-text="vm.searchText2"
-                                             md-items="item in vm.querySearchPlan(vm.searchText2)"
-                                             md-search-text-change=""
-                                             md-item-text="item.name"
-                                             md-floating-label="Plan"
-                                             md-min-length=""
-                                             autocomplete-validator>
-                                <md-item-template>
-                                    <span md-highlight-text="vm.searchText2">{{item.name}}</span>
-                                    <!--+" "+item.last_name-->
-                                </md-item-template>
-                                <div ng-messages="vm.subscriptionForm.autocompleteField2.$error">
-                                    <div ng-message="invalidInput" ng-if="!vm.subscriptionForm.autocompleteField2.$error.required">Please select a valid plan</div>
-                                </div>
-                            </md-autocomplete>
-                        </div>
-                        <div flex="5"></div>
-                        <md-input-container flex="30">
-                            <label>Start date</label>
-                            <md-datepicker ng-model="subscriptionUser.selectedPlan.startDate" md-max-date="maxDateAvailable"></md-datepicker>
-                        </md-input-container>
+                        <md-button class="md-accent md-raised"><span class="mr-10">+</span><span>NEW</span></md-button>
+                        <!--<md-button class="md-accent md-icon-button"><md-icon md-font-icon="icon-plus-circle"></md-icon><md-tooltip>Add new User</md-tooltip></md-button>-->
                     </div>
+                    <div ng-if="subscriptionUser.selectedUser != null">
+                        <div layout="row" class="pos-rel">
+                            <div class="preloader-input-block animate-fade-in-out" layout="column" layout-align="space-around" ng-if="!accGeneralLoaded">
+                                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                            </div>
+                            <div flex md-whiteframe="1dp" style="margin-top: 30px;border-radius: 5px;/*background: #e8f6fd;border: solid 1px #80DEEA*/">
+                                <div layout="row" class="p-10" style="background: #039be5;border-top-right-radius: 5px;border-top-left-radius: 5px">
+                                    <div layout="row" layout-align="start center" flex class="user">
+                                        <i class="material-icons mr-10">face</i>
+                                        <div class="user-name font-white">
+                                            <span>{{vm.userInfo.givenName}} {{vm.userInfo.surName}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div layout="row" flex class="p-10">
+                                    <div layout="column" flex>
+                                        <div layout="row">
+                                            <div layout="row" layout-align="start center" class="info-grid-row bordered" flex>
+                                                <div class="iconed-label" layout="row" layout-align="start center" flex="30">
+                                                    <md-icon md-font-icon="icon-account-location"></md-icon> <span flex>User type</span>
+                                                </div>
+                                                <div flex class="text-capitalize">{{vm.userInfo.UserType}}</div>
+                                            </div>
+                                        </div>
+                                        <div layout="row">
+                                            <div layout="row" layout-align="start center" class="info-grid-row bordered" flex>
+                                                <div class="iconed-label" layout="row" layout-align="start center" flex="30">
+                                                    <md-icon md-font-icon="icon-email"></md-icon> <span flex>Email</span>
+                                                </div>
+                                                <div flex class="">{{vm.userInfo.email}}</div>
+                                            </div>
+                                        </div>
+                                        <div layout="row">
+                                            <div layout="row" layout-align="start center" class="info-grid-row bordered" flex>
+                                                <div class="iconed-label" layout="row" layout-align="start center" flex="30">
+                                                    <md-icon md-font-icon="icon-domain"></md-icon> <span flex>Domain</span>
+                                                </div>
+                                                <div flex class="">{{vm.userInfo.domain}}</div>
+                                            </div>
+                                        </div>
+                                        <div layout="row">
+                                            <div layout="row" layout-align="start center" class="info-grid-row bordered" flex>
+                                                <div class="iconed-label" layout="row" layout-align="start center" flex="30">
+                                                    <md-icon md-font-icon="icon-google-maps"></md-icon> <span flex>Country</span>
+                                                </div>
+                                                <div flex class="">{{vm.userInfo.country}}</div>
+                                            </div>
+                                        </div>
+                                        <div layout="row">
+                                            <div layout="row" layout-align="start center" class="info-grid-row" flex ng-if="vm.userInfo.UserType.toLowerCase() == 'admin'">
+                                                <div class="iconed-label" layout="row" layout-align="start center" flex>
+                                                    <md-icon md-font-icon="icon-map"></md-icon> <span flex>Current subscription</span>
+                                                </div>
+                                                <div flex class=""><a href="" ng-click="switchInpageState('plan-details')"><u>{{selectedPlan.name}}</u></a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div flex="5"></div>
+                                    <div layout="column" flex>
+                                        <div layout="column" layout-align="center start" class="info-grid-row bordered">
+                                            <div id="cardBody" class="iconed-label bordered" layout="row" layout-align="start center" fill-width>
+                                                <md-icon md-font-icon="icon-credit-card"></md-icon> <span flex>Cards</span>
+                                            </div>
+                                            <div layout="column" layout-align="center center" style="width: 100%;" class="mt-10">
+                                                <div flex layout="row" layout-align="center center" class="msg-empty-list m-0" ng-if="cardDetails.length == 0">
+                                                    <span><md-icon md-font-icon="icon-information-outline"></md-icon> No card has been added yet</span>
+                                                </div>
 
+                                                <div layout="row" fill-width class="list-item" ng-repeat="card in cardDetails" modal-animation-class="mt-20">
+
+                                                    <div class="prodCost" flex layout="row" layout-align="start center">
+                                                        <span ng-class="card.brand"></span> <span class="text-truncate card-no">XXXX-XXXX-XXXX-{{card.last4}}</span>
+                                                        <md-tooltip>XXXX-XXXX-XXXX-{{card.last4}}</md-tooltip>
+                                                    </div>
+                                                    <div class="prodCost fs-12 fw-400" flex="30" layout="row" layout-align="start center">
+                                                        <span ng-if="card.exp_month==1">Jan</span>
+                                                        <span ng-if="card.exp_month==2">Feb</span>
+                                                        <span ng-if="card.exp_month==3">Mar</span>
+                                                        <span ng-if="card.exp_month==4">Apr</span>
+                                                        <span ng-if="card.exp_month==5">May</span>
+                                                        <span ng-if="card.exp_month==6">Jun</span>
+                                                        <span ng-if="card.exp_month==7">Jul</span>
+                                                        <span ng-if="card.exp_month==8">Aug</span>
+                                                        <span ng-if="card.exp_month==9">Sep</span>
+                                                        <span ng-if="card.exp_month==10">Oct</span>
+                                                        <span ng-if="card.exp_month==11">Nov</span>
+                                                        <span ng-if="card.exp_month==12">Dec</span>
+                                                        <span>&nbsp;{{card.exp_year}}</span>
+                                                    </div>
+                                                    <div class="prodCost" layout="column" layout-align="center end" flex="15">
+                                                        <span class="default" ng-if="card.rowId===0">Default</span>
+                                                        <md-button class="md-raised make-default" ng-if="card.rowId != 0" ng-click="defaultPayment('1',card)" layout-align="center center"> Make Default</md-button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+
+            <md-card flex class="input-block-gen">
+                <md-card-title>
+                    <div layout="row" layout-align="start center">
+                        <md-icon md-font-icon="icon-cog"></md-icon> <h3>Plans</h3>
+                    </div>
+                </md-card-title>
+                <md-card-content>
+                    <!--<div>-->
+                        <!--<div layout="row">-->
+                            <!--<div flex>-->
+                                <!--<div class="pos-rel" flex="30" layout="row">-->
+                                    <!--<md-progress-circular ng-if="loadingPlanDetails" class="autocomp-preloader"></md-progress-circular>-->
+                                    <!--<md-autocomplete flex required class="mt-20"-->
+                                                     <!--md-input-id="acPlanId"-->
+                                                     <!--ng-keydown=""-->
+                                                     <!--ng-required="true"-->
+                                                     <!--md-select-on-match-->
+                                                     <!--ng-keypress="enter($event)"-->
+                                                     <!--ng-disabled="loadingPlanDetails"-->
+                                                     <!--md-input-name="autocompleteField2"-->
+                                                     <!--md-no-cache="vm.noCache"-->
+                                                     <!--md-selected-item="subscriptionUser.selectedPlan"-->
+                                                     <!--md-selected-item-change="checkBasePlanForAddons(subscriptionUser.selectedPlan)"-->
+                                                     <!--md-search-text="vm.searchText2"-->
+                                                     <!--md-items="item in vm.querySearchPlan(vm.searchText2)"-->
+                                                     <!--md-search-text-change=""-->
+                                                     <!--md-item-text="item.name"-->
+                                                     <!--md-floating-label="Plan"-->
+                                                     <!--md-min-length=""-->
+                                                     <!--autocomplete-validator>-->
+                                        <!--<md-item-template>-->
+                                            <!--<span md-highlight-text="vm.searchText2">{{item.name}}</span>-->
+                                            <!--&lt;!&ndash;+" "+item.last_name&ndash;&gt;-->
+                                        <!--</md-item-template>-->
+                                        <!--<div ng-messages="vm.subscriptionForm.autocompleteField2.$error">-->
+                                            <!--<div ng-message="invalidInput" ng-if="!vm.subscriptionForm.autocompleteField2.$error.required">Please select a valid plan</div>-->
+                                        <!--</div>-->
+                                    <!--</md-autocomplete>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="w-300">-->
+                                <!--<div class="mb-20 text-center" fill-width style="color: #5f8597;">Plan preview</div>-->
+                                <!--<div fill-width class="subscription-plan autoheight" id="subscriptionPlan" md-whiteframe="1dp">-->
+                                    <!--&lt;!&ndash;<div class="selected-plan-ico" ng-if="plan.code == selectedPlan.code"></div>&ndash;&gt;-->
+
+                                    <!--<md-card-title flex layout="row" layout-align="center center" ng-class="{'solid-washer-blue':subscriptionUser.selectedPlan.name != null}">-->
+                                        <!--<h3 class="white-text">{{subscriptionUser.selectedPlan.name}}</h3>-->
+                                        <!--<h3 ng-if="subscriptionUser.selectedPlan.name == null" style="color: #ccc">{{subscriptionUser.selectedPlan.name != null ? subscriptionUser.selectedPlan.name : '-PLAN NAME-'}}</h3>-->
+                                    <!--</md-card-title>-->
+
+                                    <!--<md-card-content flex class="p-0" layout="column">-->
+                                        <!--<div class="preloader" ng-if="loadingPlanDetails">-->
+                                            <!--<md-progress-circular></md-progress-circular>-->
+                                        <!--</div>-->
+                                        <!--<div class="rate-container tinted" layout="column" layout-align="center center">-->
+                                            <!--<div layout="row" layout-align="center end" ng-if="subscriptionUser.selectedPlan.unitPrice != '0'">-->
+                            <!--<span>{{subscriptionUser.selectedPlan.unitPrice / subscriptionUser.selectedPlan.billingInterval | isoCurrency:BaseCurrency :decimalPoint}}-->
+                                <!--<label ng-if="subscriptionUser.selectedPlan.unitPrice == null" style="color: #ccc">-{{0| isoCurrency:BaseCurrency :0}}- </label>-->
+                            <!--</span>-->
+                                                <!--<span class="forplan">-->
+                                <!--<span class="duration"> /-->
+                                    <!--{{subscriptionUser.selectedPlan.billEvery.slice(0, -1)}}-->
+                                <!--</span>-->
+                            <!--</span>-->
+                                            <!--</div>-->
+                                            <!--<div layout="row" layout-align="center end" ng-if="subscriptionUser.selectedPlan.unitPrice == '0'">-->
+                              <!--<span>{{subscriptionUser.selectedPlan.unitPrice / subscriptionUser.selectedPlan.billingInterval | isoCurrency:BaseCurrency :decimalPoint}}-->
+                                  <!--<label ng-if="subscriptionUser.selectedPlan.unitPrice == null" style="color: #ccc">-{{0| isoCurrency:BaseCurrency :0}}- </label>-->
+                              <!--</span>-->
+                                                <!--<span class="forplan">-->
+                                  <!--<span class="duration"> /-->
+                                      <!--{{subscriptionUser.selectedPlan.billEvery.slice(0, -1)}}-->
+                                  <!--</span>-->
+                              <!--</span>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<div class="text-center" flex layout="column" layout-align="center center" style="min-height: 130px;">-->
+                                            <!--<span class="plan-feature-row"><b>{{subscriptionUser.selectedPlan.trailDays}} trial day<span ng-if="subscriptionUser.selectedPlan.trailDays > 1 || subscriptionUser.selectedPlan.trailDays == 0">s</span></b></span>-->
+
+                                            <!--<div class="msg-empty-list" ng-if="nothingSelected">-->
+                                                <!--<span><i>-Features-</i></span>-->
+                                            <!--</div>-->
+                                            <!--<div ng-repeat="item in subscriptionUser.selectedPlan.priceScheme" class="plan-feature-row">-->
+                                                <!--<span class="additional-feature">{{item.featureCode}}</span>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</md-card-content>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="packages">
+                        <md-card ng-repeat="plan in vm.plans" class="package floated" ng-class="{'selected':plan.isSelected}" ng-click="selectPlanForSubscription(plan)">
+                            <input id="{{plan.code}}" type="radio" name="planRadioButton[]" value="">
+                            <label for="{{plan.code}}" class="package-name" flex> {{ plan.name}} </label>
+                            <div class="rate-container">
+                                <div>
+                                    <span>${{plan.unitPrice}} </span><span> / {{plan.billEvery}}</span>
+                                    <div ng-if="plan.taxtype === '1'" class="tax">Tax : {{plan.taxamount}}%</div>
+                                    <div ng-if="plan.taxtype === '0'" class="tax">Tax : {{plan.taxamount}}$</div>
+                                </div>
+                            </div>
+                        </md-card>
+
+                        <!--<div class="floated-cube" md-whiteframe="1dp" ng-class="{'selected':plan.isSelected}" ng-click="selectPlanForSubscription(plan)" ng-repeat="plan in vm.plans">-->
+                            <!--<h2>{{plan.name}}</h2>-->
+                            <!--<div>-->
+                                <!--<span>${{plan.unitPrice}}</span>-->
+                                <!--<span> / {{plan.billEvery}}</span>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    </div>
                 </md-card-content>
             </md-card>
 
@@ -138,54 +337,54 @@
 
         </form>
     </md-content>
-    <md-content class="plan-portion p-20" flex="30" layout="column" layout-align="start start" style="background: #fafafa;max-width: 350px;border-left: solid 1px #eee" ms-scroll>
-        <div class="mb-20 text-center" fill-width style="color: #5f8597;">Plan preview</div>
-        <div fill-width class="subscription-plan autoheight" id="subscriptionPlan" md-whiteframe="1dp">
-            <!--<div class="selected-plan-ico" ng-if="plan.code == selectedPlan.code"></div>-->
+    <!--<md-content class="plan-portion p-20" flex="30" layout="column" layout-align="start start" style="background: #fafafa;max-width: 350px;border-left: solid 1px #eee" ms-scroll>-->
+        <!--<div class="mb-20 text-center" fill-width style="color: #5f8597;">Plan preview</div>-->
+        <!--<div fill-width class="subscription-plan autoheight" id="subscriptionPlan" md-whiteframe="1dp">-->
+            <!--&lt;!&ndash;<div class="selected-plan-ico" ng-if="plan.code == selectedPlan.code"></div>&ndash;&gt;-->
 
-            <md-card-title flex layout="row" layout-align="center center" ng-class="{'solid-washer-blue':subscriptionUser.selectedPlan.name != null}">
-                <h3 class="white-text">{{subscriptionUser.selectedPlan.name}}</h3>
-                <h3 ng-if="subscriptionUser.selectedPlan.name == null" style="color: #ccc">{{subscriptionUser.selectedPlan.name != null ? subscriptionUser.selectedPlan.name : '-PLAN NAME-'}}</h3>
-            </md-card-title>
+            <!--<md-card-title flex layout="row" layout-align="center center" ng-class="{'solid-washer-blue':subscriptionUser.selectedPlan.name != null}">-->
+                <!--<h3 class="white-text">{{subscriptionUser.selectedPlan.name}}</h3>-->
+                <!--<h3 ng-if="subscriptionUser.selectedPlan.name == null" style="color: #ccc">{{subscriptionUser.selectedPlan.name != null ? subscriptionUser.selectedPlan.name : '-PLAN NAME-'}}</h3>-->
+            <!--</md-card-title>-->
 
-            <md-card-content flex class="p-0" layout="column">
-                <div class="preloader" ng-if="loadingPlanDetails">
-                    <md-progress-circular></md-progress-circular>
-                </div>
-                <div class="rate-container tinted" layout="column" layout-align="center center">
-                    <div layout="row" layout-align="center end" ng-if="subscriptionUser.selectedPlan.unitPrice != '0'">
-                            <span>{{subscriptionUser.selectedPlan.unitPrice / subscriptionUser.selectedPlan.billingInterval | isoCurrency:BaseCurrency :decimalPoint}}
-                                <label ng-if="subscriptionUser.selectedPlan.unitPrice == null" style="color: #ccc">-{{0| isoCurrency:BaseCurrency :0}}- </label>
-                            </span>
-                        <span class="forplan">
-                                <span class="duration"> /
-                                    {{subscriptionUser.selectedPlan.billEvery.slice(0, -1)}}
-                                </span>
-                            </span>
-                    </div>
-                    <div layout="row" layout-align="center end" ng-if="subscriptionUser.selectedPlan.unitPrice == '0'">
-                              <span>{{subscriptionUser.selectedPlan.unitPrice / subscriptionUser.selectedPlan.billingInterval | isoCurrency:BaseCurrency :decimalPoint}}
-                                  <label ng-if="subscriptionUser.selectedPlan.unitPrice == null" style="color: #ccc">-{{0| isoCurrency:BaseCurrency :0}}- </label>
-                              </span>
-                        <span class="forplan">
-                                  <span class="duration"> /
-                                      {{subscriptionUser.selectedPlan.billEvery.slice(0, -1)}}
-                                  </span>
-                              </span>
-                    </div>
-                </div>
-                <div class="text-center" flex layout="column" layout-align="center center" style="min-height: 130px;">
-                    <span class="plan-feature-row"><b>{{subscriptionUser.selectedPlan.trailDays}} trial day<span ng-if="subscriptionUser.selectedPlan.trailDays > 1 || subscriptionUser.selectedPlan.trailDays == 0">s</span></b></span>
+            <!--<md-card-content flex class="p-0" layout="column">-->
+                <!--<div class="preloader" ng-if="loadingPlanDetails">-->
+                    <!--<md-progress-circular></md-progress-circular>-->
+                <!--</div>-->
+                <!--<div class="rate-container tinted" layout="column" layout-align="center center">-->
+                    <!--<div layout="row" layout-align="center end" ng-if="subscriptionUser.selectedPlan.unitPrice != '0'">-->
+                            <!--<span>{{subscriptionUser.selectedPlan.unitPrice / subscriptionUser.selectedPlan.billingInterval | isoCurrency:BaseCurrency :decimalPoint}}-->
+                                <!--<label ng-if="subscriptionUser.selectedPlan.unitPrice == null" style="color: #ccc">-{{0| isoCurrency:BaseCurrency :0}}- </label>-->
+                            <!--</span>-->
+                        <!--<span class="forplan">-->
+                                <!--<span class="duration"> /-->
+                                    <!--{{subscriptionUser.selectedPlan.billEvery.slice(0, -1)}}-->
+                                <!--</span>-->
+                            <!--</span>-->
+                    <!--</div>-->
+                    <!--<div layout="row" layout-align="center end" ng-if="subscriptionUser.selectedPlan.unitPrice == '0'">-->
+                              <!--<span>{{subscriptionUser.selectedPlan.unitPrice / subscriptionUser.selectedPlan.billingInterval | isoCurrency:BaseCurrency :decimalPoint}}-->
+                                  <!--<label ng-if="subscriptionUser.selectedPlan.unitPrice == null" style="color: #ccc">-{{0| isoCurrency:BaseCurrency :0}}- </label>-->
+                              <!--</span>-->
+                        <!--<span class="forplan">-->
+                                  <!--<span class="duration"> /-->
+                                      <!--{{subscriptionUser.selectedPlan.billEvery.slice(0, -1)}}-->
+                                  <!--</span>-->
+                              <!--</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="text-center" flex layout="column" layout-align="center center" style="min-height: 130px;">-->
+                    <!--<span class="plan-feature-row"><b>{{subscriptionUser.selectedPlan.trailDays}} trial day<span ng-if="subscriptionUser.selectedPlan.trailDays > 1 || subscriptionUser.selectedPlan.trailDays == 0">s</span></b></span>-->
 
-                    <div class="msg-empty-list" ng-if="nothingSelected">
-                        <span><i>-Features-</i></span>
-                    </div>
-                    <div ng-repeat="item in subscriptionUser.selectedPlan.priceScheme" class="plan-feature-row">
-                        <span class="additional-feature">{{item.featureCode}}</span>
-                    </div>
-                </div>
-            </md-card-content>
-        </div>
-    </md-content>
+                    <!--<div class="msg-empty-list" ng-if="nothingSelected">-->
+                        <!--<span><i>-Features-</i></span>-->
+                    <!--</div>-->
+                    <!--<div ng-repeat="item in subscriptionUser.selectedPlan.priceScheme" class="plan-feature-row">-->
+                        <!--<span class="additional-feature">{{item.featureCode}}</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</md-card-content>-->
+        <!--</div>-->
+    <!--</md-content>-->
 </div>
 
