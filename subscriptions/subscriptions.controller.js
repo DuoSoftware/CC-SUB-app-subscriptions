@@ -1826,52 +1826,52 @@
 		var skip=0;
 		var take=100;
 		$scope.isPlansLoading = false;
-		$scope.morePlans = function(selectedPlan, status){
-
-			$scope.isPlansLoading = true;
-			$azureSearchHandle.getClient().SearchRequest("plan",skip,take,'desc',status).onComplete(function(Response)
-			{
-				if($scope.loading)
-				{
-					skip += take;
-
-					for (var i = 0; i < Response.length; i++) {
-						Response[i].isSelected = false;
-						$scope.items.push(Response[i]);
-					}
-					$timeout(function () {
-						vm.plans=$scope.items;
-					});
-					//$timeout(function () {
-					//  vm.plans=$scope.items;
-					//},0);bofoxoc@evyush.com/dimezif@12hosting.net
-					vm.searchMoreInit = false;
-
-					$scope.isPlansLoading = false;
-					$scope.isdataavailable=true;
-
-					if(Response.length<take){
-						$scope.isdataavailable=false;
-						$scope.hideSearchMore=true;
-					}
-				}
-
-			}).onError(function(data)
-			{
-				//console.log(data);
-				$scope.isSpinnerShown=false;
-				$scope.isdataavailable=false;
-				$scope.isPlansLoading = false;
-				$scope.hideSearchMore=true;
-
-				$scope.infoJson= {};
-				$scope.infoJson.message =JSON.stringify(data);
-				$scope.infoJson.app ='plans';
-				logHelper.error( $scope.infoJson);
-			});
-
-		};
-		$scope.morePlans("","");
+		// $scope.morePlans = function(selectedPlan, status){
+		//
+		// 	$scope.isPlansLoading = true;
+		// 	$azureSearchHandle.getClient().SearchRequest("plan",skip,take,'desc',status).onComplete(function(Response)
+		// 	{
+		// 		if($scope.loading)
+		// 		{
+		// 			skip += take;
+		//
+		// 			for (var i = 0; i < Response.length; i++) {
+		// 				Response[i].isSelected = false;
+		// 				$scope.items.push(Response[i]);
+		// 			}
+		// 			$timeout(function () {
+		// 				vm.plans=$scope.items;
+		// 			});
+		// 			//$timeout(function () {
+		// 			//  vm.plans=$scope.items;
+		// 			//},0);bofoxoc@evyush.com/dimezif@12hosting.net
+		// 			vm.searchMoreInit = false;
+		//
+		// 			$scope.isPlansLoading = false;
+		// 			$scope.isdataavailable=true;
+		//
+		// 			if(Response.length<take){
+		// 				$scope.isdataavailable=false;
+		// 				$scope.hideSearchMore=true;
+		// 			}
+		// 		}
+		//
+		// 	}).onError(function(data)
+		// 	{
+		// 		//console.log(data);
+		// 		$scope.isSpinnerShown=false;
+		// 		$scope.isdataavailable=false;
+		// 		$scope.isPlansLoading = false;
+		// 		$scope.hideSearchMore=true;
+		//
+		// 		$scope.infoJson= {};
+		// 		$scope.infoJson.message =JSON.stringify(data);
+		// 		$scope.infoJson.app ='plans';
+		// 		logHelper.error( $scope.infoJson);
+		// 	});
+		//
+		// };
+		// $scope.morePlans("","");
 
 		$scope.loadUserDetails = function (user) {
 			$scope.accGeneralLoaded = false;
