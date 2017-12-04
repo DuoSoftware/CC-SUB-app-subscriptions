@@ -1826,7 +1826,7 @@
 		var skip=0;
 		var take=100;
 		$scope.isPlansLoading = false;
-		$scope.more = function(selectedPlan, status){
+		$scope.morePlans = function(selectedPlan, status){
 
 			$scope.isPlansLoading = true;
 			$azureSearchHandle.getClient().SearchRequest("plan",skip,take,'desc',status).onComplete(function(Response)
@@ -1871,7 +1871,7 @@
 			});
 
 		};
-		$scope.more("","");
+		$scope.morePlans("","");
 
 		$scope.loadUserDetails = function (user) {
 			$scope.accGeneralLoaded = false;
