@@ -1846,12 +1846,29 @@
 		}
 
     $scope.cardloadform = "";
+    $scope.cardLastDigits = {};
 
     $scope.addUpdateCardDetails = function (customer){
 
       var cardDetails = {};
       if(vm.userInfo.stripeCustId!=null)
       {
+        $charge.paymentgateway().getPaymentGatewayDetails(customer.profileId).success(function (response) {
+
+          var cardDetailDigits = response.data[0];
+          if(cardDetailDigits) {
+            $scope.cardLastDigits = cardDetailDigits;
+
+          }else{
+            $scope.cardLastDigits = {};
+          }
+
+        }).error(function(data) {
+          var cardloadfail = data;
+          $scope.cardLastDigits = {};
+
+        });
+
         cardDetails = {
           "profileId": customer.profileId,
           "redirectUrl": window.location.href,
@@ -1860,6 +1877,8 @@
       }
       else
       {
+        $scope.cardLastDigits = {};
+
         cardDetails = {
           "profileId": customer.profileId,
           "redirectUrl": window.location.href,

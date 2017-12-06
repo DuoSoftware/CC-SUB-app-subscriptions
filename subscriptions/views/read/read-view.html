@@ -122,11 +122,11 @@
                                                 <md-icon md-font-icon="icon-credit-card"></md-icon> <span flex>Card</span>
                                             </div>
                                             <div layout="column" layout-align="center center" style="width: 100%;" class="mt-10">
-                                                <div flex layout="row" layout-align="center center" class="msg-empty-list m-0" ng-if="vm.userInfo.stripeCustId == ''">
-                                                    <span><md-icon md-font-icon="icon-information-outline"></md-icon> No card has been added yet</span>
-                                                </div>
+                                                <!--<div flex layout="row" layout-align="center center" class="msg-empty-list m-0" ng-if="vm.userInfo.stripeCustId == null">-->
+                                                    <!--<span><md-icon md-font-icon="icon-information-outline"></md-icon> No card has been added yet</span>-->
+                                                <!--</div>-->
 
-                                                <div layout="row" fill-width class="list-item" modal-animation-class="mt-20" ng-if="vm.userInfo.stripeCustId != ''">
+                                                <div layout="row" fill-width class="list-item" modal-animation-class="mt-20" ng-if="vm.userInfo.stripeCustId != null">
                                                   <div layout="row" layout-align="start center" class="info-grid-row" flex>
                                                     <div class="iconed-label" layout="row" layout-align="start center" flex>
                                                       <i class="material-icons">local_atm</i>
@@ -135,6 +135,15 @@
                                                     <div flex>
                                                       <!--{{customer_supplier.profile.gatewayType}}-->
                                                       <div class="online_{{vm.userInfo.gatewayType | lowercase}} scale-down-5" style="margin-left: -40px"></div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div layout="row" fill-width class="list-item" modal-animation-class="mt-20">
+                                                  <div layout="row" layout-align="start center" class="info-grid-row" flex ng-if="vm.userInfo.stripeCustId != null">
+                                                    <div class="iconed-label" layout="row" layout-align="start center" flex>
+                                                      <i class="material-icons">local_atm</i>
+                                                      <!--<span flex>Card details</span>-->
+                                                      <div flex class="op-5"><i>XXXX-XXXX-XXXX-{{cardLastDigits.last4}}</i></div>
                                                     </div>
                                                   </div>
                                                   <div layout="row" layout-align="start center" class="info-grid-row" id="addUpdateCardSubsId" flex>
