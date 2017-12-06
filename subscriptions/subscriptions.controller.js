@@ -1536,7 +1536,7 @@
 		function submitSubscription (subscriptionForm){
 
 			if(subscriptionForm == 'subscriptionForm'){
-				if (vm.subscriptionForm.$valid == true) {
+				if (vm.subscriptionForm.$valid == true && $scope.subscriptionUser.selectedPlan) {
 					vm.submitted=true;
 
 					$scope.content.email=$scope.subscriptionUser.selectedUser.email_addr;
@@ -1638,6 +1638,10 @@
 					})
 				}else{
 					angular.element(document.querySelector('#subscriptionForm')).find('.ng-invalid:visible:first').focus();
+          if(!$scope.subscriptionUser.selectedPlan)
+          {
+            notifications.toast("Select a plan to continue!","error");
+          }
 				}
 				//toggleinnerView('add');
 			}
