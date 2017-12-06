@@ -1871,7 +1871,7 @@
 
         cardDetails = {
           "profileId": customer.profileId,
-          "redirectUrl": window.location.href,
+          "redirectUrl": "",
           "action": "update"
         };
       }
@@ -1881,7 +1881,7 @@
 
         cardDetails = {
           "profileId": customer.profileId,
-          "redirectUrl": window.location.href,
+          "redirectUrl": "",
           "action": "insert"
         };
         //$location.absUrl()
