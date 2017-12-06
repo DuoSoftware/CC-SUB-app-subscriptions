@@ -1891,6 +1891,10 @@
       {
         //
         $scope.cardloadform = data;
+        if(vm.userInfo.gatewayType=="adyen" || vm.userInfo.gatewayType==null)
+        {
+          $scope.cardloadform = $scope.cardloadform.toString().replace("adyen.createEncryptedForm(form, options);", "");
+        }
         angular.element("#addUpdateCardSubsId").empty();
         angular.element("#addUpdateCardSubsId").append($scope.cardloadform);
         //$scope.showMoreUserInfo=false;
