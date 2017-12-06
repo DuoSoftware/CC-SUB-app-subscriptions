@@ -16,7 +16,7 @@
 		.controller('SubscriptionsController', SubscriptionsController);
 
 	/** @ngInject */
-	function SubscriptionsController($scope, $timeout, $mdDialog, $mdMedia, $mdSidenav, $filter, $charge, $errorCheck, notifications, $azureSearchHandle, logHelper, $rootScope)
+	function SubscriptionsController($scope, $timeout, $mdDialog, $document, $mdMedia, $mdSidenav, $location, $filter, $charge, $errorCheck, notifications, $azureSearchHandle, logHelper, $rootScope)
 	{
 		var vm = this;
 
@@ -1795,27 +1795,45 @@
 			},0);
 		}
 
+    $(document).on('click', '#myBtn', function(){
+      //debugger;
+      var elem = document.getElementById('myModal');
+      $('.content-wrapper').append(elem);
+      //elem.remove();
+    });
+
 
 		// Kasun_Wijeratne_27_NOV_2017
 		$scope.accGeneralLoaded = true;
 		vm.userInfo = {};
-		$scope.getUserInfoByID = function() {
+		$scope.getUserInfoByID = function(user) {
 			try{
-				$charge.myAccountEngine().getUserInfoByID().success(function (response) {
-					response.data = response;
-					vm.userInfo = response.data.Result;
-					if($rootScope.tenantType == 'member'){
-						vm.userInfo.UserType = 'Member';
-						vm.userInfo.domain = domain;
-					}
-					if (response.data.Result.UserType === "admin") {
-						$scope.isUserAdmin = true;
-					}
+				//$charge.myAccountEngine().getUserInfoByID(user.profileId).success(function (response) {
+				//	response.data = response;
+				//	vm.userInfo = response.data.Result;
+				//	if($rootScope.tenantType == 'member'){
+				//		vm.userInfo.UserType = 'Member';
+				//		vm.userInfo.domain = domain;
+				//	}
+				//	if (response.data.Result.UserType === "admin") {
+				//		$scope.isUserAdmin = true;
+				//	}
+                //
+				//	$scope.accGeneralLoaded = true;
+				//}).error(function (data) {
+				//	console.log(data);
+				//});
+        $charge.profile().getByIDWithStripeKey(user.profileId).success(function(data) {
+          //console.log(data);
+          vm.userInfo=data[0];
 
-					$scope.accGeneralLoaded = true;
-				}).error(function (data) {
-					console.log(data);
-				});
+          $scope.addUpdateCardDetails(user);
+
+          // $scope.isLoading = false;
+        }).error(function(data) {
+          //console.log(data);
+          $scope.accGeneralLoaded = true;
+        })
 
 			}catch(ex){
 				ex.app = "myAccount";
@@ -1823,25 +1841,98 @@
 			}
 		}
 
-		var skip=0;
-		var take=100;
+    $scope.cardloadform = "";
+
+    $scope.addUpdateCardDetails = function (customer){
+
+      var cardDetails = {};
+      if(vm.userInfo.stripeCustId!=null)
+      {
+        cardDetails = {
+          "profileId": customer.profileId,
+          "redirectUrl": window.location.href,
+          "action": "update"
+        };
+      }
+      else
+      {
+        cardDetails = {
+          "profileId": customer.profileId,
+          "redirectUrl": window.location.href,
+          "action": "insert"
+        };
+        //$location.absUrl()
+      }
+
+      $charge.paymentgateway().addUpdateCard(cardDetails).success(function(data)
+      {
+        //
+        $scope.cardloadform = data;
+        angular.element("#addUpdateCardSubsId").empty();
+        angular.element("#addUpdateCardSubsId").append($scope.cardloadform);
+        //$scope.showMoreUserInfo=false;
+        $scope.accGeneralLoaded = true;
+
+      }).error(function(data)
+      {
+        //console.log(dataErrorInvoice);
+        //$scope.orderScheduledList.push(objOrderSchedule);
+        $scope.accGeneralLoaded = true;
+
+        $scope.infoJson= {};
+        $scope.infoJson.message =JSON.stringify(data);
+        $scope.infoJson.app ='Subscription';
+        logHelper.error( $scope.infoJson);
+      })
+    }
+
+    $scope.addNewUser = function(ev)
+    {
+      //console.log("yes");
+      //$scope.content.user = "";
+      $mdDialog.show({
+        controller: 'AddNewSubsUserController',
+        templateUrl: 'app/main/subscriptions/composeNewUser-dialog.html',
+        controllerAs       : 'vm',
+        locals             : {
+          selectedMail: undefined,
+          category: "Customer"
+        },
+        parent: angular.element($document.body),
+        targetEvent: ev,
+        clickOutsideToClose:true
+      })
+        .then(function(user) {
+          if(user != undefined)
+          {
+            $scope.profileList.push(user);
+            $scope.subscriptionUser.selectedUser=user;
+            vm.searchText1=user.first_name;
+          }
+        })
+
+    }
+
+		var skipPlan=0;
+		var takePlan=100;
+    vm.plans= [];
 		$scope.isPlansLoading = false;
-		$scope.more = function(selectedPlan, status){
+		$scope.morePlans = function(selectedPlan, status){
 
 			$scope.isPlansLoading = true;
-			$azureSearchHandle.getClient().SearchRequest("plan",skip,take,'desc',status).onComplete(function(Response)
+			$azureSearchHandle.getClient().SearchRequest("plan",skipPlan,takePlan,'desc',status).onComplete(function(Response)
 			{
 				if($scope.loading)
 				{
-					skip += take;
+					skipPlan += takePlan;
 
 					for (var i = 0; i < Response.length; i++) {
 						Response[i].isSelected = false;
-						$scope.items.push(Response[i]);
+            vm.plans.push(Response[i]);
 					}
-					$timeout(function () {
-						vm.plans=$scope.items;
-					});
+					//$timeout(function () {
+					//	vm.plans=$scope.items;
+					//});
 					//$timeout(function () {
 					//  vm.plans=$scope.items;
 					//},0);bofoxoc@evyush.com/dimezif@12hosting.net
@@ -1850,7 +1941,7 @@
 					$scope.isPlansLoading = false;
 					$scope.isdataavailable=true;
 
-					if(Response.length<take){
+					if(Response.length<takePlan){
 						$scope.isdataavailable=false;
 						$scope.hideSearchMore=true;
 					}
@@ -1866,16 +1957,16 @@
 
 				$scope.infoJson= {};
 				$scope.infoJson.message =JSON.stringify(data);
-				$scope.infoJson.app ='plans';
+				$scope.infoJson.app ='Subscription';
 				logHelper.error( $scope.infoJson);
 			});
 
 		};
-		$scope.more("","");
+		$scope.morePlans("","");
 
 		$scope.loadUserDetails = function (user) {
 			$scope.accGeneralLoaded = false;
-			$scope.getUserInfoByID();
+			$scope.getUserInfoByID(user);
 		}
 
 		$scope.selectPlanForSubscription = function (plan) {
@@ -1886,6 +1977,8 @@
 					p.isSelected = false;
 				}
 			});
+      $scope.subscriptionUser.selectedPlan = plan;
+      $scope.checkBasePlanForAddons($scope.subscriptionUser.selectedPlan);
 		}
 		// Kasun_Wijeratne_27_NOV_2017 - END
 	}

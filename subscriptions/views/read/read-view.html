@@ -12,7 +12,7 @@
                     <div layout="row">
                         <md-input-container flex="30">
                             <label>Start date</label>
-                            <md-datepicker ng-model="subscriptionUser.selectedPlan.startDate" md-max-date="maxDateAvailable"></md-datepicker>
+                            <md-datepicker ng-model="content.startDate" md-max-date="maxDateAvailable" md-open-on-focus></md-datepicker>
                         </md-input-container>
                     </div>
                 </md-card-content>
@@ -55,7 +55,7 @@
                             </md-autocomplete>
                         </div>
                         <div flex="5"></div>
-                        <md-button class="md-accent md-raised"><span class="mr-10">+</span><span>NEW</span></md-button>
+                        <md-button ng-click="addNewUser($event)" class="md-accent md-raised"><span class="mr-10">+</span><span>NEW</span></md-button>
                         <!--<md-button class="md-accent md-icon-button"><md-icon md-font-icon="icon-plus-circle"></md-icon><md-tooltip>Add new User</md-tooltip></md-button>-->
                     </div>
                     <div ng-if="subscriptionUser.selectedUser != null">
@@ -68,7 +68,7 @@
                                     <div layout="row" layout-align="start center" flex class="user">
                                         <i class="material-icons mr-10">face</i>
                                         <div class="user-name font-white">
-                                            <span>{{vm.userInfo.givenName}} {{vm.userInfo.surName}}</span>
+                                            <span>{{vm.userInfo.first_name}} {{vm.userInfo.last_name}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -79,7 +79,7 @@
                                                 <div class="iconed-label" layout="row" layout-align="start center" flex="30">
                                                     <md-icon md-font-icon="icon-account-location"></md-icon> <span flex>User type</span>
                                                 </div>
-                                                <div flex class="text-capitalize">{{vm.userInfo.UserType}}</div>
+                                                <div flex class="text-capitalize">{{vm.userInfo.category}}</div>
                                             </div>
                                         </div>
                                         <div layout="row">
@@ -87,71 +87,86 @@
                                                 <div class="iconed-label" layout="row" layout-align="start center" flex="30">
                                                     <md-icon md-font-icon="icon-email"></md-icon> <span flex>Email</span>
                                                 </div>
-                                                <div flex class="">{{vm.userInfo.email}}</div>
+                                                <div flex class="">{{vm.userInfo.email_addr}}</div>
                                             </div>
                                         </div>
-                                        <div layout="row">
-                                            <div layout="row" layout-align="start center" class="info-grid-row bordered" flex>
-                                                <div class="iconed-label" layout="row" layout-align="start center" flex="30">
-                                                    <md-icon md-font-icon="icon-domain"></md-icon> <span flex>Domain</span>
-                                                </div>
-                                                <div flex class="">{{vm.userInfo.domain}}</div>
-                                            </div>
-                                        </div>
+                                        <!--<div layout="row">-->
+                                            <!--<div layout="row" layout-align="start center" class="info-grid-row bordered" flex>-->
+                                                <!--<div class="iconed-label" layout="row" layout-align="start center" flex="30">-->
+                                                    <!--<md-icon md-font-icon="icon-domain"></md-icon> <span flex>Domain</span>-->
+                                                <!--</div>-->
+                                                <!--<div flex class="">{{vm.userInfo.domain}}</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
                                         <div layout="row">
                                             <div layout="row" layout-align="start center" class="info-grid-row bordered" flex>
                                                 <div class="iconed-label" layout="row" layout-align="start center" flex="30">
                                                     <md-icon md-font-icon="icon-google-maps"></md-icon> <span flex>Country</span>
                                                 </div>
-                                                <div flex class="">{{vm.userInfo.country}}</div>
+                                                <div flex class="">{{vm.userInfo.bill_country}}</div>
                                             </div>
                                         </div>
-                                        <div layout="row">
-                                            <div layout="row" layout-align="start center" class="info-grid-row" flex ng-if="vm.userInfo.UserType.toLowerCase() == 'admin'">
-                                                <div class="iconed-label" layout="row" layout-align="start center" flex>
-                                                    <md-icon md-font-icon="icon-map"></md-icon> <span flex>Current subscription</span>
-                                                </div>
-                                                <div flex class=""><a href="" ng-click="switchInpageState('plan-details')"><u>{{selectedPlan.name}}</u></a></div>
-                                            </div>
-                                        </div>
+                                        <!--<div layout="row">-->
+                                            <!--<div layout="row" layout-align="start center" class="info-grid-row" flex ng-if="vm.userInfo.UserType.toLowerCase() == 'admin'">-->
+                                                <!--<div class="iconed-label" layout="row" layout-align="start center" flex>-->
+                                                    <!--<md-icon md-font-icon="icon-map"></md-icon> <span flex>Current subscription</span>-->
+                                                <!--</div>-->
+                                                <!--<div flex class=""><a href="" ng-click="switchInpageState('plan-details')"><u>{{selectedPlan.name}}</u></a></div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
                                     </div>
                                     <div flex="5"></div>
                                     <div layout="column" flex>
                                         <div layout="column" layout-align="center start" class="info-grid-row bordered">
                                             <div id="cardBody" class="iconed-label bordered" layout="row" layout-align="start center" fill-width>
-                                                <md-icon md-font-icon="icon-credit-card"></md-icon> <span flex>Cards</span>
+                                                <md-icon md-font-icon="icon-credit-card"></md-icon> <span flex>Card</span>
                                             </div>
                                             <div layout="column" layout-align="center center" style="width: 100%;" class="mt-10">
-                                                <div flex layout="row" layout-align="center center" class="msg-empty-list m-0" ng-if="cardDetails.length == 0">
+                                                <div flex layout="row" layout-align="center center" class="msg-empty-list m-0" ng-if="vm.userInfo.stripeCustId == ''">
                                                     <span><md-icon md-font-icon="icon-information-outline"></md-icon> No card has been added yet</span>
                                                 </div>
 
-                                                <div layout="row" fill-width class="list-item" ng-repeat="card in cardDetails" modal-animation-class="mt-20">
-
-                                                    <div class="prodCost" flex layout="row" layout-align="start center">
-                                                        <span ng-class="card.brand"></span> <span class="text-truncate card-no">XXXX-XXXX-XXXX-{{card.last4}}</span>
-                                                        <md-tooltip>XXXX-XXXX-XXXX-{{card.last4}}</md-tooltip>
+                                                <div layout="row" fill-width class="list-item" modal-animation-class="mt-20" ng-if="vm.userInfo.stripeCustId != ''">
+                                                  <div layout="row" layout-align="start center" class="info-grid-row" flex>
+                                                    <div class="iconed-label" layout="row" layout-align="start center" flex>
+                                                      <i class="material-icons">local_atm</i>
+                                                      <span flex>Payment gateway</span>
                                                     </div>
-                                                    <div class="prodCost fs-12 fw-400" flex="30" layout="row" layout-align="start center">
-                                                        <span ng-if="card.exp_month==1">Jan</span>
-                                                        <span ng-if="card.exp_month==2">Feb</span>
-                                                        <span ng-if="card.exp_month==3">Mar</span>
-                                                        <span ng-if="card.exp_month==4">Apr</span>
-                                                        <span ng-if="card.exp_month==5">May</span>
-                                                        <span ng-if="card.exp_month==6">Jun</span>
-                                                        <span ng-if="card.exp_month==7">Jul</span>
-                                                        <span ng-if="card.exp_month==8">Aug</span>
-                                                        <span ng-if="card.exp_month==9">Sep</span>
-                                                        <span ng-if="card.exp_month==10">Oct</span>
-                                                        <span ng-if="card.exp_month==11">Nov</span>
-                                                        <span ng-if="card.exp_month==12">Dec</span>
-                                                        <span>&nbsp;{{card.exp_year}}</span>
+                                                    <div flex>
+                                                      <!--{{customer_supplier.profile.gatewayType}}-->
+                                                      <div class="online_{{vm.userInfo.gatewayType | lowercase}} scale-down-5" style="margin-left: -40px"></div>
                                                     </div>
-                                                    <div class="prodCost" layout="column" layout-align="center end" flex="15">
-                                                        <span class="default" ng-if="card.rowId===0">Default</span>
-                                                        <md-button class="md-raised make-default" ng-if="card.rowId != 0" ng-click="defaultPayment('1',card)" layout-align="center center"> Make Default</md-button>
-                                                    </div>
+                                                  </div>
+                                                  <div layout="row" layout-align="start center" class="info-grid-row" id="addUpdateCardSubsId" flex>
+                                                  </div>
                                                 </div>
+
+                                                <!--<div layout="row" fill-width class="list-item" ng-repeat="card in cardDetails" modal-animation-class="mt-20">-->
+
+                                                    <!--<div class="prodCost" flex layout="row" layout-align="start center">-->
+                                                        <!--<span ng-class="card.brand"></span> <span class="text-truncate card-no">XXXX-XXXX-XXXX-{{card.last4}}</span>-->
+                                                        <!--<md-tooltip>XXXX-XXXX-XXXX-{{card.last4}}</md-tooltip>-->
+                                                    <!--</div>-->
+                                                    <!--<div class="prodCost fs-12 fw-400" flex="30" layout="row" layout-align="start center">-->
+                                                        <!--<span ng-if="card.exp_month==1">Jan</span>-->
+                                                        <!--<span ng-if="card.exp_month==2">Feb</span>-->
+                                                        <!--<span ng-if="card.exp_month==3">Mar</span>-->
+                                                        <!--<span ng-if="card.exp_month==4">Apr</span>-->
+                                                        <!--<span ng-if="card.exp_month==5">May</span>-->
+                                                        <!--<span ng-if="card.exp_month==6">Jun</span>-->
+                                                        <!--<span ng-if="card.exp_month==7">Jul</span>-->
+                                                        <!--<span ng-if="card.exp_month==8">Aug</span>-->
+                                                        <!--<span ng-if="card.exp_month==9">Sep</span>-->
+                                                        <!--<span ng-if="card.exp_month==10">Oct</span>-->
+                                                        <!--<span ng-if="card.exp_month==11">Nov</span>-->
+                                                        <!--<span ng-if="card.exp_month==12">Dec</span>-->
+                                                        <!--<span>&nbsp;{{card.exp_year}}</span>-->
+                                                    <!--</div>-->
+                                                    <!--<div class="prodCost" layout="column" layout-align="center end" flex="15">-->
+                                                        <!--<span class="default" ng-if="card.rowId===0">Default</span>-->
+                                                        <!--<md-button class="md-raised make-default" ng-if="card.rowId != 0" ng-click="defaultPayment('1',card)" layout-align="center center"> Make Default</md-button>-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
                                             </div>
                                         </div>
                                     </div>
@@ -289,7 +304,7 @@
                         <div layout="column" flex="30">
                             <md-input-container flex>
                                 <label>Quantity</label>
-                                <input type="number" ng-required="true" min="0" max="100000000000000000" name="Quantity" ng-model="subscriptionUser.selectedPlan.qty" style="text-align: right">
+                                <input type="number" ng-required="true" min="0" max="100000000000000000" name="Quantity" ng-model="content.qty" style="text-align: right">
                                 <div ng-messages="vm.subscriptionForm.Quantity.$error">
                                     <div ng-message="max">Quantity must be between 1-18 digits</div>
                                     <div ng-message="min">Quantity must be between 1-18 digits</div>
@@ -301,7 +316,7 @@
 
                         <md-input-container flex="30">
                             <label>Coupon Code</label>
-                            <input ng-required="false" type="text" name="coupon" ng-maxlength="30" md-maxlength="30" ng-model="subscriptionUser.selectedPlan.coupon">
+                            <input ng-required="false" type="text" name="coupon" ng-maxlength="30" md-maxlength="30" ng-model="content.coupon">
                             <div ng-messages="vm.subscriptionForm.coupon.$error">
                                 <div ng-message="maxlength">Coupon Code must be between 1-30 characters</div>
                             </div>
@@ -312,7 +327,7 @@
                     <div layout="row">
                         <md-input-container flex>
                             <label>Note</label>
-                            <input type="text" ng-required="false" ng-maxlength="300" md-maxlength="300" name="note" ng-model="subscriptionUser.selectedPlan.note">
+                            <input type="text" ng-required="false" ng-maxlength="300" md-maxlength="300" name="note" ng-model="content.note">
                             <div ng-messages="vm.subscriptionForm.note.$error">
                                 <div ng-message="maxlength">Note must be between 1-300 characters</div>
                             </div>
