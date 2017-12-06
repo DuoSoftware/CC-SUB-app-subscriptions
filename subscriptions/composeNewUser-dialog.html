@@ -49,18 +49,20 @@
                 <div ng-message="minlength">Last name cannot be shorter than 3 characters</div>
               </div>
             </md-input-container>
-
-            <md-input-container flex="40">
-              <label>Email</label>
-              <input ng-model="contentuser.email" ng-required="checkRequired" ng-maxlength="50" name="individualEmail" ng-pattern="/^.+@.+\..+$/" type="text">
-              <div ng-messages="vm.editForm.individualEmail.$error">
-                <div ng-message="pattern">Invalid Email Address</div>
-                <div ng-message="maxlength">Email must be between 1-50 characters</div>
-              </div>
-            </md-input-container>
           </div>
 
           <div layout="row" layout-align="center center">
+              <md-input-container flex="40">
+                <label>Email</label>
+                <input ng-model="contentuser.email" ng-required="checkRequired" ng-maxlength="50" name="individualEmail" ng-pattern="/^.+@.+\..+$/" type="text">
+                <div ng-messages="vm.editForm.individualEmail.$error">
+                  <div ng-message="pattern">Invalid Email Address</div>
+                  <div ng-message="maxlength">Email must be between 1-50 characters</div>
+                </div>
+              </md-input-container>
+
+              <div flex="5"></div>
+
               <md-input-container flex="40">
                 <label>Phone</label>
                 <input ng-model="contentuser.phone" ng-pattern="" ng-required="false" ng-maxlength="35" name="phone" type="text">
@@ -68,10 +70,11 @@
                   <div ng-message="maxlength">Phone number must be between 1-35 characters</div>
                 </div>
               </md-input-container>
+            </div>
 
-              <div flex="5"></div>
+            <div layout="row" layout-align="center center">
 
-              <md-input-container flex="40">
+              <md-input-container flex="85">
                 <label>Address</label>
                 <input ng-model="contentuser.billAddress" id="autocomplete" onFocus="geolocate()" placeholder="Enter your Address" ng-required="false" ng-maxlength="200" name="bill_addrIndi" type="text">
                 <div ng-messages="vm.editForm.bill_addrIndi.$error">
