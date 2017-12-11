@@ -1848,9 +1848,12 @@
     $scope.cardloadform = "";
     $scope.cardLastDigits = {};
 
+    $scope.cardEditEnabled = false;
+
     $scope.addUpdateCardDetails = function (customer){
 
       var cardDetails = {};
+      $scope.cardEditEnabled = false;
       if(vm.userInfo.stripeCustId!=null)
       {
         $charge.paymentgateway().getPaymentGatewayDetails(customer.profileId).success(function (response) {
@@ -1895,10 +1898,21 @@
         {
           $scope.cardloadform = $scope.cardloadform.toString().replace("adyen.createEncryptedForm(form, options);", "");
         }
-        angular.element("#addUpdateCardSubsId").empty();
-        angular.element("#addUpdateCardSubsId").append($scope.cardloadform);
+        //angular.element("#addUpdateCardSubsId").empty();
+        //angular.element("#addUpdateCardSubsId").append($scope.cardloadform);
+
+        var iframe = document.getElementById('addUpdateCardSubsId');
+        iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
+
+        iframe.document.open();
+        iframe.document.write($scope.cardloadform);
+        iframe.document.close();
         //$scope.showMoreUserInfo=false;
         $scope.accGeneralLoaded = true;
+
+        $timeout(function () {
+          $scope.cardEditEnabled = true;
+        },1000);
 
       }).error(function(data)
       {
@@ -1911,6 +1925,19 @@
         $scope.infoJson.app ='Subscription';
         logHelper.error( $scope.infoJson);
       })
+    }
+
+    window.updateCardDone=function(){
+      /* have access to $scope here*/
+      if($scope.subscriptionUser.selectedUser != null && $scope.cardEditEnabled && vm.userInfo.first_name)
+      {
+        //notifications.toast("reached!","success");
+        //$scope.cardEditEnabled = false;
+        //vm.userInfo = {};
+        //var selectedUser = angular.copy($scope.subscriptionUser.selectedUser);
+        //$scope.subscriptionUser.selectedUser = "";
+        //$scope.subscriptionUser.selectedUser = selectedUser;
+      }
     }
 
     $scope.addNewUser = function(ev)
