@@ -1,8 +1,8 @@
 ////////////////////////////////
 // App : Subscription
 // Owner  : Gihan Herath
-// Last changed date : 2017/08/31
-// Version : 6.1.0.16
+// Last changed date : 2017/12/06
+// Version : 6.1.0.20
 // Modified By : Gihan
 /////////////////////////////////
 
@@ -32,25 +32,26 @@
           }
         },
         resolve: {
-			security: ['$q','mesentitlement','$timeout','$rootScope','$state','$location', function($q,mesentitlement,$timeout,$rootScope,$state, $location){
+          security: ['$q','mesentitlement','$timeout','$rootScope','$state','$location', function($q,mesentitlement,$timeout,$rootScope,$state, $location){
 
-			  return $q(function(resolve, reject) {
-				  $timeout(function() {
-					  if ($rootScope.isBaseSet2) {
-						  resolve(function () {
-							  mesentitlementProvider.setStateCheck("subscriptions");
+            return $q(function(resolve, reject) {
+              $timeout(function() {
+                //if (true) {
+                if ($rootScope.isBaseSet2) {
+                  resolve(function () {
+                    mesentitlementProvider.setStateCheck("subscriptions");
 
-							  var entitledStatesReturn = mesentitlement.stateDepResolver('subscriptions');
+                    var entitledStatesReturn = mesentitlement.stateDepResolver('subscriptions');
 
-							  if(entitledStatesReturn !== true){
-								  return $q.reject("unauthorized");
-							  };
-						  });
-					  } else {
-						  return $location.path('/guide');
-					  }
-				  });
-			  });
+                    if(entitledStatesReturn !== true){
+                      return $q.reject("unauthorized");
+                    };
+                  });
+                } else {
+                  return $location.path('/guide');
+                }
+              });
+            });
           }]
         },
         bodyClass: 'subscriptions'
