@@ -1091,7 +1091,7 @@
 			});
 
 		};
-		$scope.loadPlans();
+		// $scope.loadPlans();
 
 		$scope.isLoading = true;
 		$scope.isdataavailable=true;
@@ -1319,16 +1319,16 @@
 			var results=[];
 			var len=0;
 
-			if($scope.planList!="" && $scope.planList!=undefined)
+			if(vm.plans!="" && vm.plans!=undefined)
 			{
-				for (var i = 0, len = $scope.planList.length; i<len; ++i){
+				for (var i = 0, len = vm.plans.length; i<len; ++i){
 					//console.log($scope.allBanks[i].value.value);first_name last_name
 
-					if($scope.planList[i].name!="" && $scope.planList[i].name!=undefined)
+					if(vm.plans[i].name!="" && vm.plans[i].name!=undefined)
 					{
-						if($scope.planList[i].name.toLowerCase().indexOf(query.toLowerCase()) == 0)
+						if(vm.plans[i].name.toLowerCase().indexOf(query.toLowerCase()) == 0)
 						{
-							results.push($scope.planList[i]);
+							results.push(vm.plans[i]);
 						}
 					}
 				}
@@ -1874,7 +1874,7 @@
 
         cardDetails = {
           "profileId": customer.profileId,
-          "redirectUrl": "",
+          "redirectUrl": "https://app.cloudcharge.com/planEmbededForm/planSubscriptionScript.php/?method=cardFormShellResponse",
           "action": "update"
         };
       }
@@ -1884,7 +1884,7 @@
 
         cardDetails = {
           "profileId": customer.profileId,
-          "redirectUrl": "",
+          "redirectUrl": "https://app.cloudcharge.com/planEmbededForm/planSubscriptionScript.php/?method=cardFormShellResponse",
           "action": "insert"
         };
         //$location.absUrl()
@@ -1901,12 +1901,13 @@
         //angular.element("#addUpdateCardSubsId").empty();
         //angular.element("#addUpdateCardSubsId").append($scope.cardloadform);
 
-        var iframe = document.getElementById('addUpdateCardSubsId');
-        iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
+        var iframe = $('#addUpdateCardSubsId');
+        iframe.append($scope.cardloadform);
+        // iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
 
-        iframe.document.open();
-        iframe.document.write($scope.cardloadform);
-        iframe.document.close();
+        // iframe.document.open();
+        // iframe.document.write($scope.cardloadform);
+        // iframe.document.close();
         //$scope.showMoreUserInfo=false;
         $scope.accGeneralLoaded = true;
 
@@ -1982,7 +1983,7 @@
 
 					for (var i = 0; i < Response.length; i++) {
 						Response[i].isSelected = false;
-            vm.plans.push(Response[i]);
+            			vm.plans.push(Response[i]);
 					}
 					//$timeout(function () {
 					//	vm.plans=$scope.items;
@@ -2016,7 +2017,7 @@
 			});
 
 		};
-		$scope.morePlans("","");
+		$scope.morePlans("","Active");
 
 		$scope.loadUserDetails = function (user) {
 			$scope.accGeneralLoaded = false;

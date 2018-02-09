@@ -63,13 +63,11 @@
                             <div class="preloader-input-block animate-fade-in-out" layout="column" layout-align="space-around" ng-if="!accGeneralLoaded">
                                 <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                             </div>
-                            <div flex md-whiteframe="1dp" style="margin-top: 30px;border-radius: 5px;/*background: #e8f6fd;border: solid 1px #80DEEA*/">
-                                <div layout="row" class="p-10" style="background: #039be5;border-top-right-radius: 5px;border-top-left-radius: 5px">
+                            <div flex md-whiteframe="1dp" class="colored-iconed-card">
+                                <div layout="row" class="p-10 colored-header">
                                     <div layout="row" layout-align="start center" flex class="user">
                                         <i class="material-icons mr-10">face</i>
-                                        <div class="user-name font-white">
-                                            <span>{{vm.userInfo.first_name}} {{vm.userInfo.last_name}}</span>
-                                        </div>
+                                        <span class="title">{{vm.userInfo.first_name}} {{vm.userInfo.last_name}}</span>
                                     </div>
                                 </div>
                                 <div layout="row" flex class="p-10">
@@ -150,8 +148,8 @@
                                                   <!--</div>-->
                                                 </div>
                                                 <div layout="row" fill-width class="list-item" modal-animation-class="mt-20">
-                                                  <iframe fill-width height="550px" onLoad="updateCardDone()" id="addUpdateCardSubsId">
-                                                  </iframe>
+                                                  <div fill-width height="550px" onLoad="updateCardDone()" id="addUpdateCardSubsId">
+                                                  </div>
                                                 </div>
 
                                                 <!--<div layout="row" fill-width class="list-item" ng-repeat="card in cardDetails" modal-animation-class="mt-20">-->
