@@ -22,7 +22,7 @@
         <!-- CONTENT HEADER- V NAV-->
         <div layout="column" layout-align="start start">
             <div class="v-header" layout="column" flex fill-width>
-                <div class="title" layout="column" layout-align="center start">
+                <div class="title" layout="column" layout-align="center start" ng-if="!themeDuoworld">
                     <div class="logo" layout="row" layout-align="start center">
                         <span class="logo-icon">
                           <img src="app/core/app_icons/subscriptions_app_icon.png" alt=""/>
@@ -30,17 +30,27 @@
                         <span class="logo-text">Subscriptions</span>
                     </div>
                 </div>
-                <div class="search-wrapper md-whiteframe-4dp" layout="row" layout-align="start center" flex>
-                    <md-button class="md-icon-button sidenav-toggle" ng-click="vm.toggleSidenav('main-sidenav')" hide-gt-md aria-label="Toggle Sidenav">
-                        <md-icon class="icon" md-font-icon="icon-menu"></md-icon>
-                    </md-button>
+                <div layout="row">
+                    <div class="title" layout="column" layout-align="center start" ng-if="themeDuoworld">
+                        <div class="logo" layout="row" layout-align="start center">
+                            <span class="logo-icon">
+                              <img src="app/core/app_icons/subscriptions_app_icon_black.png" alt=""/>
+                            </span>
+                            <span class="logo-text">Subscriptions</span>
+                        </div>
+                    </div>
+                    <div class="search-wrapper" layout="row" layout-align="start center" flex>
+                        <md-button class="md-icon-button sidenav-toggle" ng-click="vm.toggleSidenav('main-sidenav')" hide-gt-md aria-label="Toggle Sidenav">
+                            <md-icon class="icon" md-font-icon="icon-menu"></md-icon>
+                        </md-button>
 
-                    <div class="search" flex layout="row" layout-align="start center">
-                        <md-icon md-font-icon="icon-magnify" class="icon s24"></md-icon>
-                        <input flex ng-model="vm.search" type="text" ng-keypress="searchKeyPress($event,vm.search,vm.search.length)" ng-change="loadByKeywordSubscription(vm.search,3)" placeholder="Search for subscriptions *eg: someone@example.com">
+                        <div class="search" flex layout="row" layout-align="start center">
+                            <md-icon md-font-icon="icon-magnify" class="icon s24"></md-icon>
+                            <input flex ng-model="vm.search" type="text" ng-keypress="searchKeyPress($event,vm.search,vm.search.length)" ng-change="loadByKeywordSubscription(vm.search,3)" placeholder="Search for subscriptions *eg: someone@example.com">
+                        </div>
                     </div>
                     <md-button class="md-raised md-accent main-app-create" layout="row" layout-align="center center" aria-label="compose" ng-disabled="vm.activePlanPaneIndex == 1" ng-click="toggleEdit()" ng-if="!inpageReadPaneEdit"><span class="fs-18 mr-10">+</span> NEW
-                    </md-button>
+                        </md-button>
                 </div>
             </div>
             <!--<div class="v-nav">-->
