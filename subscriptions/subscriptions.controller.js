@@ -1591,6 +1591,7 @@
 							$scope.stopPaneOpen = false;
 							$scope.showInpageReadpane = false;
 							closeReadPane();
+							$scope.selectPlanForSubscription("");
 						}
 						else if(data.response=="failed")
 						{
