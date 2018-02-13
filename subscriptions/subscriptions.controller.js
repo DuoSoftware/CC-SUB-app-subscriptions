@@ -1939,14 +1939,14 @@
         //angular.element("#addUpdateCardSubsId").empty();
         //angular.element("#addUpdateCardSubsId").append($scope.cardloadform);
 
-        var iframe = $('#addUpdateCardSubsId');
-        iframe.append($scope.cardloadform);
-        // iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
+        var iframe = document.getElementById('addUpdateCardSubsId');
+        // iframe.append($scope.cardloadform);
+        iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
 
-        // iframe.document.open();
-        // iframe.document.write($scope.cardloadform);
-        // iframe.document.close();
-        //$scope.showMoreUserInfo=false;
+        iframe.document.open();
+        iframe.document.write($scope.cardloadform);
+        iframe.document.close();
+        $scope.showMoreUserInfo=false;
         $scope.accGeneralLoaded = true;
 
         $timeout(function () {
