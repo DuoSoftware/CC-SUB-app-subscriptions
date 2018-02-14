@@ -13,7 +13,45 @@
 
 	angular
 		.module('app.subscriptions')
-		.controller('SubscriptionsController', SubscriptionsController);
+		.controller('SubscriptionsController', SubscriptionsController)
+		.directive('iframeAutoHeight', function ($interval) {
+			var stepSize = 100,
+				stepInterval = 200,
+				stepSizeMax = stepSize * 2;
+
+			return {
+				restrict: 'C',
+				link: function (scope, element, attrs) {
+					var iframe = element[0],
+						iahi, h;
+
+					scope.start = function () {
+						if (!angular.isDefined(iahi)) {
+							iahi = $interval(function () {
+								if (iframe.contentWindow.document.body) {
+									h = iframe.contentWindow.document.body.scrollHeight;
+									iframe.style.height = ((h > stepSizeMax) ? (h - stepSize) : stepSize) + "px";
+									iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
+								}
+							}, stepInterval);
+						}
+					};
+
+					scope.stop = function () {
+						if (angular.isDefined(iahi)) {
+							$interval.cancel(iahi);
+							iahi = undefined;
+						}
+					};
+
+					scope.$on('$destroy', function () {
+						scope.stop();
+					});
+
+					scope.start();
+				}
+			}
+		});
 
 	/** @ngInject */
 	function SubscriptionsController($scope, $timeout, $mdDialog, $document, $mdMedia, $mdSidenav, $location, $filter, $charge, $errorCheck, notifications, $azureSearchHandle, logHelper, $rootScope)
@@ -1591,7 +1629,6 @@
 							$scope.stopPaneOpen = false;
 							$scope.showInpageReadpane = false;
 							closeReadPane();
-							$scope.selectPlanForSubscription("");
 						}
 						else if(data.response=="failed")
 						{
@@ -1902,14 +1939,14 @@
         //angular.element("#addUpdateCardSubsId").empty();
         //angular.element("#addUpdateCardSubsId").append($scope.cardloadform);
 
-        var iframe = $('#addUpdateCardSubsId');
-        iframe.append($scope.cardloadform);
-        // iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
+        var iframe = document.getElementById('addUpdateCardSubsId');
+        // iframe.append($scope.cardloadform);
+        iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
 
-        // iframe.document.open();
-        // iframe.document.write($scope.cardloadform);
-        // iframe.document.close();
-        //$scope.showMoreUserInfo=false;
+        iframe.document.open();
+        iframe.document.write($scope.cardloadform);
+        iframe.document.close();
+        $scope.showMoreUserInfo=false;
         $scope.accGeneralLoaded = true;
 
         $timeout(function () {
@@ -1928,6 +1965,17 @@
         logHelper.error( $scope.infoJson);
       })
     }
+
+    $scope.$watch(function () {
+		var iframe = document.getElementById('addUpdateCardSubsId');
+		// iframe.append($scope.cardloadform);
+		iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
+		var elem = iframe.document.children[0].children[1].children[1].getAttribute('style');
+
+		if(elem.indexOf('display: block') !== -1){
+			$('#addUpdateCardSubsId').css('height', 550 + 'px');
+		}
+	});
 
     window.updateCardDone=function(){
       /* have access to $scope here*/
