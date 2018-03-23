@@ -12,7 +12,7 @@
 	'use strict';
 
 	angular
-		.module('app.subscriptions')
+		.module('app.subscription')
 		.controller('SubscriptionsController', SubscriptionsController)
 		.directive('iframeAutoHeight', function ($interval) {
 			var stepSize = 100,

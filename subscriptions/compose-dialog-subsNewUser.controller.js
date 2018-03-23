@@ -11,7 +11,7 @@
   'use strict';
 
   angular
-    .module('app.subscriptions')
+    .module('app.subscription')
     .controller('AddNewSubsUserController', AddNewSubsUserController);
 
   /** @ngInject */
