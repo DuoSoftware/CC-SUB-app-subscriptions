@@ -11,7 +11,7 @@
   'use strict';
 
   angular
-    .module('app.subscriptions', [])
+    .module('app.subscription', [])
     .config(config)
     .filter('parseDate',parseDateFilter);
 
@@ -19,11 +19,9 @@
   function config($stateProvider, $translatePartialLoaderProvider, msApiProvider, msNavigationServiceProvider, mesentitlementProvider)
   {
 
-    mesentitlementProvider.setStateCheck("plans");
-
     // State
     $stateProvider
-      .state('app.subscriptions', {
+      .state('app.subscription', {
         url    : '/subscriptions',
         views  : {
           'subscriptions@app': {
@@ -39,9 +37,9 @@
                 // if (true) {
                 if ($rootScope.isBaseSet2) {
                   resolve(function () {
-                    mesentitlementProvider.setStateCheck("subscriptions");
+                    mesentitlementProvider.setStateCheck("subscription");
 
-                    var entitledStatesReturn = mesentitlement.stateDepResolver('subscriptions');
+                    var entitledStatesReturn = mesentitlement.stateDepResolver('subscription');
 
                     if(entitledStatesReturn !== true){
                       return $q.reject("unauthorized");
@@ -54,7 +52,7 @@
             });
           }]
         },
-        bodyClass: 'subscriptions'
+        bodyClass: 'subscription'
       });
 
     // //Api
@@ -62,10 +60,10 @@
 
     // Navigation
 
-    msNavigationServiceProvider.saveItem('subscriptions', {
-      title    : 'Subscriptions',
+    msNavigationServiceProvider.saveItem('subscription', {
+      title    : 'Subscription',
       icon     : 'icon-leaf',
-      state    : 'app.subscriptions',
+      state    : 'app.subscription',
       /*stateParams: {
        'param1': 'page'
        },*/
