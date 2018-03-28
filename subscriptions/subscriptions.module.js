@@ -22,9 +22,9 @@
     // State
     $stateProvider
       .state('app.subscription', {
-        url    : '/subscriptions',
+        url    : '/subscription',
         views  : {
-          'subscriptions@app': {
+          'subscription@app': {
             templateUrl: 'app/main/subscriptions/subscriptions.html',
             controller : 'SubscriptionsController as vm'
           }
@@ -46,7 +46,7 @@
                     };
                   });
                 } else {
-                  return $location.path('/guide');
+                  return $location.path('/setupguide');
                 }
               });
             });
