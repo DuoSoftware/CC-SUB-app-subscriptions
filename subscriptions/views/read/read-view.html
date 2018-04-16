@@ -285,9 +285,9 @@
                             <label for="{{plan.code}}" class="package-name" flex> {{ plan.name}} </label>
                             <div class="rate-container">
                                 <div>
-                                    <span>${{plan.unitPrice}} </span><span> / {{plan.billEvery}}</span>
+                                    <span>{{plan.unitPrice|isoCurrency:BaseCurrency}} </span><span> / {{plan.billEvery}}</span>
                                     <div ng-if="plan.taxtype === '1'" class="tax">Tax : {{plan.taxamount}}%</div>
-                                    <div ng-if="plan.taxtype === '0'" class="tax">Tax : {{plan.taxamount}}$</div>
+                                    <div ng-if="plan.taxtype === '0'" class="tax">Tax : {{plan.taxamount|isoCurrency:BaseCurrency}}</div>
                                 </div>
                             </div>
                         </md-card>
