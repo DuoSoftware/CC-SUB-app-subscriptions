@@ -1623,11 +1623,12 @@
 
 							skip = 0;
 							vm.subscriptions=[];
-							$scope.items = [];
-							$scope.loading=true;
-							$scope.more("");
+							//$scope.items = [];
+							//$scope.loading=true;
+							//$scope.more("");
 							$scope.stopPaneOpen = false;
 							$scope.showInpageReadpane = false;
+							$scope.refreshSubscriptionListLoop(subsLength);
 							closeReadPane();
 						}
 						else if(data.response=="failed")
@@ -1739,6 +1740,65 @@
 				}
 			}
 
+		}
+		
+		$scope.refreshSubscriptionListLoop = function (length){
+		  if($scope.items.length != length+1)
+		  {
+			$scope.items = [];
+			$scope.loading=true;
+			$scope.isLoading = true;
+
+			$azureSearchHandle.getClient().SearchRequest("subscription",0,100,'asc','').onComplete(function(Response)
+			{
+			  if($scope.loading)
+			  {
+
+				for (var i = 0; i < Response.length; i++) {
+				  for (var j = 0; j < $scope.profileList.length; j++) {
+					if($scope.profileList[j].profileId==Response[i].guAccountId)
+					{
+					  Response[i].first_name=$scope.profileList[j].first_name;
+					  Response[i].last_name=$scope.profileList[j].last_name;
+					  break;
+					}
+				  }
+				  $scope.items.push(Response[i]);
+				}
+				//$timeout(function () {
+				//  vm.plans=$scope.items;
+				//},0);profileId
+				vm.searchMoreInit = false;
+
+				$scope.isLoading = false;
+				$scope.loading = false;
+				$scope.isdataavailable=true;
+				if(Response.length<100){
+				  $scope.isdataavailable=false;
+				  $scope.hideSearchMore=true;
+				}
+				$scope.refreshSubscriptionListLoop(length);
+
+			  }
+
+			}).onError(function(data)
+			{
+			  //console.log(data);
+			  $scope.isSpinnerShown=false;
+			  $scope.isdataavailable=false;
+			  $scope.isLoading = false;
+			  $scope.hideSearchMore=true;
+
+			  //$scope.refreshSubscriptionListLoop(length);
+			  vm.subscriptions=$scope.items;
+			  $scope.isLoading = false;
+			});
+		  }
+		  else
+		  {
+			vm.subscriptions=$scope.items;
+			$scope.isLoading = false;
+		  }
 		}
 
 		$scope.searchKeyPress = function (event,keyword,length){
