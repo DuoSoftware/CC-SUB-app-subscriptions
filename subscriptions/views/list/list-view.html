@@ -52,7 +52,8 @@
         </div>
 
         <div flex="15" layout="column" layout-align="center start" ng-if="!showInpageReadpane">
-            <span>{{subscription.endDate | parseDate | date}}</span>
+            <span ng-if="subscription.remarks!='endofsubscription'">{{subscription.endDate | parseDate | date}}</span>
+            <span ng-if="subscription.remarks=='endofsubscription'">--</span>
         </div>
 
         <div class="status" layout="column" layout-align="center start" ng-class="{'flex-30':showInpageReadpane == true,'flex-10': showInpageReadpane == false}">
