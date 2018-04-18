@@ -278,7 +278,7 @@
 				vm.selectedSubscription.guOrderId=subscription.guOrderId;
 				vm.selectedSubscription.first_name=subscription.first_name;
 				vm.selectedSubscription.class=subscription.class;
-				vm.selectedSubscription.remark=subscription.remark;//endofsubscription
+				vm.selectedSubscription.remark=subscription.remarks;//endofsubscription
 
 				$charge.tax().getTaxGrpByIDs(vm.selectedSubscription.taxID).success(function(data) {
 					var taxid=data.groupDetail[0].taxid;

@@ -149,9 +149,9 @@
 
                             <md-menu-content width="3">
                                 <md-menu-item>
-                                    <md-button aria-label="Delete" layout="row" layout-align="start center" ng-click="openSubscriptionStopPane($event,vm.selectedSubscription)" ng-disabled="vm.selectedSubscription.orderStatus == 'Stopped'">
+                                    <md-button aria-label="Delete" layout="row" layout-align="start center" ng-click="openSubscriptionStopPane($event,vm.selectedSubscription)" ng-disabled="vm.selectedSubscription.orderStatus == 'Stopped' || vm.selectedSubscription.remark=='endofsubscription'">
                                         <i class="material-icons md-warn">not_interested</i>
-                                        <span>Cancel subscription</span>
+                                        <span>Deactivate Subscription</span>
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item>
@@ -170,15 +170,15 @@
                 </div>
                 <div id="stop-subscription" layout="column" ng-if="stopPaneOpen" class="animate-slide-down" md-whiteframe="4dp">
                     <div class="header-bar text-right" layout="row" layout-align="space-between center">
-                        <h3>Cancel subscription</h3>
+                        <h3>Deactivate Subscription</h3>
                         <md-button class="md-icon-button" ng-click="closeSubscriptionStopPane()"><md-icon md-font-icon="icon-close"></md-icon> </md-button>
                     </div>
                     <div class="p-20">
                         <div>
                             <div layout="row" layout-align="start center" class="title">
-                                <i class="material-icons">not_interested</i> <span flex>Cancel immediately</span>
+                                <i class="material-icons">not_interested</i> <span flex>Deactivate immediately</span>
                             </div>
-                            <div class="mt-10 mb-20">Subscription will be cancelled immediately</div>
+                            <div class="mt-10 mb-20">Subscription will be deactivated immediately</div>
                             <div layout="row" layout-align="end center">
                                 <md-button class="md-accent md-raised" ng-click="showStopSubscriptionConfirm($event,vm.selectedSubscription,'Immediate')">Choose this</md-button>
                             </div>
@@ -186,9 +186,9 @@
                         <md-divider class="mv-20"></md-divider>
                         <div>
                             <div layout="row" layout-align="start center" class="title">
-                                <i class="material-icons">not_interested</i> <span flex>Cancel on renewal</span>
+                                <i class="material-icons">not_interested</i> <span flex>Deactivate on renewal</span>
                             </div>
-                            <div class="mt-10 mb-20">Subscription will be cancelled on {{vm.selectedSubscription.endDate | limitTo:10}}</div>
+                            <div class="mt-10 mb-20">Subscription will be deactivated on {{vm.selectedSubscription.endDate | limitTo:10}}</div>
                             <div layout="row" layout-align="end center">
                                 <md-button class="md-accent md-raised" ng-click="showStopSubscriptionConfirm($event,vm.selectedSubscription,'EOM')">Choose this</md-button>
                             </div>
@@ -389,12 +389,14 @@
                                             </div>
                                             <div flex layout="row" layout-align="start center" class="info-grid-row">
                                                 <div flex class="iconed-label">
-                                                    <md-icon md-font-icon="icon-calendar-today"></md-icon> <span>Next scheduled date</span>
+                                                    <md-icon md-font-icon="icon-calendar-today"></md-icon>
+													<span ng-if="vm.selectedSubscription.remark!='endofsubscription'">Next scheduled date</span>
+                                                    <span ng-if="vm.selectedSubscription.remark=='endofsubscription'">Subscription end date</span>
                                                     <md-progress-circular ng-if="nextSheduleUpdating" style="float: right"></md-progress-circular>
                                                 </div>
                                                 <div flex class="font-accent" ng-if="!scheduledDateEditing" layout="row" layout-align="space-between center">
                                                     {{vm.selectedSubscription.endDate | parseDate | date: 'dd'}} {{vm.selectedSubscription.endDate | parseDate | date: 'MMMM' | limitTo:3}} {{vm.selectedSubscription.endDate | parseDate | date: 'yyyy'}}
-                                                    <md-button class="md-accent md-raised h-25 line-height-20" ng-click="editNextScheduledDate()">Change date</md-button>
+                                                    <md-button class="md-accent md-raised h-25 line-height-20" ng-disabled="vm.selectedSubscription.remark=='endofsubscription'" ng-click="editNextScheduledDate()">Change date</md-button>
                                                 </div>
                                                 <div flex class="font-accent" layout="row" layout-align="start center" ng-if="scheduledDateEditing" md-whiteframe="1dp">
                                                     <md-datepicker ng-model="vm.selectedSubscription.endDate" md-max-date="maxDateAvailable" md-open-on-focus flex></md-datepicker>
