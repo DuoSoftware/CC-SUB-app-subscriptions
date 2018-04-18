@@ -1621,6 +1621,7 @@
 							$scope.infoJson.app ='subscriptions';
 							logHelper.info( $scope.infoJson);
 
+							var subsLength = $scope.items.length;
 							skip = 0;
 							vm.subscriptions=[];
 							//$scope.items = [];
