@@ -93,7 +93,7 @@
           var errorMsg="Profile creation failed";
           for (key in data.error) {
             errorMsg=data.error[key][0];
-            if(errorMsg=="The user or account could not be authenticated.")
+            if(errorMsg=="The user or account could not be authenticated."||errorMsg.indexOf('Cannot insert The duplicate key value') >= 0)
             {
               errorMsg = "Profile creation failed - Duplicate Email address";
             }
