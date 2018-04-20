@@ -76,7 +76,7 @@
 
               <md-input-container flex="85">
                 <label>Address</label>
-                <input ng-model="contentuser.billAddress" id="autocomplete" onFocus="geolocate()" placeholder="Enter your Address" ng-required="false" ng-maxlength="200" name="bill_addrIndi" type="text">
+                <input ng-model="contentuser.billAddress" id="autocomplete" onFocus="geolocate()" placeholder="Enter your Address" ng-required="true" ng-maxlength="200" name="bill_addrIndi" type="text">
                 <div ng-messages="vm.editForm.bill_addrIndi.$error">
                   <div ng-message="maxlength">Address must be between 1-200 characters</div>
                 </div>
