@@ -73,35 +73,7 @@
 		vm.scrollPos = 0;
 		vm.scrollEl = angular.element('#content');
 		vm.selectedMailShowDetails = false;
-		//vm.subscriptions = [{
-		//  'user':'User 1',
-		//  'plan':'Plan 1',
-		//  'type':'Plan type 1',
-		//  'lastBillingDate':new Date(),
-		//  'nextScheduledDate':new Date(),
-		//  'status':'Active'
-		//},{
-		//  'user':'User 2',
-		//  'plan':'Plan 2',
-		//  'type':'Plan type 2',
-		//  'lastBillingDate':new Date(),
-		//  'nextScheduledDate':new Date(),
-		//  'status':'Stopped'
-		//},{
-		//  'user':'User 3',
-		//  'plan':'Plan 3',
-		//  'type':'Plan type 3',
-		//  'lastBillingDate':new Date(),
-		//  'nextScheduledDate':new Date(),
-		//  'status':'Active'
-		//},{
-		//  'user':'User 2',
-		//  'plan':'Plan 4',
-		//  'type':'Plan type 4',
-		//  'lastBillingDate':new Date(),
-		//  'nextScheduledDate':new Date(),
-		//  'status':'Stopped'
-		//}];
+
 		$scope.showUser = false;
 		$scope.showCode = false;
 		$scope.showType = false;
@@ -109,23 +81,126 @@
 		$scope.showNext = false;
 		$scope.showState = false;
 
-		$scope.subscriptionHistory = [{
-			'date':new Date(),
-			'plan':'Plan 1',
-			'amount':20,
-			'status':'Active'
-		},{
-			'date':new Date(),
-			'plan':'Plan 2',
-			'amount':40,
-			'status':'Active'
-		},{
-			'date':new Date(),
-			'plan':'Plan 3',
-			'amount':20,
-			'status':'Stopped'
-		}];
-		vm.selectedSubscription = {};
+    //$charge.order().all(skip,take,'asc',filter).success(function(data)
+    //{
+    //	console.log(data);
+    //
+    //	if($scope.loading)
+    //	{
+    //		skip += take;
+    //
+    //		for (var i = 0; i < data.length; i++) {
+    //			$scope.items.push(data[i]);
+    //		}
+    //		vm.subscriptions=$scope.items;
+    //		//$timeout(function () {
+    //		//  vm.plans=$scope.items;
+    //		//},0);
+    //		vm.searchMoreInit = false;
+    //
+    //		$scope.isLoading = false;
+    //		$scope.loading = false;
+    //		$scope.isdataavailable=true;
+    //		if(data.length<take){
+    //			$scope.isdataavailable=false;
+    //			$scope.hideSearchMore=true;
+    //		}
+    //
+    //	}
+    //
+    //}).error(function(data)
+    //{
+    //	console.log(data);
+    //	$scope.isSpinnerShown=false;
+    //	$scope.isdataavailable=false;
+    //	$scope.isLoading = false;
+    //	$scope.hideSearchMore=true;
+    //})
+
+    //	var dbNamePart1="";
+    //	var dbNamePart2="";
+    //	var dbName="";
+    //	var filter="";
+    //var data={};
+    //	dbNamePart1=getDomainName().split('.')[0];
+    //	dbNamePart2=getDomainExtension();
+    //	dbName=dbNamePart1+"_"+dbNamePart2;
+    //	//filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
+    ////and status eq 'active'
+    //if(status=='')
+    //{
+    //  data={
+    //    "search": "*",
+    //    "filter": "(domain eq '"+dbName+"' and status ne 'Stopped')",
+    //    "orderby" : "endDate asc",
+    //    "top":take,
+    //    "skip":skip
+    //  }
+    //}
+    //else if(status=='All')
+    //{
+    //  data={
+    //    "search": "*",
+    //    "filter": "(domain eq '"+dbName+"')",
+    //    "orderby" : "endDate asc",
+    //    "top":take,
+    //    "skip":skip
+    //  }
+    //}
+    //else
+    //{
+    //  data={
+    //    "search": "*",
+    //    "filter": "(domain eq '"+dbName+"' and status eq '"+status+"')",
+    //    "orderby" : "endDate asc",
+    //    "top":take,
+    //    "skip":skip
+    //  }
+    //}
+    //
+    //$charge.azuresearch().getAllSubscriptionPost(data).success(function(data)
+    //{
+    //  //console.log(data);
+    //
+    //  if($scope.loading)
+    //  {
+    //    skip += take;
+    //
+    //    for (var i = 0; i < data.value.length; i++) {
+    //      for (var j = 0; j < $scope.profileList.length; j++) {
+    //        if($scope.profileList[j].profileId==data.value[i].guAccountId)
+    //        {
+    //          data.value[i].first_name=$scope.profileList[j].first_name;
+    //          data.value[i].last_name=$scope.profileList[j].last_name;
+    //          break;
+    //        }
+    //      }
+    //      $scope.items.push(data.value[i]);
+    //    }
+    //    vm.subscriptions=$scope.items;
+    //    //$timeout(function () {
+    //    //  vm.plans=$scope.items;
+    //    //},0);profileId
+    //    vm.searchMoreInit = false;
+    //
+    //    $scope.isLoading = false;
+    //    $scope.loading = false;
+    //    $scope.isdataavailable=true;
+    //    if(data.length<take){
+    //      $scope.isdataavailable=false;
+    //      $scope.hideSearchMore=true;
+    //    }
+    //
+    //  }
+    //
+    //}).error(function(data)
+    //{
+    //  //console.log(data);
+    //  $scope.isSpinnerShown=false;
+    //  $scope.isdataavailable=false;
+    //  $scope.isLoading = false;
+    //  $scope.hideSearchMore=true;
+    //}) = {};
 
 		// Methods
 		vm.closeReadPane = closeReadPane;
@@ -195,7 +270,7 @@
 
 		function getDomainExtension() {
 			var _st = gst("extension_mode");
-			if(_st=="sandbox"){
+			if(_st=="sandbox"||_st=="ssandbox"){
 				_st="test";
 			}
 			return (_st != null) ? _st : "test"; //"248570d655d8419b91f6c3e0da331707 51de1ea9effedd696741d5911f77a64f";
@@ -233,11 +308,11 @@
 		function toggleinnerView(state){
 			if(vm.appInnerState === "default"){
 				vm.appInnerState = "add";
-				vm.pageTitle="View current plan";
+				vm.pageTitle="View current Subscriptions";
 				$scope.showFilers=false;
 			}else{
 				vm.appInnerState = "default";
-				vm.pageTitle="Change Plan";
+				vm.pageTitle="Change Subscriptions";
 			}
 		}
 
@@ -270,7 +345,7 @@
 			$charge.plan().getPlanByCode(subscription.code).success(function(data){
 				vm.selectedSubscription=data;
 				vm.selectedSubscription.startDate=subscription.startDate;
-				vm.selectedSubscription.endDate=subscription.endDate;
+				vm.selectedSubscription.endDate= new Date(subscription.endDate);
 				vm.selectedSubscription.lastBillDate=subscription.lastBillDate;
 				//vm.selectedSubscription.email_addr=subscription.email_addr;
 				vm.selectedSubscription.orderStatus=subscription.status;
@@ -465,54 +540,10 @@
 			//vm.selectedSubscription = subscription;
 		};
 
-		var skipAuditTrails=0;
-		var takeAuditTrails=100;
-		$scope.auditTrailList=[];
-		vm.isAuditTrailLoaded = true;
-		$scope.moreAuditTrailLoaded = false;
-
-		$scope.getAuditTrailDetails = function (order){
-
-
-			var orderId=order.guAccountId;
-			$scope.noAuditTrailLabel=false;
-			vm.isAuditTrailLoaded = true;
-			$charge.audit().getByAccountId(orderId,skipAuditTrails,takeAuditTrails,'desc').success(function(data)
-			{
-				//console.log(data);
-				skipAuditTrails+=takeAuditTrails;
-				//$scope.auditTrailList=data;
-				for (var i = 0; i < data.length; i++) {
-					var objAuditTrail=data[i];
-					//objAuditTrail.id=i+1;
-					//objAuditTrail.createdDate=objAuditTrail.createdDate.split(' ')[0];
-					$scope.auditTrailList.push(objAuditTrail);
-
-				}
-
-				if(data.length<takeAuditTrails)
-				{
-					vm.isAuditTrailLoaded = false;
-				}
-				$scope.moreAuditTrailLoaded = true;
-
-			}).error(function(data)
-			{
-				//console.log(data);
-				//if(data.error=="No found!")
-				//{
-				//  $scope.noAuditTrailLabel=true;
-				//}
-				$scope.moreAuditTrailLoaded = true;
-				vm.isAuditTrailLoaded = false;
-				//$scope.auditTrailList=[];
-			})
-		}
-
-		$scope.searchmoreAuditTrails = function (order){
-			$scope.moreAuditTrailLoaded = false;
-			$scope.getAuditTrailDetails(order);
-		}
+    // -- function has removed --
+		//$scope.auditTrailList=[];
+		//$scope.getAuditTrailDetails = function (order)
+		//$scope.searchmoreAuditTrails = function (order)
 
 		var skipOrderHistory=0;
 		var takeOrderHistory=100;
@@ -699,7 +730,7 @@
 				if(inpageReadElement != undefined) inpageReadElement.setAttribute('style','width:70%');
 			}else if(state=='close'){
 				if($scope.inpageReadPaneEdit){
-					$scope.cancelEdit();
+					//$scope.cancelEdit();
 					$scope.$watch(function () {
 						vm.selectedListItem = subscription;
 					});
@@ -711,29 +742,9 @@
 			}
 		}
 
-		$scope.tempEditPlan=[];
-		$scope.editPlan = function (plan) {
-			$scope.tempEditPlan=plan;
-			vm.editSelectedPlan = plan;
-			vm.editSelectedPlan.rate = parseInt(plan.rate);
-			vm.editSelectedPlan.unitPrice = parseInt(plan.unitPrice);
-			vm.editSelectedPlan.billingInterval = parseInt(plan.billingInterval);
-			vm.editSelectedPlan.billingCycle = parseFloat(plan.billingCycle);
-			vm.editSelectedPlan.trailDays = parseInt(plan.trailDays);
-			if(vm.editSelectedPlan.billingCycle == -1){
-				vm.editSelectedPlan.billingCycleType = "auto";
-			}
-			else{
-				vm.editSelectedPlan.billingCycleType = "fixed";
-			}
-			$scope.inpageReadPaneEdit=true;
-		};
-		$scope.cancelEdit = function () {
-			vm.editPlanForm.$pristine = false;
-			vm.editPlanForm.$dirty = false;
-			$scope.inpageReadPaneEdit=false;
-			$scope.clearform();
-		}
+		//$scope.tempEditPlan=[];
+		//$scope.editPlan = function (plan)
+		//$scope.cancelEdit = function ()
 
 		$scope.stopPaneOpen = false;
 		$scope.openSubscriptionStopPane = function () {
@@ -925,9 +936,7 @@
 					$scope.infoJson.app ='subscriptions';
 					logHelper.info( $scope.infoJson);
 
-					$timeout(function(){
-						skip = 0;
-					});
+          skip = 0;
 					vm.subscriptions=[];
 					$scope.items = [];
 					$scope.nextSheduleUpdating = false;
@@ -991,61 +1000,6 @@
 		$scope.loadProfiles = function(){
 			//
 			vm.loadingProfiles = true;
-
-			//var dbNamePart1="";
-			//var dbNamePart2="";
-			//var dbName="";
-			//var filter="";
-			//dbNamePart1=getDomainName().split('.')[0];
-			//dbNamePart2=getDomainExtension();
-			//dbName=dbNamePart1+"_"+dbNamePart2;
-			////filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
-			//var data={
-			//  "search": "*",
-			//  "filter": "(domain eq '"+dbName+"')",
-			//  "orderby" : "createddate desc",
-			//  "top":takeProfiles,
-			//  "skip":skipProfiles
-			//}
-			//
-			//$charge.azuresearch().getAllProfilesPost(data).success(function(data)
-			//{
-			//  //console.log(data);
-			//  if(vm.loadingProfiles)
-			//  {
-			//    skipProfiles += takeProfiles;
-			//    //
-			//
-			//    for (var i = 0; i < data.value.length; i++) {
-			//      //
-			//      if(data.value[i].status==0)
-			//      {
-			//        data.value[i].status=false;
-			//      }
-			//      else
-			//      {
-			//        data.value[i].status=true;
-			//      }
-			//      data.value[i].createddate = new Date(data.value[i].createddate);
-			//      $scope.profileList.push(data.value[i]);
-			//
-			//    }
-			//
-			//    vm.loadingProfiles = false;
-			//    if(data.value.length<takeProfiles){
-			//      $scope.more("");
-			//    }
-			//    else
-			//    {
-			//      $scope.loadProfiles();
-			//    }
-			//  }
-			//}).error(function(data)
-			//{
-			//  //console.log(data);
-			//  vm.loadingProfiles = false;
-			//  $scope.more("");
-			//})
 
 			$azureSearchHandle.getClient().SearchRequest("profile",skipProfiles,takeProfiles,'desc',"").onComplete(function(Response)
 			{
@@ -1142,126 +1096,6 @@
 		$scope.more = function(status){
 
 			$scope.isLoading = true;
-			//$charge.order().all(skip,take,'asc',filter).success(function(data)
-			//{
-			//	console.log(data);
-			//
-			//	if($scope.loading)
-			//	{
-			//		skip += take;
-			//
-			//		for (var i = 0; i < data.length; i++) {
-			//			$scope.items.push(data[i]);
-			//		}
-			//		vm.subscriptions=$scope.items;
-			//		//$timeout(function () {
-			//		//  vm.plans=$scope.items;
-			//		//},0);
-			//		vm.searchMoreInit = false;
-			//
-			//		$scope.isLoading = false;
-			//		$scope.loading = false;
-			//		$scope.isdataavailable=true;
-			//		if(data.length<take){
-			//			$scope.isdataavailable=false;
-			//			$scope.hideSearchMore=true;
-			//		}
-			//
-			//	}
-			//
-			//}).error(function(data)
-			//{
-			//	console.log(data);
-			//	$scope.isSpinnerShown=false;
-			//	$scope.isdataavailable=false;
-			//	$scope.isLoading = false;
-			//	$scope.hideSearchMore=true;
-			//})
-
-			//	var dbNamePart1="";
-			//	var dbNamePart2="";
-			//	var dbName="";
-			//	var filter="";
-			//var data={};
-			//	dbNamePart1=getDomainName().split('.')[0];
-			//	dbNamePart2=getDomainExtension();
-			//	dbName=dbNamePart1+"_"+dbNamePart2;
-			//	//filter="api-version=2016-09-01&?search=*&$orderby=createdDate desc&$skip="+skip+"&$top="+take+"&$filter=(domain eq '"+dbName+"')";
-			////and status eq 'active'
-			//if(status=='')
-			//{
-			//  data={
-			//    "search": "*",
-			//    "filter": "(domain eq '"+dbName+"' and status ne 'Stopped')",
-			//    "orderby" : "endDate asc",
-			//    "top":take,
-			//    "skip":skip
-			//  }
-			//}
-			//else if(status=='All')
-			//{
-			//  data={
-			//    "search": "*",
-			//    "filter": "(domain eq '"+dbName+"')",
-			//    "orderby" : "endDate asc",
-			//    "top":take,
-			//    "skip":skip
-			//  }
-			//}
-			//else
-			//{
-			//  data={
-			//    "search": "*",
-			//    "filter": "(domain eq '"+dbName+"' and status eq '"+status+"')",
-			//    "orderby" : "endDate asc",
-			//    "top":take,
-			//    "skip":skip
-			//  }
-			//}
-			//
-			//$charge.azuresearch().getAllSubscriptionPost(data).success(function(data)
-			//{
-			//  //console.log(data);
-			//
-			//  if($scope.loading)
-			//  {
-			//    skip += take;
-			//
-			//    for (var i = 0; i < data.value.length; i++) {
-			//      for (var j = 0; j < $scope.profileList.length; j++) {
-			//        if($scope.profileList[j].profileId==data.value[i].guAccountId)
-			//        {
-			//          data.value[i].first_name=$scope.profileList[j].first_name;
-			//          data.value[i].last_name=$scope.profileList[j].last_name;
-			//          break;
-			//        }
-			//      }
-			//      $scope.items.push(data.value[i]);
-			//    }
-			//    vm.subscriptions=$scope.items;
-			//    //$timeout(function () {
-			//    //  vm.plans=$scope.items;
-			//    //},0);profileId
-			//    vm.searchMoreInit = false;
-			//
-			//    $scope.isLoading = false;
-			//    $scope.loading = false;
-			//    $scope.isdataavailable=true;
-			//    if(data.length<take){
-			//      $scope.isdataavailable=false;
-			//      $scope.hideSearchMore=true;
-			//    }
-			//
-			//  }
-			//
-			//}).error(function(data)
-			//{
-			//  //console.log(data);
-			//  $scope.isSpinnerShown=false;
-			//  $scope.isdataavailable=false;
-			//  $scope.isLoading = false;
-			//  $scope.hideSearchMore=true;
-			//})
 
 			$azureSearchHandle.getClient().SearchRequest("subscription",skip,take,'asc',status).onComplete(function(Response)
 			{
@@ -1685,64 +1519,9 @@
 				}
 				//toggleinnerView('add');
 			}
-			else if(planForm == 'editPlanForm'){
-				if (vm.editPlanForm.$valid == true) {
-					vm.submitted=true;
-					if(vm.editSelectedPlan.billingCycleType=="auto")
-					{
-						vm.editSelectedPlan.billingCycle=-1;
-					}
-					//$scope.content.unitPrice=JSON.stringify($scope.content.unitPrice);
-					//vm.editSelectedPlan.rate=$scope.currencyRate;
-
-					var planObject = vm.editSelectedPlan;
-					//console.log(planObject);
-					$charge.plan().updatePlan(planObject).success(function(data){
-						//console.log(data);
-						if(data.Result==true)
-						{
-							notifications.toast("Successfully Plan Modified","success");
-							$scope.clearform();
-							vm.submitted=false;
-
-							skip=0;
-							$scope.items = [];
-							$scope.loading=true;
-							$scope.more();
-							$scope.cancelEdit();
-							//$window.location.href='#/paymentlist';
-						}
-						else if(data.Result==false)
-						{
-							notifications.toast(data.error,"error");
-
-							//console.log(data);
-							vm.submitted=false;
-						}
-
-					}).error(function(data){
-						//
-						//if(data==201)
-						//{
-						//  notifications.toast("Successfully Plan Modified","success");
-						//  $scope.clearform();
-						//}
-						//else
-						//{
-						//  notifications.toast(data,"error");
-						//  console.log(data);
-						//}
-						notifications.toast(data,"error");
-						//console.log(data);
-						vm.submitted=false;
-					})
-				}else{
-					angular.element(document.querySelector('#editPlanForm')).find('.ng-invalid:visible:first').focus();
-				}
-			}
 
 		}
-		
+
 		$scope.refreshSubscriptionListLoop = function (length){
 		  if($scope.items.length != length+1)
 		  {
