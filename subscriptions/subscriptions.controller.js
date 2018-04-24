@@ -1834,7 +1834,7 @@
       //$scope.content.user = "";
       $mdDialog.show({
         controller: 'AddNewSubsUserController',
-        templateUrl: 'app/main/subscriptions/composeNewUser-dialog.html',
+        templateUrl: 'app/main/subscriptions/dialogs/composeNewUser-dialog.html',
         controllerAs       : 'vm',
         locals             : {
           selectedMail: undefined,

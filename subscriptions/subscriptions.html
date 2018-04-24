@@ -202,8 +202,9 @@
                                                                 <span>by <b>{{vm.selectedSubscription.first_name}}</b></span>
                                                             </div>
                                                         </div>
-                                                        <div>
-                                                            <span class="pill" layout="row" layout-align="center center" ng-class="{'partial':vm.selectedSubscription.orderStatus==='Pending','negative':vm.selectedSubscription.orderStatus==='Stopped','positive':vm.selectedSubscription.orderStatus==='Active'}">{{vm.selectedSubscription.orderStatus}} <label ng-if="vm.selectedSubscription.remark == 'endofsubscription'">SAR</label></span>
+                                                        <div layout="row">
+                                                            <span class="pill" layout="row" layout-align="center center" ng-class="{'partial':vm.selectedSubscription.orderStatus==='Pending','negative':vm.selectedSubscription.orderStatus==='Stopped','positive':vm.selectedSubscription.orderStatus==='Active'}">{{vm.selectedSubscription.orderStatus}}</span>
+                                                            <span ng-if="vm.selectedSubscription.remark == 'endofsubscription'" class="pill negative w-165 ml-10" layout="row" layout-align="center center">Diactivates on renewal</span>
                                                         </div>
                                                         <div layout="row" layout-align="start center" class="more-collapse" ng-style="showMoreUserInfo ? {'right':'10px','bottom':'0px', 'background':'#fafafa'} : null">
                                                             <md-button class="md-icon-button m-0" ng-click="contentExpandHandler()"><md-icon md-font-icon="icon-chevron-down" ng-if="!showMoreUserInfo"></md-icon><md-icon md-font-icon="icon-chevron-up" ng-if="showMoreUserInfo"></md-icon> </md-button><label ng-if="showMoreUserInfo">Less</label><label ng-if="!showMoreUserInfo">More</label>
