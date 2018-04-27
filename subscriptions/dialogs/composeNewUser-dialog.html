@@ -72,7 +72,7 @@
               </md-input-container>
             </div>
 
-            <div layout="row" layout-align="center center">
+            <div layout="row" layout-align="center center" ng-if="!vm.usingAvalaraTax">
 
               <md-input-container flex="85">
                 <label>Address</label>
@@ -84,6 +84,63 @@
                 <input ng-model="contentuser.country" id="country" ng-hide="true" type="text">
                 <input ng-model="contentuser.bill_zip_post" id="postal_code" ng-hide="true" type="text">
               </md-input-container>
+            </div>
+
+            <div layout-align="center center" ng-if="vm.usingAvalaraTax">
+              <div class="title" layout="row">
+                <md-input-container class="md-block mb-0" flex>
+                  <label>Line 1 </label>
+                  <input name="line1" ng-required="true" type="text" ng-model="contentuser.line1" ng-maxlength="30">
+                </md-input-container>
+              </div>
+              <div class="address" layout="row">
+                <md-input-container class="md-block mb-0" flex>
+                  <label>Line 2 </label>
+                  <input name="line2" ng-required="false" type="text" ng-model="contentuser.line2" ng-maxlength="100">
+                </md-input-container>
+              </div>
+              <div class="title" layout="row">
+                <md-input-container class="md-block mb-0" flex>
+                  <label>Line 3</label>
+                  <input name="line3" ng-required="false" type="text" ng-model="contentuser.line3" ng-maxlength="15">
+                </md-input-container>
+              </div>
+              <div class="title" layout="row">
+                <md-input-container class="md-block mb-0" flex>
+                  <label>City</label>
+                  <input name="city" ng-required="true" type="text" ng-model="contentuser.city"  ng-maxlength="30">
+                  <div ng-messages="vm.editForm.city.$error">
+                    <div ng-message="maxlength">City has to be less than 30 characters long</div>
+                  </div>
+                </md-input-container>
+              </div>
+              <div class="title" layout="row">
+                <md-input-container class="md-block mb-0" flex>
+                  <label>Region</label>
+                  <input name="region" ng-required="true" type="text" ng-model="contentuser.region" ng-maxlength="30">
+                  <div ng-messages="vm.editForm.region.$error">
+                    <div ng-message="maxlength">Region has to be less than 30 characters long</div>
+                  </div>
+                </md-input-container>
+              </div>
+              <div class="title" layout="row">
+                <md-input-container class="md-block mb-0" flex>
+                  <label>Country</label>
+                  <input name="country" ng-required="true" type="text" ng-model="contentuser.country" ng-maxlength="30">
+                  <div ng-messages="vm.editForm.country.$error">
+                    <div ng-message="maxlength">Country has to be less than 30 characters long</div>
+                  </div>
+                </md-input-container>
+              </div>
+              <!--<div class="title" layout="row">-->
+              <!--<md-input-container class="md-block mb-0" flex>-->
+              <!--<label>Postal Code</label>-->
+              <!--<input name="postalCode" ng-required="false" type="text" ng-model="createProfile.postalCode" ng-maxlength="15">-->
+              <!--<div ng-messages="vm.addProfileForm.postalCode.$error">-->
+              <!--<div ng-message="maxlength">Postal Code has to be less than 15 characters long</div>-->
+              <!--</div>-->
+              <!--</md-input-container>-->
+              <!--</div>-->
             </div>
 
         </md-dialog-content>
