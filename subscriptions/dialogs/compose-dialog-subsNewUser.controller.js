@@ -51,6 +51,26 @@
       $mdDialog.cancel();
     };
 
+    vm.usingAvalaraTax = false;
+
+    $scope.checkAvalaraTax= function () {
+      $charge.ccapi().getAvalaraTax().success(function(data) {
+        //
+        if(data!=undefined && data!=null && data!="") {
+          vm.usingAvalaraTax = true;
+
+        }
+        else{
+          vm.usingAvalaraTax = false;
+        }
+      }).error(function(data) {
+        //console.log(data);
+        vm.usingAvalaraTax = false;
+
+      })
+    }
+    $scope.checkAvalaraTax();
+
     $scope.checkRequired=true;
 
     $scope.submit = function()
@@ -59,8 +79,15 @@
       vm.submitted=true;
       if(vm.editForm.$valid)
       {
-        $scope.contentuser.billAddress=document.getElementById('autocomplete').value;
-        $scope.contentuser.country=document.getElementById('country').value;
+        if(!vm.usingAvalaraTax)
+        {
+          $scope.contentuser.billAddress=document.getElementById('autocomplete').value;
+          $scope.contentuser.country=document.getElementById('country').value;
+        }
+        else
+        {
+          $scope.contentuser.billAddress = $scope.contentuser.line1+"|"+$scope.contentuser.city+"|"+$scope.contentuser.region+"|"+$scope.contentuser.country;
+        }
 
         var userObj = $scope.contentuser;
 
