@@ -612,7 +612,9 @@
                                             <div flex>Start</div>
                                             <div flex>End</div>
                                             <!--<div flex>Occurrences</div>-->
-                                            <div flex class="text-right">Amount</div>
+                                            <div flex>Amount</div>
+											<div flex>User</div>
+                                            <div flex class="text-right">Transaction Date</div>
                                             <div flex class="text-right">Status</div>
                                         </div>
                                         <md-card-content class="p-0" flex>
@@ -634,8 +636,14 @@
                                                     <!--<div flex>-->
                                                     <!--<span>{{history.occurences}}</span>-->
                                                     <!--</div>-->
-                                                    <div flex class="text-right">
+                                                    <div flex>
                                                         <span>{{history.amount|isoCurrency:BaseCurrency}}</span>
+                                                    </div>
+													<div flex>
+                                                      <span>{{history.createdUser}}</span>
+                                                    </div>
+                                                    <div flex class="text-right">
+                                                      <span>{{history.createDate | date:'yyyy.MM.dd'}}</span>
                                                     </div>
                                                     <div flex class="text-right">
                                                         <span>{{history.status}}</span>

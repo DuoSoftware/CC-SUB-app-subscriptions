@@ -1,0 +1,48 @@
+<!-- SIDENAV HEADER -->
+<div class="header" layout="column" layout-align="center start">
+
+    <div class="logo" layout="row" layout-align="center center">
+        <span class="logo-icon">
+          <img src="app/core/app_icons/subscriptions_app_icon.png" alt=""/>
+        </span>
+        <span class="logo-text" style="font-size: 20px">Subscriptions</span>
+    </div>
+
+</div>
+<!-- / SIDENAV HEADER -->
+
+<!-- SIDENAV CONTENT -->
+<md-content ms-scroll class="content" flex>
+
+    <!--<div class="compose-button">-->
+        <!--<md-button class="md-accent md-raised" aria-label="compose"-->
+                   <!--ng-click="toggleEdit()" ng-if="!inpageReadPaneEdit">{{vm.pageTitle}}-->
+        <!--</md-button>-->
+    <!--</div>-->
+
+    <div class="navigation-simple" layout="column">
+      <div class="navigation-simple" layout="column">
+        <div class="item subheader">Filters</div>
+        <md-button class="item" ng-click="applyFilters('')">
+          <div layout="row" layout-align="start center">
+            <md-icon md-font-icon="icon-label" class="s16"></md-icon>
+            <span class="title" flex>All</span>
+          </div>
+        </md-button>
+        <md-button class="item" ng-click="applyFilters('Active')">
+          <div layout="row" layout-align="start center">
+            <md-icon md-font-icon="icon-label" class="filter-label-positive s16"></md-icon>
+            <span class="title" flex>Active</span>
+          </div>
+        </md-button>
+        <md-button class="item" ng-click="applyFilters('Stopped')">
+          <div layout="row" layout-align="start center">
+            <md-icon md-font-icon="icon-label" class="filter-label-negative s16"></md-icon>
+            <span class="title" flex>Expired</span>
+          </div>
+        </md-button>
+      </div>
+    </div>
+
+</md-content>
+<!-- / SIDENAV CONTENT -->
