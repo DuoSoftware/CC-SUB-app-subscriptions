@@ -564,6 +564,7 @@
 					var objOrderHistory=data.result[i];
 					objOrderHistory.startDate=moment(objOrderHistory.startDate).format('L');
 					objOrderHistory.endDate=moment(objOrderHistory.endDate).format('L');
+					objOrderHistory.createDate=moment(objOrderHistory.createDate).format('L');
 					vm.paymentHistoryList.push(objOrderHistory);
 
 				}
