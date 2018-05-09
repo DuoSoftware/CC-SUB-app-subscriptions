@@ -135,7 +135,7 @@
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item>
-                                    <md-button aria-label="Delete" ng-disabled="vm.selectedSubscription.orderStatus == 'Active'">
+                                    <md-button aria-label="Delete" ng-click="openSubscriptionRestartPane($event,vm.selectedSubscription)" ng-disabled="vm.selectedSubscription.orderStatus != 'Pending' || vm.submittedRestart">
                                         <md-icon md-font-icon="icon-play" class="md-accent"></md-icon>
                                         <span>Start</span>
                                     </md-button>
