@@ -351,6 +351,7 @@
 				vm.selectedSubscription.orderStatus=subscription.status;
 				vm.selectedSubscription.guAccountId=subscription.guAccountId;
 				vm.selectedSubscription.guOrderId=subscription.guOrderId;
+				vm.selectedSubscription.guDetailID=subscription.guDetailID;
 				vm.selectedSubscription.first_name=subscription.first_name;
 				vm.selectedSubscription.class=subscription.class;
 				vm.selectedSubscription.remark=subscription.remarks;//endofsubscription
@@ -905,6 +906,89 @@
 				//console.log(data);
 			})
 		}
+		
+		$scope.openSubscriptionRestartPane = function(ev,schedule) {
+		  // Appending dialog to document.body to cover sidenav in docs app
+		  var confirm = $mdDialog.confirm()
+			.title('Would you like to restart this Subscription?')
+			.textContent('You can revert this again for a active Subscription!')
+			.ariaLabel('Lucky day')
+			.targetEvent(ev)
+			.ok('Please do it!')
+			.cancel('No!');
+
+		  $mdDialog.show(confirm).then(function() {
+
+			vm.submittedRestart=true;
+			var restartObj={};
+			if(schedule.class!="Trial")
+			{
+			  restartObj={
+				"startDate":moment(new Date()).format('YYYY-MM-DD'),
+				"qty":1,
+				"email":schedule.email_addr,
+				"planCode":schedule.code,
+				"addOns":schedule.addOnCodes,
+				"coupon":"",
+				"note":"",
+				"guDetailID":schedule.guDetailID,
+				"dueDate":moment(new Date()).format('YYYY-MM-DD'),
+				"isScheduled":true,
+				"guOrderId":schedule.guOrderId
+			  };
+			}
+			else
+			{
+			  restartObj={
+				"startDate":moment(new Date()).format('YYYY-MM-DD'),
+				"qty":1,
+				"email":schedule.email_addr,
+				"planCode":schedule.code,
+				"addOns":schedule.addOnCodes,
+				"coupon":"",
+				"note":"",
+				"guDetailID":schedule.guDetailID,
+				"dueDate":moment(new Date()).format('YYYY-MM-DD'),
+				//"isScheduled":true,
+				"isTrial":true,
+				"guOrderId":schedule.guOrderId
+			  };
+			}
+
+			$charge.subscription().createSubscription(restartObj).success(function(data){
+			  //console.log(data);
+			  if(data.response=="succeeded")
+			  {
+				notifications.toast("Successfully Subscription restarted","success");
+				vm.submittedRestart=false;
+				$scope.applyFilters("");
+				$scope.switchInfoPane('close',vm.selectedPlan);
+			  }
+			  else if(data.response=="failed")
+			  {
+				notifications.toast(data.error,"error");
+
+				//console.log(data);
+				vm.submittedRestart=false;
+			  }
+
+			}).error(function(data){
+			  //
+			  //notifications.toast("Subscription restart failed :"+data.error,"error");
+			  var errorMsg = "Subscription restart failed";
+			  for (key in data.error) {
+				errorMsg = data.error[key][0];
+				break;
+			  }
+			  notifications.toast(errorMsg, "error");
+			  vm.submittedRestart=false;
+			})
+
+		  }, function() {
+
+		  });
+		};
+		
 
 		$scope.scheduledDateEditing=false;
 
