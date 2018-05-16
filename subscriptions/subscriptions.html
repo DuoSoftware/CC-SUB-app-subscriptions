@@ -18,19 +18,15 @@
             <div class="v-header" layout="column" flex fill-width>
                 <div class="title" layout="column" layout-align="center start" ng-if="!themeDuoworld">
                     <div class="logo" layout="row" layout-align="start center">
-                        <span class="logo-icon">
-                          <img src="app/core/app_icons/subscriptions_app_icon.png" alt=""/>
-                        </span>
+                        <span class="logo-icon logo-icon-subscription"></span>
                         <span class="logo-text">Subscriptions</span>
                     </div>
                 </div>
                 <div layout="row">
                     <div class="title" layout="column" layout-align="center start" ng-if="themeDuoworld">
                         <div class="logo" layout="row" layout-align="start center">
-                            <span class="logo-icon">
-                              <img src="app/core/app_icons/subscriptions_app_icon_black.png" alt=""/>
-                            </span>
-                            <span class="logo-text">Subscriptions</span>
+                          <span class="logo-icon logo-icon-subscription"></span>
+                          <span class="logo-text">Subscriptions</span>
                         </div>
                     </div>
                     <div class="search-wrapper" layout="row" layout-align="start center" flex>
@@ -215,7 +211,7 @@
                                                         <!--<i class="material-icons">repeat</i>-->
                                                         <!--<span class="retry-title">Payment retry status</span>-->
                                                         <div class="retry-status {{paymentRetryHistory.status}}" layout="row" layout-align="start center" ng-click="showPaymentRetryHistry()">
-                                                            <img src="assets/icons/retry_black.svg" alt="" ng-if="paymentRetryHistory.firstAttemptStatus != '' || paymentRetryHistory.secondAttemptStatus != '' || paymentRetryHistory.thiredAttemptStatus != ''" ng-hide="paymentRetryHistory.status.toLowerCase() == 'success'">
+                                                          <md-icon md-font-icon="icon-refresh" ng-if="paymentRetryHistory.firstAttemptStatus != '' || paymentRetryHistory.secondAttemptStatus != '' || paymentRetryHistory.thiredAttemptStatus != ''" ng-hide="paymentRetryHistory.status.toLowerCase() == 'success'"></md-icon>
                                                             <md-icon md-font-icon="icon-check-circle" class="retry-suc" ng-if="paymentRetryHistory.firstAttemptStatus == 'Success' || paymentRetryHistory.secondAttemptStatus == 'Success' || paymentRetryHistory.thiredAttemptStatus == 'Success'"></md-icon>
                                                             <span class="retry-val {{paymentRetryHistory.status}}">
                                                                 <label ng-if="paymentRetryHistory.attempted==1 && paymentRetryHistory.status.toLowerCase() != 'success'">1</label>
