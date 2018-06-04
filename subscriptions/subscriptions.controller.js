@@ -906,7 +906,7 @@
 				//console.log(data);
 			})
 		}
-		
+
 		$scope.openSubscriptionRestartPane = function(ev,schedule) {
 		  // Appending dialog to document.body to cover sidenav in docs app
 		  var confirm = $mdDialog.confirm()
@@ -988,7 +988,7 @@
 
 		  });
 		};
-		
+
 
 		$scope.scheduledDateEditing=false;
 
@@ -1864,13 +1864,15 @@
 
         var iframe = document.getElementById('addUpdateCardSubsId');
         // iframe.append($scope.cardloadform);
-        iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
+        if (iframe) {
+          iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
 
-        iframe.document.open();
-        iframe.document.write($scope.cardloadform);
-        iframe.document.close();
-        $scope.showMoreUserInfo=false;
-        $scope.accGeneralLoaded = true;
+          iframe.document.open();
+          iframe.document.write($scope.cardloadform);
+          iframe.document.close();
+          $scope.showMoreUserInfo=false;
+          $scope.accGeneralLoaded = true;
+        }
 
         $timeout(function () {
           $scope.cardEditEnabled = true;
@@ -1890,15 +1892,20 @@
     }
 
     $scope.$watch(function () {
-		var iframe = document.getElementById('addUpdateCardSubsId');
-		// iframe.append($scope.cardloadform);
-		iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
-		var elem = iframe.document.children[0].children[1].children[1].getAttribute('style');
+      var iframe = document.getElementById('addUpdateCardSubsId');
+      // iframe.append($scope.cardloadform);
+      if (iframe) {
+        iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
+        if(iframe.document.children[0].children[1].children[1]){
+          var elem = iframe.document.children[0].children[1].children[1].getAttribute('style');
 
-		if(elem.indexOf('display: block') !== -1){
-			$('#addUpdateCardSubsId').css('height', 550 + 'px');
-		}
-	});
+          if(elem.indexOf('display: block') !== -1){
+            $('#addUpdateCardSubsId').css('height', 550 + 'px');
+          }
+        }
+      }
+
+    });
 
     window.updateCardDone=function(){
       /* have access to $scope here*/
