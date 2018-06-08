@@ -1,12 +1,3 @@
-////////////////////////////////
-// App : Plans
-// File : Plans Controller
-// Owner  : GihanHerath
-// Modified by  : Kasun
-// Modified date : 2017/02/15
-// Version : 6.0.1.0
-/////////////////////////////////
-
 (function ()
 {
 	'use strict';
