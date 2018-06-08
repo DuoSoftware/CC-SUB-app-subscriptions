@@ -24,6 +24,7 @@
                                         h = iframe.contentWindow.document.body.scrollHeight;
                                         iframe.style.height = ((h > stepSizeMax) ? (h - stepSize) : stepSize) + "px";
                                         iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
+                                        scope.stop();
                                     }
                                 }else{
                                     scope.stop();
