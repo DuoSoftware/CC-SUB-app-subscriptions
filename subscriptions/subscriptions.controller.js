@@ -13,7 +13,47 @@
 
 	angular
 		.module('app.subscription')
-		.controller('SubscriptionsController', SubscriptionsController);
+		.controller('SubscriptionsController', SubscriptionsController)
+        .directive('iframeAutoHeight', function ($interval) {
+            var stepSize = 100,
+                stepInterval = 200,
+                stepSizeMax = stepSize * 2;
+
+            return {
+                restrict: 'C',
+                link: function (scope, element, attrs) {
+                    var iframe = element[0],
+                        iahi, h;
+
+                    scope.start = function () {
+                        if (!angular.isDefined(iahi)) {
+                            iahi = $interval(function () {
+                                if(iframe.contentWindow){
+                                    if (iframe.contentWindow.document.body) {
+                                        h = iframe.contentWindow.document.body.scrollHeight;
+                                        iframe.style.height = ((h > stepSizeMax) ? (h - stepSize) : stepSize) + "px";
+                                        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
+                                    }
+                                }
+                            }, stepInterval);
+                        }
+                    };
+
+                    scope.stop = function () {
+                        if (angular.isDefined(iahi)) {
+                            $interval.cancel(iahi);
+                            iahi = undefined;
+                        }
+                    };
+
+                    scope.$on('$destroy', function () {
+                        scope.stop();
+                    });
+
+                    scope.start();
+                }
+            }
+        });
 
 	/** @ngInject */
 	function SubscriptionsController($scope, $timeout, $mdDialog, $document, $mdMedia, $mdSidenav, $location, $filter, $charge, $errorCheck, notifications, $azureSearchHandle, logHelper, $rootScope)
