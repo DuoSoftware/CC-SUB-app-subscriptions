@@ -19,16 +19,15 @@
                     scope.start = function () {
                         if (!angular.isDefined(iahi)) {
                             iahi = $interval(function () {
-
+                                if (iframe.contentWindow.name != "SecurityError") {
                                     if (iframe.contentWindow.document.body) {
-                                        if (iframe.contentWindow.name != "SecurityError") {
-                                            h = iframe.contentWindow.document.body.scrollHeight;
-                                            iframe.style.height = ((h > stepSizeMax) ? (h - stepSize) : stepSize) + "px";
-                                            iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
-                                        }else{
-                                            scope.stop();
-                                        }
+                                        h = iframe.contentWindow.document.body.scrollHeight;
+                                        iframe.style.height = ((h > stepSizeMax) ? (h - stepSize) : stepSize) + "px";
+                                        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
                                     }
+                                }else{
+                                    scope.stop();
+                                }
                             }, stepInterval);
                         }
                     };
