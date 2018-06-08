@@ -22,14 +22,13 @@
 			return {
 				restrict: 'C',
 				link: function (scope, element, attrs) {
-					var iframe = element[0],
+                    var iframe = document.getElementById('addUpdateCardSubsId'),
 						iahi, h;
 
 					scope.start = function () {
 						if (!angular.isDefined(iahi)) {
 							iahi = $interval(function () {
 								if(iframe.contentWindow){
-									debugger;
                                     if (iframe.contentWindow.document.body) {
                                         h = iframe.contentWindow.document.body.scrollHeight;
                                         iframe.style.height = ((h > stepSizeMax) ? (h - stepSize) : stepSize) + "px";
