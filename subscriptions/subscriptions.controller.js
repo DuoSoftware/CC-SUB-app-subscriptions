@@ -7,7 +7,7 @@
 		.controller('SubscriptionsController', SubscriptionsController)
         .directive('iframeAutoHeight', function ($interval) {
             var stepSize = 100,
-                stepInterval = 200,
+                stepInterval = 500,
                 stepSizeMax = stepSize * 2;
 
             return {
@@ -18,17 +18,18 @@
 
                     scope.start = function () {
                         if (!angular.isDefined(iahi)) {
-                            if (iframe.contentWindow.name != "SecurityError") {
-                                iahi = $interval(function () {
+                            iahi = $interval(function () {
+
                                     if (iframe.contentWindow.document.body) {
-                                        h = iframe.contentWindow.document.body.scrollHeight;
-                                        iframe.style.height = ((h > stepSizeMax) ? (h - stepSize) : stepSize) + "px";
-                                        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
+                                        if (iframe.contentWindow.name != "SecurityError") {
+                                            h = iframe.contentWindow.document.body.scrollHeight;
+                                            iframe.style.height = ((h > stepSizeMax) ? (h - stepSize) : stepSize) + "px";
+                                            iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
+                                        }else{
+                                            scope.stop();
+                                        }
                                     }
-                                }, stepInterval);
-                            }else{
-                                scope.stop();
-                            }
+                            }, stepInterval);
                         }
                     };
 
