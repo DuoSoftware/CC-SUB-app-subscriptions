@@ -320,14 +320,14 @@
                                         <label for="{{addon.name}}">{{addon.name}}</label>
                                     </div>
                                     <div flex class="amount">
-                                        <span>${{addon.unitPrice}}</span><span>/ {{addon.billEvery}}</span>
+                                        <span>{{addon.unitPrice|isoCurrency:BaseCurrency}}</span><span>/ {{addon.billEvery}}</span>
                                     </div>
                                     <div ng-style="addon.isChecked ? {'z-index':'10'} : {'z-index':'0','opacity':'0.6'}">
                                         <span>Quantity : </span>
                                         <input type="number" ng-disabled="!addon.isChecked" ng-model="addon.qty" ng-init="addon.qty = 1" min="1">
                                     </div>
                                     <div flex class="amount text-right">
-                                        <span>${{addon.unitPrice * addon.qty}}</span>
+                                        <span>{{addon.unitPrice * addon.qty|isoCurrency:BaseCurrency}}</span>
                                     </div>
                                 </div>
                             </div>

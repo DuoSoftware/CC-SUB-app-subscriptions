@@ -1500,10 +1500,13 @@
                     $scope.content.addOns=[];
                     for(var i=0; i<$scope.planAddonList.length; i++)
                     {
+                      if($scope.planAddonList[i].isChecked)
+                      {
                         $scope.content.addOns.push({
-                            "code": $scope.planAddonList[i],
-                            "qty": 1
+                          "code": $scope.planAddonList[i].code,
+                          "qty": $scope.planAddonList[i].qty
                         })
+                      }
                     }
                     if($scope.content.startDate == undefined)
                     {
