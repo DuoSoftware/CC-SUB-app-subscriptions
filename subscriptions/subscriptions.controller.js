@@ -1,12 +1,3 @@
-////////////////////////////////
-// App : Plans
-// File : Plans Controller
-// Owner  : GihanHerath
-// Modified by  : Kasun
-// Modified date : 2017/02/15
-// Version : 6.0.1.0
-/////////////////////////////////
-
 (function ()
 {
     'use strict';
@@ -16,7 +7,7 @@
         .controller('SubscriptionsController', SubscriptionsController)
         .directive('iframeAutoHeight', function ($interval) {
             var stepSize = 100,
-                stepInterval = 200,
+                stepInterval = 500,
                 stepSizeMax = stepSize * 2;
 
             return {
@@ -28,17 +19,15 @@
                     scope.start = function () {
                         if (!angular.isDefined(iahi)) {
                             iahi = $interval(function () {
-                                if(iframe.contentWindow){
-                                    try {
-                                        if (iframe.contentWindow.document.body) {
-                                            h = iframe.contentWindow.document.body.scrollHeight;
-                                            iframe.style.height = ((h > stepSizeMax) ? (h - stepSize) : stepSize) + "px";
-                                            iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
-                                        }
+                                try {
+                                    if (iframe.contentWindow.document.body) {
+                                        h = iframe.contentWindow.document.body.scrollHeight;
+                                        iframe.style.height = ((h > stepSizeMax) ? (h - stepSize) : stepSize) + "px";
+                                        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
                                     }
-                                    catch(err) {
-                                        scope.stop();
-                                    }
+                                }
+                                catch(err) {
+                                    scope.stop();
                                 }
                             }, stepInterval);
                         }
@@ -364,7 +353,7 @@
                 vm.selectedSubscription.remark=subscription.remarks;//endofsubscription
 
                 $charge.tax().getTaxGrpByIDs(vm.selectedSubscription.taxID).success(function(data) {
-                    var taxid=data.groupDetail[0].taxid;
+                    if(data)var taxid=data.groupDetail[0].taxid;
                     $charge.tax().getTaxByIDs(taxid).success(function(data) {
                         //vm.selectedPlan = plan;
                         vm.selectedSubscription.taxType = data[0].amounttype;
@@ -1303,13 +1292,16 @@
         $scope.planAddonList=[];
 
         $scope.loadingPlanDetails = false;
+        // Kasun_Wijeratne_20_JUNE_2018
+        // $scope.toggleAddonSelection
+        // Kasun_Wijeratne_20_JUNE_2018 - END
         $scope.checkBasePlanForAddons= function (selectedPlan) {
             $scope.planAddonList=[];
             if(selectedPlan != null && selectedPlan.type=="Base-Plan")
             {
                 $scope.loadingPlanDetails = true;
                 var basePlanCode = selectedPlan.code;
-                $charge.plan().getAddonsforBasePlan(basePlanCode).success(function(data){
+                $charge.plan().getAddOnsFullForBasePlan(basePlanCode).success(function(data){
                     //console.log(data);
                     $scope.planAddonList=data;
 
@@ -1813,18 +1805,6 @@
             }
         }
 
-        $scope.baseUrl="";
-        $http.get('app/core/cloudcharge/js/config.json').then(function(data){
-
-            //console.log(data);
-            $scope.baseUrl=data.data["plan"]["domain"];
-            //$scope.loadFilterCategories('dashBoardReport.mrt');
-            $scope.baseUrl=$scope.baseUrl.split('/')[2];
-        }, function(errorResponse){
-            //console.log(errorResponse);
-            $scope.baseUrl="cloudcharge.com";
-        });
-
         $scope.cardloadform = "";
         $scope.cardLastDigits = {};
 
@@ -1854,7 +1834,7 @@
 
                 cardDetails = {
                     "profileId": customer.profileId,
-                    "redirectUrl": "https://"+$scope.baseUrl+"/planEmbededForm/planSubscriptionScript.php/?method=cardFormShellResponse",
+                    "redirectUrl": "https://app.cloudcharge.com/planEmbededForm/planSubscriptionScript.php/?method=cardFormShellResponse",
                     "action": "update"
                 };
             }
@@ -1864,7 +1844,7 @@
 
                 cardDetails = {
                     "profileId": customer.profileId,
-                    "redirectUrl": "https://"+$scope.baseUrl+"/planEmbededForm/planSubscriptionScript.php/?method=cardFormShellResponse",
+                    "redirectUrl": "https://app.cloudcharge.com/planEmbededForm/planSubscriptionScript.php/?method=cardFormShellResponse",
                     "action": "insert"
                 };
                 //$location.absUrl()
@@ -1927,7 +1907,7 @@
         });
 
         window.updateCardDone=function(){
-			/* have access to $scope here*/
+            /* have access to $scope here*/
             if($scope.subscriptionUser.selectedUser != null && $scope.cardEditEnabled && vm.userInfo.first_name)
             {
                 //notifications.toast("reached!","success");
