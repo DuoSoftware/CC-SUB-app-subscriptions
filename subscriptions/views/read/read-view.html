@@ -151,7 +151,6 @@
                                                   <iframe class="iframe-auto-height" fill-width onLoad="updateCardDone(this)" id="addUpdateCardSubsId" style="border: none">
                                             </iframe>
                                                 </div>
-
                                                 <!--<div layout="row" fill-width class="list-item" ng-repeat="card in cardDetails" modal-animation-class="mt-20">-->
 
                                                     <!--<div class="prodCost" flex layout="row" layout-align="start center">-->
@@ -191,7 +190,7 @@
             <md-card flex class="input-block-gen">
                 <md-card-title>
                     <div layout="row" layout-align="start center">
-                        <md-icon md-font-icon="icon-cog"></md-icon> <h3>Plans</h3>
+                        <md-icon md-font-icon="icon-cog"></md-icon> <h3>Plans & Addons</h3>
                     </div>
                 </md-card-title>
                 <md-card-content>
@@ -279,8 +278,11 @@
                             <!--</div>-->
                         <!--</div>-->
                     <!--</div>-->
-                    <div class="packages">
-                        <md-card ng-repeat="plan in vm.plans" class="package floated" ng-class="{'selected':plan.isSelected}" ng-click="selectPlanForSubscription(plan)">
+                    <div ng-repeat="(key, value) in vm.plans | groupBy:'type'" class="packages p-5" style="overflow: auto">
+                        <div class="group-sub-head pos-rel">
+                            <b>{{key}}</b>
+                        </div>
+                        <md-card ng-repeat="plan in value" class="package floated" ng-class="{'selected':plan.isSelected}" ng-click="selectPlanForSubscription(plan)">
                             <input id="{{plan.code}}" type="radio" name="planRadioButton[]" value="">
                             <label for="{{plan.code}}" class="package-name" flex> {{ plan.name}} </label>
                             <div class="rate-container">
@@ -291,16 +293,48 @@
                                 </div>
                             </div>
                         </md-card>
-
-                        <!--<div class="floated-cube" md-whiteframe="1dp" ng-class="{'selected':plan.isSelected}" ng-click="selectPlanForSubscription(plan)" ng-repeat="plan in vm.plans">-->
-                            <!--<h2>{{plan.name}}</h2>-->
-                            <!--<div>-->
-                                <!--<span>${{plan.unitPrice}}</span>-->
-                                <!--<span> / {{plan.billEvery}}</span>-->
-                            <!--</div>-->
+                    </div>
+                    <!--<div class="floated-cube" md-whiteframe="1dp" ng-class="{'selected':plan.isSelected}" ng-click="selectPlanForSubscription(plan)" ng-repeat="plan in vm.plans">-->
+                        <!--<h2>{{plan.name}}</h2>-->
+                        <!--<div>-->
+                            <!--<span>${{plan.unitPrice}}</span>-->
+                            <!--<span> / {{plan.billEvery}}</span>-->
                         <!--</div>-->
+                    <!--</div>-->
+                </md-card-content>
+            </md-card>
+
+            <md-card flex class="input-block-gen" ng-if="planAddonList.length">
+                <md-card-title>
+                    <div layout="row" layout-align="start center">
+                        <md-icon md-font-icon="icon-cog"></md-icon> <h3>Add-ons for Selected Plan</h3>
+                    </div>
+                </md-card-title>
+                <md-card-content>
+                    <div class="addons-container">
+                        <div layout="row" layout-align="start center">
+                            <div flex="50">
+                                <div ng-repeat="addon in planAddonList" class="check-row" ng-class="{'active':addon.isChecked,'static':!addon.isChecked}" layout="row" layout-align="start center" md-whiteframe="1dp" flex>
+                                    <div flex>
+                                        <input class="styled-checkbox" type="checkbox" id="{{addon}}" ng-click="addon.isChecked = !addon.isChecked" ng-change="addon.isChecked = !addon.isChecked" ng-model="addon.isChecked">
+                                        <label for="{{addon.name}}">{{addon.name}}</label>
+                                    </div>
+                                    <div flex class="amount">
+                                        <span>{{addon.unitPrice|isoCurrency:BaseCurrency}}</span><span>/ {{addon.billEvery}}</span>
+                                    </div>
+                                    <div ng-style="addon.isChecked ? {'z-index':'10'} : {'z-index':'0','opacity':'0.6'}">
+                                        <span>Quantity : </span>
+                                        <input type="number" ng-disabled="!addon.isChecked" ng-model="addon.qty" ng-init="addon.qty = 1" min="1">
+                                    </div>
+                                    <div flex class="amount text-right">
+                                        <span>{{addon.unitPrice * addon.qty|isoCurrency:BaseCurrency}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </md-card-content>
+
             </md-card>
 
             <md-card flex class="input-block-gen">
@@ -345,19 +379,6 @@
                         </md-input-container>
                     </div>
 
-                </md-card-content>
-            </md-card>
-
-            <md-card flex class="input-block-gen" ng-if="planAddonList.length!=0">
-                <md-card-title>
-                    <div layout="row" layout-align="start center">
-                        <md-icon md-font-icon="icon-cog"></md-icon> <h3>Add-ons for Selected Plan</h3>
-                    </div>
-                </md-card-title>
-                <md-card-content>
-                    <div ng-repeat="addon in planAddonList" class="plan-feature-row" flex>
-                        <span class="additional-feature">{{addon}}</span>
-                    </div>
                 </md-card-content>
             </md-card>
 
